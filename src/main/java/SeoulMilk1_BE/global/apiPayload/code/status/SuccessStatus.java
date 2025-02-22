@@ -1,7 +1,7 @@
-package SeoulMilk1_BE.global.aplPayload.code.status;
+package SeoulMilk1_BE.global.apiPayload.code.status;
 
-import SeoulMilk1_BE.global.aplPayload.BaseCode;
-import SeoulMilk1_BE.global.aplPayload.ReasonDTO;
+import SeoulMilk1_BE.global.apiPayload.BaseCode;
+import SeoulMilk1_BE.global.apiPayload.ReasonDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;

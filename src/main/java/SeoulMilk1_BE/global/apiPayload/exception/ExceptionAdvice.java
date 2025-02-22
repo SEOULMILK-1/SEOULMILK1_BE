@@ -1,8 +1,8 @@
-package SeoulMilk1_BE.global.aplPayload.exception;
+package SeoulMilk1_BE.global.apiPayload.exception;
 
-import SeoulMilk1_BE.global.aplPayload.ApiResponse;
-import SeoulMilk1_BE.global.aplPayload.ErrorReasonDTO;
-import SeoulMilk1_BE.global.aplPayload.code.status.ErrorStatus;
+import SeoulMilk1_BE.global.apiPayload.ApiResponse;
+import SeoulMilk1_BE.global.apiPayload.ErrorReasonDTO;
+import SeoulMilk1_BE.global.apiPayload.code.status.ErrorStatus;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;

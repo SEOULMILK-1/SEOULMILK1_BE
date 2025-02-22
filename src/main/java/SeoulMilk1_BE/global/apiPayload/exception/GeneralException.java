@@ -1,7 +1,7 @@
-package SeoulMilk1_BE.global.aplPayload.exception;
+package SeoulMilk1_BE.global.apiPayload.exception;
 
-import SeoulMilk1_BE.global.aplPayload.BaseErrorCode;
-import SeoulMilk1_BE.global.aplPayload.ErrorReasonDTO;
+import SeoulMilk1_BE.global.apiPayload.BaseErrorCode;
+import SeoulMilk1_BE.global.apiPayload.ErrorReasonDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

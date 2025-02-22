@@ -1,6 +1,6 @@
-package SeoulMilk1_BE.global.aplPayload;
+package SeoulMilk1_BE.global.apiPayload;
 
-import SeoulMilk1_BE.global.aplPayload.code.status.SuccessStatus;
+import SeoulMilk1_BE.global.apiPayload.code.status.SuccessStatus;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;

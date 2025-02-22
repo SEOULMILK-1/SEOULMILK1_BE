@@ -1,4 +1,4 @@
-package SeoulMilk1_BE.global.aplPayload;
+package SeoulMilk1_BE.global.apiPayload;
 
 public interface BaseCode {
     
