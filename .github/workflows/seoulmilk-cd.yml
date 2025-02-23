@@ -1,8 +1,8 @@
-name: Dockerizing to Amazon EC2
+name: SeoulMilk CD Pipeline
 
 on:
-  pull_request:
-    branches: [ "develop" ]
+  push:
+    branches: [ "main" ]
 
 jobs:
   build:
