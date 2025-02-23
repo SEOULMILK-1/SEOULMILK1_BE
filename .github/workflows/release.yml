@@ -1,0 +1,59 @@
+name: SeoulMilk_CI/CD
+
+on:
+  pull_request:
+    branches: [ develop ]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.SUBMODULE_ACCESS_TOKEN }}
+          submodule: true
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@417ae3ccd767c252f5661f1ace9f835f9654f2b5
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x ./gradlew
+        shell: bash
+
+      - name: Build with Gradle
+        run: ./gradlew clean bootJar -x test -Pprofile=prod
+        shell: bash
+
+      - name: docker login
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
+      - name: docker image build
+        run: docker build -f Dockerfile -t ${{ secrets.DOCKERHUB_USERNAME }}/seoulmilk .
+
+      - name: docker Hub push
+        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/seoulmilk
+
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            sudo docker rm -f $(sudo docker ps -qa) || true
+            sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/seoulmilk
+            sudo docker run -d -p 8080:8080 -e TZ=Asia/Seoul --name seoulmilk ${{ secrets.DOCKERHUB_USERNAME }}/seoulmilk
