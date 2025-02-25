@@ -8,6 +8,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @Tag(name = "Post", description = "게시판 관련 API")
 @Slf4j
@@ -18,9 +21,8 @@ public class PostController {
     private final PostService postService;
 
     @PostMapping("")
-    public ApiResponse<Long> create(@RequestBody PostUpdateRequest request) {
-        postService.save(request);
-        return ApiResponse.onSuccess(postService.save(request));
+    public ApiResponse<Long> create(@RequestBody PostUpdateRequest request, @RequestParam("files") List<MultipartFile> files) {
+        return ApiResponse.onSuccess(postService.save(request, files));
     }
 
 }

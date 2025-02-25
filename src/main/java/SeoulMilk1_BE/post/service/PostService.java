@@ -10,6 +10,9 @@ import SeoulMilk1_BE.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -18,7 +21,7 @@ public class PostService {
     private final UserService userService;
 
     @Transactional
-    public Long save(PostUpdateRequest request) {
+    public Long save(PostUpdateRequest request, List<MultipartFile> files) {
         User user = userService.findOne(request.userId());
         Post post = Post.builder()
                 .user(user)
@@ -26,6 +29,7 @@ public class PostService {
                 .content(request.content())
                 .isValid(true)
                 .views(0L)
+                .postImgList(files)
                 .build();
 
         postRepository.save(post);
