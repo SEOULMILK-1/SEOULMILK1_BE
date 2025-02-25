@@ -20,6 +20,9 @@ public class NtsTax extends BaseTimeEntity {
     @Column(name = "nts_tax_id")
     private Long id;
 
+    @Column(nullable = false, length = 24)
+    private String issueId;
+
     @JoinColumn(name = "user_id")
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
@@ -143,13 +146,13 @@ public class NtsTax extends BaseTimeEntity {
     // 금액 관련
 
     @Column(nullable = false)
-    private Integer chargeTotal;
+    private Long chargeTotal;
 
     @Column(nullable = false)
-    private Integer taxTotal;
+    private Long taxTotal;
 
     @Column(nullable = false)
-    private Integer grandTotal;
+    private Long grandTotal;
 
     // 생성자
     @Column(length = 12)
