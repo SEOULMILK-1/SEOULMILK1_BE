@@ -2,7 +2,11 @@ package SeoulMilk1_BE.nts_tax.domain.type;
 
 import SeoulMilk1_BE.global.apiPayload.code.status.ErrorStatus;
 import SeoulMilk1_BE.global.apiPayload.exception.GeneralException;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
+@Getter
 public enum TypeCode {
     GENERAL_TAX_INVOICE("0101", "일반 세금계산서"),
     ZERO_RATE_TAX_INVOICE("0102", "영세율 세금계산서"),
@@ -22,11 +26,6 @@ public enum TypeCode {
 
     private final String code;
     private final String description;
-
-    TypeCode(String code, String description) {
-        this.code = code;
-        this.description = description;
-    }
 
     public static TypeCode fromCode(String code) {
         for (TypeCode type : TypeCode.values()) {
