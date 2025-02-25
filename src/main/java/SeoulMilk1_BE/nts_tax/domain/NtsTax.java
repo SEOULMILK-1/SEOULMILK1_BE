@@ -20,7 +20,7 @@ public class NtsTax extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
-    @Column(nullable = false, length = 255)
+    @Column(nullable = false)
     private String taxImgUrl;
 
     @Enumerated(EnumType.STRING)
