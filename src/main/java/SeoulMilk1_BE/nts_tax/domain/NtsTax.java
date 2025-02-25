@@ -4,11 +4,15 @@ import SeoulMilk1_BE.global.domain.BaseTimeEntity;
 import SeoulMilk1_BE.nts_tax.domain.type.*;
 import SeoulMilk1_BE.user.domain.User;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Getter
 public class NtsTax extends BaseTimeEntity {
     @Id
