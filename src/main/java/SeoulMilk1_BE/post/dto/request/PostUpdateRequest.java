@@ -1,4 +1,4 @@
 package SeoulMilk1_BE.post.dto.request;
 
-public record PostRequest() {
+public record PostUpdateRequest(Long userId, String title, String content) {
 }

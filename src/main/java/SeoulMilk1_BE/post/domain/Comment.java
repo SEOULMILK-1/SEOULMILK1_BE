@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+@Table(name = "comments")
 @Entity
 @Getter
 @NoArgsConstructor

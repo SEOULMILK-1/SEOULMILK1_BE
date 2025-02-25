@@ -1,4 +1,4 @@
 package SeoulMilk1_BE.post.dto.response;
 
-public record PostResponse() {
+public record PostUpdateResponse(Long postId) {
 }
