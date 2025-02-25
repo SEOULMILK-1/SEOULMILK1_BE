@@ -1,5 +1,6 @@
 package SeoulMilk1_BE.nts_tax.domain;
 
+import SeoulMilk1_BE.global.domain.BaseTimeEntity;
 import SeoulMilk1_BE.nts_tax.domain.type.*;
 import SeoulMilk1_BE.user.domain.User;
 import jakarta.persistence.*;
@@ -9,9 +10,10 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor
 @Getter
-public class NtsTax {
+public class NtsTax extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "nts_tax_id")
     private Long id;
 
     @JoinColumn(name = "user_id")
