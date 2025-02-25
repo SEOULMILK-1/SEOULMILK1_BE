@@ -1,5 +1,6 @@
 package SeoulMilk1_BE.global.apiPayload;
 
+import SeoulMilk1_BE.global.apiPayload.code.status.ErrorStatus;
 import SeoulMilk1_BE.global.apiPayload.code.status.SuccessStatus;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -33,5 +34,10 @@ public class ApiResponse<T> {
     // 실패한 경우 응답 생성
     public static <T> ApiResponse<T> onFailure(String code, String message, T data){
         return new ApiResponse<>(false, code, message, data);
+    }
+
+    // 실패한 경우 응답 생성 - ErrorStatus
+    public static <T> ApiResponse<T> onFailure(ErrorStatus errorStatus){
+        return new ApiResponse<>(false, errorStatus.getCode(), errorStatus.getMessage(), null);
     }
 }
