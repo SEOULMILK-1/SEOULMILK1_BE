@@ -1,4 +1,6 @@
 package SeoulMilk1_BE.post.dto.response;
 
-public record PostUpdateResponse(Long postId) {
+import java.time.LocalDateTime;
+
+public record PostUpdateResponse(Long postId, LocalDateTime createdAt) {
 }
