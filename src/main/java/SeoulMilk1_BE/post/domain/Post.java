@@ -1,6 +1,7 @@
 package SeoulMilk1_BE.post.domain;
 
 import SeoulMilk1_BE.global.domain.BaseTimeEntity;
+import SeoulMilk1_BE.post.domain.type.Type;
 import SeoulMilk1_BE.user.domain.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -37,6 +38,9 @@ public class Post extends BaseTimeEntity {
 
     @Column(name = "is_valid", nullable = false)
     private Boolean isValid;
+
+    @Enumerated(EnumType.STRING)
+    private Type type;
 
     @ElementCollection
     @CollectionTable(name = "post_img_list", joinColumns = @JoinColumn(name = "post_id"))
