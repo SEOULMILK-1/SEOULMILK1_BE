@@ -8,6 +8,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Table(name = "post")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -35,12 +38,17 @@ public class Post extends BaseTimeEntity {
     @Column(name = "is_valid", nullable = false)
     private Boolean isValid;
 
+    @ElementCollection
+    @CollectionTable(name = "post_img_list", joinColumns = @JoinColumn(name = "post_id"))
+    private List<String> postImgList = new ArrayList<>();
+
     @Builder
-    public Post(User user, String title, String content, Long views, Boolean isValid) {
+    public Post(User user, String title, String content, Long views, Boolean isValid, List postImgList) {
         this.user = user;
         this.title = title;
         this.content = content;
         this.views = views;
         this.isValid = isValid;
+        this.postImgList = postImgList;
     }
 }
