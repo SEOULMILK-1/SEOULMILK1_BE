@@ -5,12 +5,17 @@ import SeoulMilk1_BE.global.apiPayload.exception.GeneralException;
 import SeoulMilk1_BE.global.service.S3Service;
 import SeoulMilk1_BE.post.domain.Post;
 import SeoulMilk1_BE.post.domain.type.Type;
-import SeoulMilk1_BE.post.dto.request.PostCreateRequest;
-import SeoulMilk1_BE.post.dto.response.*;
+import SeoulMilk1_BE.post.dto.request.post.PostCreateRequest;
+import SeoulMilk1_BE.post.dto.request.post.PostListRequest;
+import SeoulMilk1_BE.post.dto.response.comment.CommentReadResponse;
+import SeoulMilk1_BE.post.dto.response.post.*;
 import SeoulMilk1_BE.post.repository.PostRepository;
 import SeoulMilk1_BE.user.domain.User;
 import SeoulMilk1_BE.user.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -53,6 +58,12 @@ public class PostService {
         post.updateViews();
 
         return new PostDetailResponse(post.getPostId(), post.getUser().getName(), post.getTitle(), post.getContent(), post.getType(), post.getViews(), post.getPostImgUrl(), post.getCreatedAt(), post.getModifiedAt(), comments);
+    }
+
+    public List<PostListResponse> findList(PostListRequest request) {
+        Pageable pageable = PageRequest.of(request.page(), request.size());
+        List<Post> result = postRepository.findAllByOrderByModifiedAtDesc(pageable).getContent();
+        return result.stream().map(r -> new PostListResponse(r.getPostId(), r.getTitle(), r.getUser().getName())).collect(Collectors.toList());
     }
 
     public PostUpdateResponse update(Long postId, PostCreateRequest request, List<MultipartFile> files) {

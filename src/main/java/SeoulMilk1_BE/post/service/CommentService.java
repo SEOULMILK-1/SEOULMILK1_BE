@@ -2,12 +2,11 @@ package SeoulMilk1_BE.post.service;
 
 import SeoulMilk1_BE.post.domain.Comment;
 import SeoulMilk1_BE.post.domain.Post;
-import SeoulMilk1_BE.post.dto.request.CommentCreateRequest;
-import SeoulMilk1_BE.post.dto.request.CommentUpdateRequest;
-import SeoulMilk1_BE.post.dto.response.CommentCreateResponse;
-import SeoulMilk1_BE.post.dto.response.CommentDeleteResponse;
-import SeoulMilk1_BE.post.dto.response.CommentReadResponse;
-import SeoulMilk1_BE.post.dto.response.CommentUpdateResponse;
+import SeoulMilk1_BE.post.dto.request.comment.CommentCreateRequest;
+import SeoulMilk1_BE.post.dto.request.comment.CommentUpdateRequest;
+import SeoulMilk1_BE.post.dto.response.comment.CommentCreateResponse;
+import SeoulMilk1_BE.post.dto.response.comment.CommentDeleteResponse;
+import SeoulMilk1_BE.post.dto.response.comment.CommentUpdateResponse;
 import SeoulMilk1_BE.post.repository.CommentRepository;
 import SeoulMilk1_BE.user.domain.User;
 import SeoulMilk1_BE.user.service.UserService;
@@ -16,7 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor

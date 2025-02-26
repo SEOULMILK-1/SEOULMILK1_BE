@@ -1,11 +1,11 @@
 package SeoulMilk1_BE.post.controller;
 
 import SeoulMilk1_BE.global.apiPayload.ApiResponse;
-import SeoulMilk1_BE.post.dto.request.CommentCreateRequest;
-import SeoulMilk1_BE.post.dto.request.CommentUpdateRequest;
-import SeoulMilk1_BE.post.dto.response.CommentCreateResponse;
-import SeoulMilk1_BE.post.dto.response.CommentDeleteResponse;
-import SeoulMilk1_BE.post.dto.response.CommentUpdateResponse;
+import SeoulMilk1_BE.post.dto.request.comment.CommentCreateRequest;
+import SeoulMilk1_BE.post.dto.request.comment.CommentUpdateRequest;
+import SeoulMilk1_BE.post.dto.response.comment.CommentCreateResponse;
+import SeoulMilk1_BE.post.dto.response.comment.CommentDeleteResponse;
+import SeoulMilk1_BE.post.dto.response.comment.CommentUpdateResponse;
 import SeoulMilk1_BE.post.service.CommentService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;

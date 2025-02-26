@@ -1,11 +1,9 @@
 package SeoulMilk1_BE.post.controller;
 
 import SeoulMilk1_BE.global.apiPayload.ApiResponse;
-import SeoulMilk1_BE.post.dto.request.PostCreateRequest;
-import SeoulMilk1_BE.post.dto.response.PostCreateResponse;
-import SeoulMilk1_BE.post.dto.response.PostDeleteResponse;
-import SeoulMilk1_BE.post.dto.response.PostDetailResponse;
-import SeoulMilk1_BE.post.dto.response.PostUpdateResponse;
+import SeoulMilk1_BE.post.dto.request.post.PostCreateRequest;
+import SeoulMilk1_BE.post.dto.request.post.PostListRequest;
+import SeoulMilk1_BE.post.dto.response.post.*;
 import SeoulMilk1_BE.post.service.PostService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -28,9 +26,14 @@ public class PostController {
         return ApiResponse.onSuccess(postService.save(request, files));
     }
 
-    @GetMapping("{postId}")
+    @GetMapping("/{postId}")
     public ApiResponse<PostDetailResponse> readOne(@PathVariable("postId") Long postId) {
         return ApiResponse.onSuccess(postService.findOne(postId));
+    }
+
+    @GetMapping
+    public ApiResponse<List<PostListResponse>> readList(@RequestBody PostListRequest request) {
+        return ApiResponse.onSuccess(postService.findList(request));
     }
 
     @PatchMapping("{postId}")
