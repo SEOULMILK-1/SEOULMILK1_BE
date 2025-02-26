@@ -38,7 +38,7 @@ public class S3Service {
         String fileName = generateUniqueFileName(file.getOriginalFilename());
         ObjectMetadata metadata = new ObjectMetadata();
 
-        pubImage(fileName, metadata, file);
+        putImage(fileName, metadata, file);
 
         // 업로드된 파일의 URL 반환
         return amazonS3.getUrl(bucketName, fileName).toString();
@@ -55,7 +55,7 @@ public class S3Service {
 
             fileName = generateUniqueFileName(file.getOriginalFilename());
 
-            pubImage(fileName, metadata, file);
+            putImage(fileName, metadata, file);
             fileUrls.add(amazonS3.getUrl(bucketName, fileName).toString());
         }
 
@@ -63,7 +63,7 @@ public class S3Service {
     }
 
     // s3에 등록
-    private void pubImage(String fileName, ObjectMetadata metadata, MultipartFile file) {
+    private void putImage(String fileName, ObjectMetadata metadata, MultipartFile file) {
         try (InputStream inputStream = file.getInputStream()) {
             metadata.setContentLength(file.getSize());
             metadata.setContentType(file.getContentType());
