@@ -47,12 +47,13 @@ public class Post extends BaseTimeEntity {
     private List<String> postImgUrl = new ArrayList<>();
 
     @Builder
-    public Post(User user, String title, String content, Long views, Boolean isValid, List postImgList) {
+    public Post(User user, String title, String content, Long views, Boolean isValid, Type type, List postImgList) {
         this.user = user;
         this.title = title;
         this.content = content;
         this.views = views;
         this.isValid = isValid;
+        this.type = type;
         this.postImgUrl = postImgList;
     }
 

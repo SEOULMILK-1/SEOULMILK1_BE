@@ -2,6 +2,7 @@ package SeoulMilk1_BE.post.service;
 
 import SeoulMilk1_BE.global.service.S3Service;
 import SeoulMilk1_BE.post.domain.Post;
+import SeoulMilk1_BE.post.domain.type.Type;
 import SeoulMilk1_BE.post.dto.request.PostUpdateRequest;
 import SeoulMilk1_BE.post.dto.response.PostDetailResponse;
 import SeoulMilk1_BE.post.dto.response.PostUpdateResponse;
@@ -34,6 +35,7 @@ public class PostService {
                 .content(request.content())
                 .isValid(true)
                 .views(0L)
+                .type(Type.valueOf(request.type()))
                 .postImgList(postImgList)
                 .build();
 
@@ -49,6 +51,6 @@ public class PostService {
         // 조회 수 증가.
         post.updateViews();
 
-        return new PostDetailResponse(post.getPostId(), post.getUser().getName(), post.getTitle(), post.getContent(), post.getViews(), post.getPostImgUrl(), post.getCreatedAt(), post.getModifiedAt());
+        return new PostDetailResponse(post.getPostId(), post.getUser().getName(), post.getTitle(), post.getContent(), post.getType(), post.getViews(), post.getPostImgUrl(), post.getCreatedAt(), post.getModifiedAt());
     }
 }

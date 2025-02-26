@@ -1,4 +1,6 @@
 package SeoulMilk1_BE.post.dto.request;
 
-public record PostUpdateRequest(Long userId, String title, String content) {
+import SeoulMilk1_BE.post.domain.type.Type;
+
+public record PostUpdateRequest(Long userId, String title, String content, String type) {
 }
