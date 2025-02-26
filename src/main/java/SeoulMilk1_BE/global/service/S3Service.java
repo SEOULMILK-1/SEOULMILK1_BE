@@ -35,10 +35,15 @@ public class S3Service {
     public String uploadFile(MultipartFile file) {
         validateFile(file);
 
-        String fileName = generateUniqueFileName(file.getOriginalFilename());
+        String fileName = file.getOriginalFilename();
         ObjectMetadata metadata = new ObjectMetadata();
 
-        pubImage(fileName, metadata, file);
+        // 이미 존재하는지 확인
+        if (amazonS3.doesObjectExist(bucketName, fileName)) {
+            return amazonS3.getUrl(bucketName, fileName).toString();
+        }
+
+        putImage(fileName, metadata, file);
 
         // 업로드된 파일의 URL 반환
         return amazonS3.getUrl(bucketName, fileName).toString();
@@ -53,17 +58,23 @@ public class S3Service {
         for (MultipartFile file : files) {
             validateFile(file);
 
-            fileName = generateUniqueFileName(file.getOriginalFilename());
+            fileName = file.getOriginalFilename();
 
-            pubImage(fileName, metadata, file);
-            fileUrls.add(amazonS3.getUrl(bucketName, fileName).toString());
-        }
+            // 이미 존재하는지 확인
+            if (amazonS3.doesObjectExist(bucketName, fileName)) {
+                fileUrls.add(amazonS3.getUrl(bucketName, fileName).toString());
+            }
+            else {
+                putImage(fileName, metadata, file);
+                fileUrls.add(amazonS3.getUrl(bucketName, fileName).toString());
+            }
+       }
 
         return fileUrls;
     }
 
     // s3에 등록
-    private void pubImage(String fileName, ObjectMetadata metadata, MultipartFile file) {
+    private void putImage(String fileName, ObjectMetadata metadata, MultipartFile file) {
         try (InputStream inputStream = file.getInputStream()) {
             metadata.setContentLength(file.getSize());
             metadata.setContentType(file.getContentType());
@@ -84,12 +95,6 @@ public class S3Service {
         if (contentType == null || !contentType.startsWith("image/")) {
             throw new GeneralException(ErrorStatus.FILE_NOT_IMAGE);
         }
-    }
-
-    private String generateUniqueFileName(String originalFilename) {
-        String extension = originalFilename.substring(originalFilename.lastIndexOf("."));
-        String uniqueId = UUID.randomUUID().toString().replace("-", "");
-        return uniqueId + extension;
     }
 
     public void deleteImageFromS3(String imageAddress){

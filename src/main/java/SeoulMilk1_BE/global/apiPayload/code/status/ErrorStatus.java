@@ -35,6 +35,10 @@ public enum ErrorStatus implements BaseErrorCode {
     AMENDCODE_NOT_FOUND(HttpStatus.NOT_FOUND, "TAX402", "해당 사유 코드를 찾을 수 없습니다."),
     IPTYPECODE_NOT_FOUND(HttpStatus.NOT_FOUND, "TAX403", "해당 구분 코드를 찾을 수 없습니다."),
 
+    // 게시글 관련 에러
+    POST_NOT_FOUND(HttpStatus.NOT_FOUND, "POST400", "해당 게시글을 찾을 수 없습니다."),
+    COMMENT_IS_EXIST(HttpStatus.NOT_FOUND, "POST401", "해당 게시글에 등록된 댓글이 존재합니다."),
+
     ;
 
     private final HttpStatus httpStatus;

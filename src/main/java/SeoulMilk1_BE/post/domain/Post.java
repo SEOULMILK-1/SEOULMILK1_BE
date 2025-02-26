@@ -1,12 +1,14 @@
 package SeoulMilk1_BE.post.domain;
 
 import SeoulMilk1_BE.global.domain.BaseTimeEntity;
+import SeoulMilk1_BE.post.domain.type.Type;
 import SeoulMilk1_BE.user.domain.User;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Table(name = "post")
 @Getter
@@ -35,12 +37,43 @@ public class Post extends BaseTimeEntity {
     @Column(name = "is_valid", nullable = false)
     private Boolean isValid;
 
+    @Enumerated(EnumType.STRING)
+    private Type type;
+
+    @ElementCollection
+    @CollectionTable(name = "post_img_list", joinColumns = @JoinColumn(name = "post_id"))
+    private List<String> postImgUrl = new ArrayList<>();
+
+    private LocalDateTime inactiveDate;
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+    private List<Comment> commentList;
+
     @Builder
-    public Post(User user, String title, String content, Long views, Boolean isValid) {
+    public Post(User user, String title, String content, Long views, Boolean isValid, Type type, List postImgList) {
         this.user = user;
         this.title = title;
         this.content = content;
         this.views = views;
         this.isValid = isValid;
+        this.type = type;
+        this.postImgUrl = postImgList;
     }
+
+    public void updatePost(String title, String content, Type type, List<String> postImgUrl) {
+        this.title = title;
+        this.content = content;
+        this.type = type;
+        this.postImgUrl = postImgUrl;
+    }
+
+    public void updateViews() {
+        this.views += 1;
+    }
+
+    public void deactivate() {
+        this.isValid = false;
+        this.inactiveDate = LocalDateTime.now().plusDays(7);
+    }
+
 }
