@@ -1,4 +1,4 @@
-package SeoulMilk1_BE.auth.util;
+package SeoulMilk1_BE.user.util;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

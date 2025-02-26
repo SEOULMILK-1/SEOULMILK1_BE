@@ -61,4 +61,8 @@ public class User extends BaseTimeEntity {
         this.role = role;
         this.team = team;
     }
+
+    public void assign() {
+        this.isAssigned = true;
+    }
 }

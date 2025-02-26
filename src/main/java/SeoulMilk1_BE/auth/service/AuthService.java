@@ -10,7 +10,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static SeoulMilk1_BE.auth.util.UserConstants.*;
+import static SeoulMilk1_BE.user.util.UserConstants.*;
 
 @Slf4j
 @Service
