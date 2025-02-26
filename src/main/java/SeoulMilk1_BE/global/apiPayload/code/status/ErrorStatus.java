@@ -21,6 +21,7 @@ public enum ErrorStatus implements BaseErrorCode {
 
     // 유저 관련 에러
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "USER400", "유저를 찾을 수 없습니다."),
+    PASSWORD_NOT_MATCH(HttpStatus.BAD_REQUEST, "USER401", "비밀번호가 일치하지 않습니다."),
 
     // S3 이미지 업로드 관련
     FILE_NOT_UPLOADED(HttpStatus.BAD_REQUEST, "S3401", "이미지를 업로드 할 수 없습니다."),

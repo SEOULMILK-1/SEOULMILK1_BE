@@ -1,10 +1,12 @@
 package SeoulMilk1_BE.auth.controller;
 
+import SeoulMilk1_BE.auth.dto.request.LoginRequest;
 import SeoulMilk1_BE.auth.dto.request.SignUpRequest;
 import SeoulMilk1_BE.auth.service.AuthService;
 import SeoulMilk1_BE.global.apiPayload.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -41,5 +43,14 @@ public class AuthController {
     @PostMapping("/sign-up")
     public ApiResponse<?> signUp(@Valid @RequestBody SignUpRequest request) {
         return ApiResponse.onSuccess(authService.signUp(request));
+    }
+
+    @Operation(summary = "로그인", description = "access token은 header에 Authorization: Bearer 로, refresh token은 쿠키로 전달됩니다. <br><br>" +
+            "이후 user의 role에 맞춰 redirect를 해주시면 됩니다.")
+    @PostMapping("/login")
+    public ApiResponse<?> login(
+            @RequestBody LoginRequest loginRequest,
+            HttpServletResponse response) {
+        return ApiResponse.onSuccess(authService.login(loginRequest, response));
     }
 }
