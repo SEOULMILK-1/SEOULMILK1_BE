@@ -25,11 +25,14 @@ public class Comment extends BaseTimeEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Setter
     private String text;
 
     public void setPost(Post post) {
         this.post = post;
         post.getCommentList().add(this);
+    }
+
+    public void updateText(String text) {
+        this.text = text;
     }
 }
