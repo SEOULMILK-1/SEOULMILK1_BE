@@ -55,4 +55,8 @@ public class Post extends BaseTimeEntity {
         this.isValid = isValid;
         this.postImgUrl = postImgList;
     }
+
+    public void updateViews() {
+        this.views += 1;
+    }
 }
