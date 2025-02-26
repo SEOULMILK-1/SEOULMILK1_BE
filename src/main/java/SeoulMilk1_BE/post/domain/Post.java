@@ -44,7 +44,7 @@ public class Post extends BaseTimeEntity {
 
     @ElementCollection
     @CollectionTable(name = "post_img_list", joinColumns = @JoinColumn(name = "post_id"))
-    private List<String> postImgList = new ArrayList<>();
+    private List<String> postImgUrl = new ArrayList<>();
 
     @Builder
     public Post(User user, String title, String content, Long views, Boolean isValid, List postImgList) {
@@ -53,6 +53,6 @@ public class Post extends BaseTimeEntity {
         this.content = content;
         this.views = views;
         this.isValid = isValid;
-        this.postImgList = postImgList;
+        this.postImgUrl = postImgList;
     }
 }
