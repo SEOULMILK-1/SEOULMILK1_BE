@@ -34,13 +34,13 @@ public class PostService {
 
     public PostCreateResponse save(PostCreateRequest request, List<MultipartFile> files) {
         List<String> postImgList = s3Service.uploadFiles(files);
-        User user = userService.findOne(request.userId());
+        User user = userService.findUser(request.userId());
 
         Post post = PostCreateRequest.of(user, request.title(), request.content(), Type.valueOf(request.type()), postImgList);
 
         postRepository.save(post);
 
-        return PostCreateResponse.from(post.getPostId());
+        return PostCreateResponse.from(post.getId());
     }
 
     public PostDetailResponse findOne(Long postId) {
@@ -49,13 +49,13 @@ public class PostService {
         // 조회 수 증가.
         post.updateViews();
 
-        return PostDetailResponse.from(post.getPostId(), post.getUser().getName(), post.getTitle(), post.getContent(), post.getType(), post.getViews(), post.getPostImgUrl(), post.getCreatedAt(), post.getModifiedAt(), comments);
+        return PostDetailResponse.from(post.getId(), post.getUser().getName(), post.getTitle(), post.getContent(), post.getType(), post.getViews(), post.getPostImgUrl(), post.getCreatedAt(), post.getModifiedAt(), comments);
     }
 
     public List<PostListResponse> findList(PostListRequest request) {
         Pageable pageable = PageRequest.of(request.page(), request.size());
         List<Post> result = postRepository.findAllByOrderByModifiedAtDesc(pageable).getContent();
-        return result.stream().map(r -> PostListResponse.from(r.getPostId(), r.getTitle(), r.getUser().getName())).collect(Collectors.toList());
+        return result.stream().map(r -> PostListResponse.from(r.getId(), r.getTitle(), r.getUser().getName())).collect(Collectors.toList());
     }
 
     public PostUpdateResponse update(Long postId, PostCreateRequest request, List<MultipartFile> files) {
@@ -63,7 +63,7 @@ public class PostService {
         Post post = postRepository.findById(postId).orElseThrow();
         post.updatePost(request.title(), request.content(), Type.valueOf(request.type()), postImgList);
 
-        return PostUpdateResponse.from(post.getPostId(), post.getModifiedAt());
+        return PostUpdateResponse.from(post.getId(), post.getModifiedAt());
     }
 
 

@@ -47,7 +47,7 @@ public class UserService {
         return REJECTED.getMessage();
     }
 
-    private User findUser(Long userId) {
+    public User findUser(Long userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException(USER_NOT_FOUND));
     }
