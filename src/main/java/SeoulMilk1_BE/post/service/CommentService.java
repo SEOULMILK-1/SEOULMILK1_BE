@@ -9,4 +9,9 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class CommentService {
     private final CommentRepository commentRepository;
+
+    public Boolean isExist(Long postId) {
+        long l = commentRepository.countByPostId(postId);
+        return l > 0;
+    }
 }

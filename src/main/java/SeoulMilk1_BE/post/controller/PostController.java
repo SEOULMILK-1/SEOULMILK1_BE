@@ -1,7 +1,9 @@
 package SeoulMilk1_BE.post.controller;
 
 import SeoulMilk1_BE.global.apiPayload.ApiResponse;
-import SeoulMilk1_BE.post.dto.request.PostUpdateRequest;
+import SeoulMilk1_BE.post.dto.request.PostCreateRequest;
+import SeoulMilk1_BE.post.dto.response.PostCreateResponse;
+import SeoulMilk1_BE.post.dto.response.PostDeleteResponse;
 import SeoulMilk1_BE.post.dto.response.PostDetailResponse;
 import SeoulMilk1_BE.post.dto.response.PostUpdateResponse;
 import SeoulMilk1_BE.post.service.PostService;
@@ -22,8 +24,8 @@ public class PostController {
     private final PostService postService;
 
     @PostMapping
-    public ApiResponse<PostUpdateResponse> create(@RequestPart PostUpdateRequest request, @RequestPart List<MultipartFile> files) {
-        return ApiResponse.onSuccess(postService.save(request,files));
+    public ApiResponse<PostCreateResponse> create(@RequestPart PostCreateRequest request, @RequestPart List<MultipartFile> files) {
+        return ApiResponse.onSuccess(postService.save(request, files));
     }
 
     @GetMapping("{postId}")
@@ -31,4 +33,13 @@ public class PostController {
         return ApiResponse.onSuccess(postService.findOne(postId));
     }
 
+    @PatchMapping("{postId}")
+    public ApiResponse<PostUpdateResponse> update(@PathVariable("postId") Long postId, @RequestPart PostCreateRequest request, @RequestPart List<MultipartFile> files) {
+        return ApiResponse.onSuccess(postService.update(postId, request, files));
+    }
+
+    @DeleteMapping("{postId}")
+    public ApiResponse<PostDeleteResponse> delete(@PathVariable("postId") Long postId) {
+        return ApiResponse.onSuccess(postService.delete(postId));
+    }
 }

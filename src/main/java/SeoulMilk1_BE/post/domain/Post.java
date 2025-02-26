@@ -4,11 +4,9 @@ import SeoulMilk1_BE.global.domain.BaseTimeEntity;
 import SeoulMilk1_BE.post.domain.type.Type;
 import SeoulMilk1_BE.user.domain.User;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,6 +35,7 @@ public class Post extends BaseTimeEntity {
     private Long views;
 
     @Column(name = "is_valid", nullable = false)
+    @Setter
     private Boolean isValid;
 
     @Enumerated(EnumType.STRING)
@@ -45,6 +44,12 @@ public class Post extends BaseTimeEntity {
     @ElementCollection
     @CollectionTable(name = "post_img_list", joinColumns = @JoinColumn(name = "post_id"))
     private List<String> postImgUrl = new ArrayList<>();
+
+    @Setter
+    private LocalDateTime inactiveDate;
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+    private List<Comment> commentList;
 
     @Builder
     public Post(User user, String title, String content, Long views, Boolean isValid, Type type, List postImgList) {
@@ -55,6 +60,13 @@ public class Post extends BaseTimeEntity {
         this.isValid = isValid;
         this.type = type;
         this.postImgUrl = postImgList;
+    }
+
+    public void updatePost(String title, String content, Type type, List<String> postImgUrl) {
+        this.title = title;
+        this.content = content;
+        this.type = type;
+        this.postImgUrl = postImgUrl;
     }
 
     public void updateViews() {
