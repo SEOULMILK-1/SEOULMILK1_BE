@@ -1,4 +1,4 @@
-package SeoulMilk1_BE.post.dto.response;
+package SeoulMilk1_BE.post.dto.response.post;
 
 import java.time.LocalDateTime;
 

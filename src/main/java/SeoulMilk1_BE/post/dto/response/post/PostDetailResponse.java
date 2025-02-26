@@ -1,6 +1,7 @@
-package SeoulMilk1_BE.post.dto.response;
+package SeoulMilk1_BE.post.dto.response.post;
 
 import SeoulMilk1_BE.post.domain.type.Type;
+import SeoulMilk1_BE.post.dto.response.comment.CommentReadResponse;
 
 import java.time.LocalDateTime;
 import java.util.List;
