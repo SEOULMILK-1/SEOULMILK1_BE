@@ -22,6 +22,13 @@ public enum ErrorStatus implements BaseErrorCode {
     // 유저 관련 에러
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "USER400", "유저를 찾을 수 없습니다."),
 
+    // S3 이미지 업로드 관련
+    FILE_NOT_UPLOADED(HttpStatus.BAD_REQUEST, "S3401", "이미지를 업로드 할 수 없습니다."),
+    FILE_IS_EMPTY(HttpStatus.BAD_REQUEST, "S3402", "파일이 비어있습니다."),
+    FILE_NOT_IMAGE(HttpStatus.BAD_REQUEST, "S3403", "이미지 파일만 업로드 가능합니다."),
+    IO_EXCEPTION_ON_IMAGE_DELETE(HttpStatus.BAD_REQUEST, "S34004", "삭제 중 에러가 발생했습니다."),
+    INVALID_URL(HttpStatus.BAD_REQUEST, "S3405", "유효하지 않은 url입니다."),
+
     // 세금 계산서 관련 에러
     TYPECODE_NOT_FOUND(HttpStatus.NOT_FOUND, "TAX400", "해당 구분자를 찾을 수 없습니다."),
     PURPCODE_NOT_FOUND(HttpStatus.NOT_FOUND, "TAX401", "해당 지시자를 찾을 수 없습니다."),
