@@ -31,7 +31,7 @@ public class AuthController {
         return authService.getTestToken(userId);
     }
 
-    @Operation(summary = "사번 중복 검사", description = "사번이 존재하면 true, 존재하지 않으면 false를 반환합니다")
+    @Operation(summary = "사번 중복 검사", description = "사번 중복 검사")
     @GetMapping("/validation/employee-id")
     public ApiResponse<?> validateEmployeeId(@Valid @RequestParam Long employeeId) {
         return ApiResponse.onSuccess(authService.validateEmployeeId(employeeId));
