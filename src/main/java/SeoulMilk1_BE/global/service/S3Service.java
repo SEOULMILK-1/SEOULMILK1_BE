@@ -35,8 +35,13 @@ public class S3Service {
     public String uploadFile(MultipartFile file) {
         validateFile(file);
 
-        String fileName = generateUniqueFileName(file.getOriginalFilename());
+        String fileName = file.getOriginalFilename();
         ObjectMetadata metadata = new ObjectMetadata();
+
+        // 이미 존재하는지 확인
+        if (amazonS3.doesObjectExist(bucketName, fileName)) {
+            return amazonS3.getUrl(bucketName, fileName).toString();
+        }
 
         putImage(fileName, metadata, file);
 
@@ -53,11 +58,17 @@ public class S3Service {
         for (MultipartFile file : files) {
             validateFile(file);
 
-            fileName = generateUniqueFileName(file.getOriginalFilename());
+            fileName = file.getOriginalFilename();
 
-            putImage(fileName, metadata, file);
-            fileUrls.add(amazonS3.getUrl(bucketName, fileName).toString());
-        }
+            // 이미 존재하는지 확인
+            if (amazonS3.doesObjectExist(bucketName, fileName)) {
+                fileUrls.add(amazonS3.getUrl(bucketName, fileName).toString());
+            }
+            else {
+                putImage(fileName, metadata, file);
+                fileUrls.add(amazonS3.getUrl(bucketName, fileName).toString());
+            }
+       }
 
         return fileUrls;
     }
@@ -86,11 +97,11 @@ public class S3Service {
         }
     }
 
-    private String generateUniqueFileName(String originalFilename) {
-        String extension = originalFilename.substring(originalFilename.lastIndexOf("."));
-        String uniqueId = UUID.randomUUID().toString().replace("-", "");
-        return uniqueId + extension;
-    }
+//    private String generateUniqueFileName(String originalFilename) {
+//        String extension = originalFilename.substring(originalFilename.lastIndexOf("."));
+//        String uniqueId = UUID.randomUUID().toString().replace("-", "");
+//        return uniqueId + extension;
+//    }
 
     public void deleteImageFromS3(String imageAddress){
         String key = getKeyFromImageAddress(imageAddress);
