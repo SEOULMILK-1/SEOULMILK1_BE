@@ -27,33 +27,23 @@ public class CommentService {
     public CommentCreateResponse create(CommentCreateRequest request) {
         User user = userService.findOne(request.userId());
         Post post = postService.get(request.postId());
-        Comment comment = Comment.builder()
-                .user(user)
-                .text(request.text())
-                .build();
-        comment.setPost(post);
+        Comment comment = CommentCreateRequest.of(user, post, request.text());
 
         commentRepository.save(comment);
 
-        return new CommentCreateResponse(comment.getId(), comment.getCreatedAt());
+        return CommentCreateResponse.from(comment.getId(), comment.getCreatedAt());
     }
 
     public CommentUpdateResponse update(Long commentId, CommentUpdateRequest request) {
         Comment comment = commentRepository.findById(commentId).orElseThrow();
-        comment.setText(request.text());
+        comment.updateText(request.text());
 
-        return new CommentUpdateResponse(commentId, comment.getModifiedAt());
+        return CommentUpdateResponse.from(commentId, comment.getModifiedAt());
     }
 
     public CommentDeleteResponse delete(Long commentId) {
         commentRepository.deleteById(commentId);
-        return new CommentDeleteResponse(commentId, LocalDateTime.now());
+        return CommentDeleteResponse.from(commentId, LocalDateTime.now());
     }
 
-
-    // 게시글에 등록된 댓글 존재 여부 체크
-    public Boolean isExist(Long postId) {
-        long l = commentRepository.countByPostId(postId);
-        return l > 0;
-    }
 }

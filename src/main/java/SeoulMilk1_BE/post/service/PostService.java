@@ -36,19 +36,11 @@ public class PostService {
         List<String> postImgList = s3Service.uploadFiles(files);
         User user = userService.findOne(request.userId());
 
-        Post post = Post.builder()
-                .user(user)
-                .title(request.title())
-                .content(request.content())
-                .isValid(true)
-                .views(0L)
-                .type(Type.valueOf(request.type()))
-                .postImgList(postImgList)
-                .build();
+        Post post = PostCreateRequest.of(user, request.title(), request.content(), Type.valueOf(request.type()), postImgList);
 
         postRepository.save(post);
 
-        return new PostCreateResponse(post.getPostId(), post.getCreatedAt());
+        return PostCreateResponse.from(post.getPostId());
     }
 
     public PostDetailResponse findOne(Long postId) {
@@ -57,13 +49,13 @@ public class PostService {
         // 조회 수 증가.
         post.updateViews();
 
-        return new PostDetailResponse(post.getPostId(), post.getUser().getName(), post.getTitle(), post.getContent(), post.getType(), post.getViews(), post.getPostImgUrl(), post.getCreatedAt(), post.getModifiedAt(), comments);
+        return PostDetailResponse.from(post.getPostId(), post.getUser().getName(), post.getTitle(), post.getContent(), post.getType(), post.getViews(), post.getPostImgUrl(), post.getCreatedAt(), post.getModifiedAt(), comments);
     }
 
     public List<PostListResponse> findList(PostListRequest request) {
         Pageable pageable = PageRequest.of(request.page(), request.size());
         List<Post> result = postRepository.findAllByOrderByModifiedAtDesc(pageable).getContent();
-        return result.stream().map(r -> new PostListResponse(r.getPostId(), r.getTitle(), r.getUser().getName())).collect(Collectors.toList());
+        return result.stream().map(r -> PostListResponse.from(r.getPostId(), r.getTitle(), r.getUser().getName())).collect(Collectors.toList());
     }
 
     public PostUpdateResponse update(Long postId, PostCreateRequest request, List<MultipartFile> files) {
@@ -71,7 +63,7 @@ public class PostService {
         Post post = postRepository.findById(postId).orElseThrow();
         post.updatePost(request.title(), request.content(), Type.valueOf(request.type()), postImgList);
 
-        return new PostUpdateResponse(post.getPostId(), post.getModifiedAt());
+        return PostUpdateResponse.from(post.getPostId(), post.getModifiedAt());
     }
 
 
@@ -86,7 +78,7 @@ public class PostService {
         // 게시글 비활성화
         post.deactivate();
 
-        return new PostDeleteResponse(postId, post.getInactiveDate());
+        return PostDeleteResponse.from(postId, post.getInactiveDate());
     }
 
     // 엔티티 조회용
