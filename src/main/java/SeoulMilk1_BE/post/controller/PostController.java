@@ -22,27 +22,27 @@ public class PostController {
     private final PostService postService;
 
     @PostMapping
-    public ApiResponse<PostCreateResponse> create(@RequestPart PostCreateRequest request, @RequestPart List<MultipartFile> files) {
+    public ApiResponse<PostCreateResponse> createPost(@RequestPart PostCreateRequest request, @RequestPart List<MultipartFile> files) {
         return ApiResponse.onSuccess(postService.save(request, files));
     }
 
     @GetMapping("/{postId}")
-    public ApiResponse<PostDetailResponse> readOne(@PathVariable("postId") Long postId) {
+    public ApiResponse<PostDetailResponse> readPostOne(@PathVariable("postId") Long postId) {
         return ApiResponse.onSuccess(postService.findOne(postId));
     }
 
     @GetMapping
-    public ApiResponse<List<PostListResponse>> readList(@RequestBody PostListRequest request) {
+    public ApiResponse<List<PostListResponse>> readPostList(@RequestBody PostListRequest request) {
         return ApiResponse.onSuccess(postService.findList(request));
     }
 
     @PatchMapping("/{postId}")
-    public ApiResponse<PostUpdateResponse> update(@PathVariable("postId") Long postId, @RequestPart PostCreateRequest request, @RequestPart List<MultipartFile> files) {
+    public ApiResponse<PostUpdateResponse> updatePost(@PathVariable("postId") Long postId, @RequestPart PostCreateRequest request, @RequestPart List<MultipartFile> files) {
         return ApiResponse.onSuccess(postService.update(postId, request, files));
     }
 
     @DeleteMapping("/{postId}")
-    public ApiResponse<PostDeleteResponse> delete(@PathVariable("postId") Long postId) {
+    public ApiResponse<PostDeleteResponse> deletePost(@PathVariable("postId") Long postId) {
         return ApiResponse.onSuccess(postService.delete(postId));
     }
 }

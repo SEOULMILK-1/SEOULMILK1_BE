@@ -21,17 +21,17 @@ public class CommentController {
     private final CommentService commentService;
 
     @PostMapping
-    public ApiResponse<CommentCreateResponse> create(@RequestBody CommentCreateRequest request) {
+    public ApiResponse<CommentCreateResponse> createComment(@RequestBody CommentCreateRequest request) {
         return ApiResponse.onSuccess(commentService.create(request));
     }
 
     @PatchMapping("/{commentId}")
-    public ApiResponse<CommentUpdateResponse> update(@PathVariable("commentId") Long commentId, @RequestBody CommentUpdateRequest request) {
+    public ApiResponse<CommentUpdateResponse> updateComment(@PathVariable("commentId") Long commentId, @RequestBody CommentUpdateRequest request) {
         return ApiResponse.onSuccess(commentService.update(commentId, request));
     }
 
     @DeleteMapping("/{commentId}")
-    public ApiResponse<CommentDeleteResponse> delete(@PathVariable("commentId") Long commentId) {
+    public ApiResponse<CommentDeleteResponse> deleteComment(@PathVariable("commentId") Long commentId) {
         return ApiResponse.onSuccess(commentService.delete(commentId));
     }
 }
