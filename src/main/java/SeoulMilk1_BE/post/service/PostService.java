@@ -6,10 +6,7 @@ import SeoulMilk1_BE.global.service.S3Service;
 import SeoulMilk1_BE.post.domain.Post;
 import SeoulMilk1_BE.post.domain.type.Type;
 import SeoulMilk1_BE.post.dto.request.PostCreateRequest;
-import SeoulMilk1_BE.post.dto.response.PostCreateResponse;
-import SeoulMilk1_BE.post.dto.response.PostDeleteResponse;
-import SeoulMilk1_BE.post.dto.response.PostDetailResponse;
-import SeoulMilk1_BE.post.dto.response.PostUpdateResponse;
+import SeoulMilk1_BE.post.dto.response.*;
 import SeoulMilk1_BE.post.repository.PostRepository;
 import SeoulMilk1_BE.user.domain.User;
 import SeoulMilk1_BE.user.service.UserService;
@@ -20,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -28,7 +26,6 @@ public class PostService {
     private final PostRepository postRepository;
     private final UserService userService;
     private final S3Service s3Service;
-    private final CommentService commentService;
 
     public PostCreateResponse save(PostCreateRequest request, List<MultipartFile> files) {
         List<String> postImgList = s3Service.uploadFiles(files);
@@ -51,11 +48,11 @@ public class PostService {
 
     public PostDetailResponse findOne(Long postId) {
         Post post = postRepository.findById(postId).orElseThrow();
-
+        List<CommentReadResponse> comments = post.getCommentList().stream().map(c -> new CommentReadResponse(c.getId(), c.getUser().getName(), c.getText())).collect(Collectors.toList());
         // 조회 수 증가.
         post.updateViews();
 
-        return new PostDetailResponse(post.getPostId(), post.getUser().getName(), post.getTitle(), post.getContent(), post.getType(), post.getViews(), post.getPostImgUrl(), post.getCreatedAt(), post.getModifiedAt());
+        return new PostDetailResponse(post.getPostId(), post.getUser().getName(), post.getTitle(), post.getContent(), post.getType(), post.getViews(), post.getPostImgUrl(), post.getCreatedAt(), post.getModifiedAt(), comments);
     }
 
     public PostUpdateResponse update(Long postId, PostCreateRequest request, List<MultipartFile> files) {
@@ -68,17 +65,22 @@ public class PostService {
 
 
     public PostDeleteResponse delete(Long postId) {
+        Post post = postRepository.findById(postId).orElseThrow();
+
         // 댓글 존재하는지 검증.
-        if (!commentService.isExist(postId)) {
+        if (post.getCommentList().size() > 0) {
             throw new GeneralException(ErrorStatus.COMMENT_IS_EXIST);
         }
-
-        Post post = postRepository.findById(postId).orElseThrow();
 
         // 비활성일자 설정.
         post.setIsValid(false);
         post.setInactiveDate(LocalDateTime.now().plusDays(7));
 
         return new PostDeleteResponse(postId, post.getInactiveDate());
+    }
+
+    // 엔티티 조회용
+    public Post get(Long postId) {
+        return postRepository.findById(postId).orElseThrow(() -> new GeneralException(ErrorStatus.POST_NOT_FOUND));
     }
 }

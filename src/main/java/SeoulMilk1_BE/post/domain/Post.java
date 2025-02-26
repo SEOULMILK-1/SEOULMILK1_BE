@@ -72,4 +72,5 @@ public class Post extends BaseTimeEntity {
     public void updateViews() {
         this.views += 1;
     }
+
 }
