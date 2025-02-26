@@ -36,12 +36,12 @@ public class PostController {
         return ApiResponse.onSuccess(postService.findList(request));
     }
 
-    @PatchMapping("{postId}")
+    @PatchMapping("/{postId}")
     public ApiResponse<PostUpdateResponse> update(@PathVariable("postId") Long postId, @RequestPart PostCreateRequest request, @RequestPart List<MultipartFile> files) {
         return ApiResponse.onSuccess(postService.update(postId, request, files));
     }
 
-    @DeleteMapping("{postId}")
+    @DeleteMapping("/{postId}")
     public ApiResponse<PostDeleteResponse> delete(@PathVariable("postId") Long postId) {
         return ApiResponse.onSuccess(postService.delete(postId));
     }
