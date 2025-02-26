@@ -83,9 +83,8 @@ public class PostService {
             throw new GeneralException(ErrorStatus.COMMENT_IS_EXIST);
         }
 
-        // 비활성일자 설정.
-        post.setIsValid(false);
-        post.setInactiveDate(LocalDateTime.now().plusDays(7));
+        // 게시글 비활성화
+        post.deactivate();
 
         return new PostDeleteResponse(postId, post.getInactiveDate());
     }

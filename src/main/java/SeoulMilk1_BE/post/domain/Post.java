@@ -35,7 +35,6 @@ public class Post extends BaseTimeEntity {
     private Long views;
 
     @Column(name = "is_valid", nullable = false)
-    @Setter
     private Boolean isValid;
 
     @Enumerated(EnumType.STRING)
@@ -45,7 +44,6 @@ public class Post extends BaseTimeEntity {
     @CollectionTable(name = "post_img_list", joinColumns = @JoinColumn(name = "post_id"))
     private List<String> postImgUrl = new ArrayList<>();
 
-    @Setter
     private LocalDateTime inactiveDate;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
@@ -71,6 +69,11 @@ public class Post extends BaseTimeEntity {
 
     public void updateViews() {
         this.views += 1;
+    }
+
+    public void deactivate() {
+        this.isValid = false;
+        this.inactiveDate = LocalDateTime.now().plusDays(7);
     }
 
 }
