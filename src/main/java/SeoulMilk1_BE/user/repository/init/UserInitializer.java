@@ -12,8 +12,7 @@ import org.springframework.core.annotation.Order;
 import java.util.ArrayList;
 import java.util.List;
 
-import static SeoulMilk1_BE.user.domain.type.Role.ADMIN;
-import static SeoulMilk1_BE.user.domain.type.Role.USER;
+import static SeoulMilk1_BE.user.domain.type.Role.*;
 import static SeoulMilk1_BE.user.domain.type.Team.*;
 
 @Slf4j
@@ -38,6 +37,7 @@ public class UserInitializer implements ApplicationRunner {
                     .email("admin@naver.com")
                     .phone("01011112222")
                     .profileImageUrl("image.png")
+                    .isAssigned(true)
                     .role(ADMIN)
                     .team(AI)
                     .build();
@@ -49,7 +49,8 @@ public class UserInitializer implements ApplicationRunner {
                     .email("mincheol@naver.com")
                     .phone("01033337777")
                     .profileImageUrl("image.png")
-                    .role(USER)
+                    .isAssigned(true)
+                    .role(HQ_USER)
                     .team(SW)
                     .build();
 
@@ -60,7 +61,8 @@ public class UserInitializer implements ApplicationRunner {
                     .email("woojeong@naver.com")
                     .phone("01055559999")
                     .profileImageUrl("image.png")
-                    .role(USER)
+                    .isAssigned(true)
+                    .role(AGENCY_USER)
                     .team(FINANCE)
                     .build();
 

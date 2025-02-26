@@ -10,7 +10,8 @@ import java.util.Collections;
 @Getter
 public enum Role {
     ADMIN,
-    USER,
+    HQ_USER,
+    AGENCY_USER,
     ;
 
     public Collection<? extends GrantedAuthority> getAuthority() {
