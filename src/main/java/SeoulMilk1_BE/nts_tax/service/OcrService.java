@@ -25,14 +25,14 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class OcrService {
 
-    @Value("${ocr.secretKey2}")
+    @Value("${ocr.secretKey}")
     private String secret;
 
-    @Value("${ocr.api-url2}")
+    @Value("${ocr.api-url}")
     private String apiUrl;
 
     @Value("${ocr.template-id}")
-    private Integer templateIds;
+    private String templateIds;
 
     private final S3Service s3Service;
 
@@ -72,7 +72,9 @@ public class OcrService {
             image.put("data", encodeFileToBase64(multipartFile));
 
             JSONArray templateArray = new JSONArray();
-            templateArray.add(templateIds);
+            for (String id : templateIds.split(",")) {
+                templateArray.add(Integer.parseInt(id.trim())); // trim()으로 공백 제거
+            }
             image.put("templateIds", templateArray);
 
             JSONArray images = new JSONArray();
