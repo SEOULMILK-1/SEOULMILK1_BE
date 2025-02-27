@@ -17,10 +17,15 @@ public class AdminController {
 
     private final UserService userService;
 
-    @Operation(summary = "승인 대기중인 본사/대리점 사용자 조회", description = "승인 대기중인 본사/대리점 사용자 조회")
+    @Operation(summary = "승인 대기중인 본사/대리점 사용자 조회", description = "승인 대기중인 본사/대리점 사용자 조회 <br><br> " +
+            "page : 조회할 페이지 번호 <br> " +
+            "size : 한 페이지에 조회할 사용자 수")
     @GetMapping("/pending")
-    public ApiResponse<?> findPendingUsers() {
-        return ApiResponse.onSuccess(userService.findPendingUsers());
+    public ApiResponse<?> findPendingUsers(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        return ApiResponse.onSuccess(userService.findPendingUsers(page, size));
     }
 
     @Operation(summary = "승인 대기중인 사용자 승인", description = "승인 대기중인 본사/대리점 사용자 승인")
