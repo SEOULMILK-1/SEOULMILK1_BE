@@ -1,6 +1,7 @@
 package SeoulMilk1_BE.user.controller;
 
 import SeoulMilk1_BE.global.apiPayload.ApiResponse;
+import SeoulMilk1_BE.user.dto.response.PendingUserResponseList;
 import SeoulMilk1_BE.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -21,7 +22,7 @@ public class AdminController {
             "page : 조회할 페이지 번호 <br> " +
             "size : 한 페이지에 조회할 사용자 수")
     @GetMapping("/pending")
-    public ApiResponse<?> findPendingUsers(
+    public ApiResponse<PendingUserResponseList> findPendingUsers(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
