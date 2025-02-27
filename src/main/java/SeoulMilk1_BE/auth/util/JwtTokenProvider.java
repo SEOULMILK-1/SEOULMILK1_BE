@@ -3,7 +3,6 @@ package SeoulMilk1_BE.auth.util;
 import SeoulMilk1_BE.auth.service.type.JwtProperties;
 import SeoulMilk1_BE.auth.service.type.JwtUserDetails;
 import SeoulMilk1_BE.user.domain.User;
-import SeoulMilk1_BE.user.exception.UserNotFoundException;
 import SeoulMilk1_BE.user.repository.UserRepository;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
@@ -18,8 +17,6 @@ import org.springframework.stereotype.Component;
 import java.security.Key;
 import java.util.Date;
 import java.util.Map;
-
-import static SeoulMilk1_BE.global.apiPayload.code.status.ErrorStatus.USER_NOT_FOUND;
 
 @Slf4j
 @Component
@@ -99,16 +96,6 @@ public class JwtTokenProvider {
             log.error("Token validation error: ", e);
             return false;
         }
-    }
-
-    public User getUser(String token) {
-        Long id = Long.parseLong(Jwts.parserBuilder().setSigningKey(key).build()
-                .parseClaimsJws(token).getBody().getSubject());
-
-        log.info("in getUser() id: {}", id);
-
-        return userRepository.findById(id)
-                .orElseThrow(() -> new UserNotFoundException(USER_NOT_FOUND));
     }
 
     public JwtUserDetails getJwtUserDetails(String token) {

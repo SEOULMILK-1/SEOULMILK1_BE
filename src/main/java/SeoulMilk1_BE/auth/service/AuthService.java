@@ -29,7 +29,10 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
 
     public String getTestToken(Long userId) {
-        return jwtTokenProvider.createAccessToken(userRepository.findById(userId).orElseThrow());
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException(USER_NOT_FOUND));
+
+        return jwtTokenProvider.createAccessToken(user);
     }
 
     public String validateEmployeeId(Long employeeId) {
