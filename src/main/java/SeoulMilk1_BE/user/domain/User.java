@@ -2,7 +2,6 @@ package SeoulMilk1_BE.user.domain;
 
 import SeoulMilk1_BE.global.domain.BaseTimeEntity;
 import SeoulMilk1_BE.user.domain.type.Role;
-import SeoulMilk1_BE.user.domain.type.Team;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -44,17 +43,16 @@ public class User extends BaseTimeEntity {
     @Column(name = "account")
     private String account;
 
+    @Column(name = "team", nullable = false)
+    private String team;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false)
     private Role role;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "team", nullable = false)
-    private Team team;
-
     @Builder
     public User(Long employeeId, String password, String name, String email, Boolean isAssigned,
-                String phone, String profileImageUrl, String account, Role role, Team team) {
+                String phone, String profileImageUrl, String account, Role role, String team) {
         this.employeeId = employeeId;
         this.password = password;
         this.name = name;

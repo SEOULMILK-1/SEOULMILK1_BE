@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static SeoulMilk1_BE.user.domain.type.Role.*;
-import static SeoulMilk1_BE.user.domain.type.Team.*;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -41,7 +40,7 @@ public class UserInitializer implements ApplicationRunner {
                     .profileImageUrl("image.png")
                     .isAssigned(true)
                     .role(ADMIN)
-                    .team(AI)
+                    .team("서울우유협동조합")
                     .build();
 
             User DUMMY_USER1 = User.builder()
@@ -53,7 +52,7 @@ public class UserInitializer implements ApplicationRunner {
                     .profileImageUrl("image.png")
                     .isAssigned(true)
                     .role(HQ_USER)
-                    .team(SW)
+                    .team("서울우유태평고객센터")
                     .build();
 
             User DUMMY_USER2 = User.builder()
@@ -65,7 +64,7 @@ public class UserInitializer implements ApplicationRunner {
                     .profileImageUrl("image.png")
                     .isAssigned(true)
                     .role(CUSTOMER_USER)
-                    .team(FINANCE)
+                    .team("서울우유용인고객센터")
                     .build();
 
             userList.add(DUMMY_ADMIN);
