@@ -35,9 +35,9 @@ public class AdminController {
         return ApiResponse.onSuccess(userService.approvePendingUser(userId));
     }
 
-    @Operation(summary = "승인 대기중인 사용자 거절", description = "승인 대기중인 본사/대리점 사용자 거절")
-    @PostMapping("/reject/{userId}")
-    public ApiResponse<?> rejectPendingUser(@PathVariable Long userId) {
-        return ApiResponse.onSuccess(userService.rejectPendingUser(userId));
+    @Operation(summary = "회원 삭제", description = "회원을 삭제하는 기능")
+    @DeleteMapping("/{userId}")
+    public ApiResponse<?> deleteUser(@PathVariable Long userId) {
+        return ApiResponse.onSuccess(userService.deleteUser(userId));
     }
 }
