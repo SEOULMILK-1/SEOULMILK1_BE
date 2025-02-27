@@ -64,7 +64,7 @@ public class UserInitializer implements ApplicationRunner {
                     .phone("01055559999")
                     .profileImageUrl("image.png")
                     .isAssigned(true)
-                    .role(AGENCY_USER)
+                    .role(CUSTOMER_USER)
                     .team(FINANCE)
                     .build();
 
