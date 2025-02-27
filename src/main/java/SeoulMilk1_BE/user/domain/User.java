@@ -18,7 +18,7 @@ public class User extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
-    private Long userId;
+    private Long id;
 
     @Column(name = "employee_id", nullable = false)
     private Long employeeId;
@@ -31,6 +31,9 @@ public class User extends BaseTimeEntity {
 
     @Column(name = "email", nullable = false)
     private String email;
+
+    @Column(name = "is_assigned", nullable = false)
+    private Boolean isAssigned;
 
     @Column(name = "phone")
     private String phone;
@@ -47,14 +50,19 @@ public class User extends BaseTimeEntity {
     private Team team;
 
     @Builder
-    public User(Long employeeId, String password, String name, String email, String phone, String profileImageUrl, Role role, Team team) {
+    public User(Long employeeId, String password, String name, String email, Boolean isAssigned, String phone, String profileImageUrl, Role role, Team team) {
         this.employeeId = employeeId;
         this.password = password;
         this.name = name;
         this.email = email;
+        this.isAssigned = isAssigned;
         this.phone = phone;
         this.profileImageUrl = profileImageUrl;
         this.role = role;
         this.team = team;
+    }
+
+    public void assign() {
+        this.isAssigned = true;
     }
 }

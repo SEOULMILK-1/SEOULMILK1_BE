@@ -25,7 +25,7 @@ public class CommentService {
     private final PostService postService;
 
     public CommentCreateResponse create(CommentCreateRequest request) {
-        User user = userService.findOne(request.userId());
+        User user = userService.findUser(request.userId());
         Post post = postService.get(request.postId());
         Comment comment = CommentCreateRequest.of(user, post, request.text());
 

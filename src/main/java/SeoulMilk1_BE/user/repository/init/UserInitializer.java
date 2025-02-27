@@ -8,12 +8,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.core.annotation.Order;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static SeoulMilk1_BE.user.domain.type.Role.ADMIN;
-import static SeoulMilk1_BE.user.domain.type.Role.USER;
+import static SeoulMilk1_BE.user.domain.type.Role.*;
 import static SeoulMilk1_BE.user.domain.type.Team.*;
 
 @Slf4j
@@ -23,6 +23,7 @@ import static SeoulMilk1_BE.user.domain.type.Team.*;
 public class UserInitializer implements ApplicationRunner {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public void run(ApplicationArguments args) {
@@ -33,34 +34,37 @@ public class UserInitializer implements ApplicationRunner {
 
             User DUMMY_ADMIN = User.builder()
                     .employeeId(123456L)
-                    .password("password")
+                    .password(passwordEncoder.encode("password"))
                     .name("관리자")
                     .email("admin@naver.com")
                     .phone("01011112222")
                     .profileImageUrl("image.png")
+                    .isAssigned(true)
                     .role(ADMIN)
                     .team(AI)
                     .build();
 
             User DUMMY_USER1 = User.builder()
                     .employeeId(123789L)
-                    .password("password")
+                    .password(passwordEncoder.encode("password"))
                     .name("김민철")
                     .email("mincheol@naver.com")
                     .phone("01033337777")
                     .profileImageUrl("image.png")
-                    .role(USER)
+                    .isAssigned(true)
+                    .role(HQ_USER)
                     .team(SW)
                     .build();
 
             User DUMMY_USER2 = User.builder()
                     .employeeId(456789L)
-                    .password("password")
+                    .password(passwordEncoder.encode("password"))
                     .name("이우정")
                     .email("woojeong@naver.com")
                     .phone("01055559999")
                     .profileImageUrl("image.png")
-                    .role(USER)
+                    .isAssigned(true)
+                    .role(AGENCY_USER)
                     .team(FINANCE)
                     .build();
 
