@@ -202,13 +202,13 @@ public class NtsTax extends BaseTimeEntity {
                 .issueId(formatInputData(getInferText(response, "승인번호")))
                 .arap(AR)   // 임시 지정
                 .suId(formatInputData(getInferText(response, "공급자 등록번호")))
-                .suDeptName(getInferText(response, "공급자 상호 법인명"))
-                .suPersName(getInferText(response, "공급자 성명"))
+                .suDeptName(formatInputData(getInferText(response, "공급자 상호 법인명")))
+                .suPersName(formatName(getInferText(response, "공급자 성명")))
                 .suAddr(getInferText(response, "공급자 사업장 주소"))
                 .suEmail(getInferText(response, "공급자 이메일"))
                 .ipId(formatInputData(getInferText(response, "공급받는자 등록번호")))
                 .ipName(getInferText(response, "공급받는자 상호 법인명"))
-                .ipPersName1(getInferText(response, "공급받는자 성명"))
+                .ipPersName1(formatName(getInferText(response, "공급받는자 성명")))
                 .ipAddr(getInferText(response, "공급받는자 사업장 주소"))
                 .issueDate(formatInputData(getInferText(response, "작성일자")))
                 .chargeTotal(stringToLong(getInferText(response, "공급가액")))
@@ -244,5 +244,13 @@ public class NtsTax extends BaseTimeEntity {
         }
 
         return inputData.replace("-", "").replace("/", "").replace(" ", "");
+    }
+
+    private static String formatName(String name) {
+        if (name == null || name.isEmpty()) {
+            return "";
+        }
+
+        return name.split(" ")[0];
     }
 }
