@@ -3,13 +3,12 @@ package SeoulMilk1_BE.nts_tax.dto.request;
 import lombok.Builder;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
 @Builder
-public record OcrRequest(
+public record OcrApiRequest(
         String version,
         String requestId,
         Long timestamp,
@@ -24,8 +23,8 @@ public record OcrRequest(
             List<Integer> templateIds
     ) {}
 
-    public static OcrRequest from(String ext, String imageUrl, String templateIds, MultipartFile file) throws IOException {
-        return OcrRequest.builder()
+    public static OcrApiRequest from(String ext, String imageUrl, String templateIds, MultipartFile file) {
+        return OcrApiRequest.builder()
                 .version("V2")
                 .requestId(UUID.randomUUID().toString())
                 .lang("ko")
