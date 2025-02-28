@@ -9,6 +9,7 @@ import java.util.Locale;
 
 @Builder
 public record CustomOcrResponse(
+        Long ntsTaxId,
         String issueId,
         String suId,
         String ipId,
@@ -17,6 +18,7 @@ public record CustomOcrResponse(
 ) {
     public static CustomOcrResponse from(NtsTax ntsTax) {
         return CustomOcrResponse.builder()
+                .ntsTaxId(ntsTax.getId())
                 .issueId(formatIssueId(ntsTax.getIssueId()))
                 .suId(formatSuAndIpId(ntsTax.getSuId()))
                 .ipId(formatSuAndIpId(ntsTax.getIpId()))
