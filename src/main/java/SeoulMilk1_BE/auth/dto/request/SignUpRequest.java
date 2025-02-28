@@ -2,7 +2,6 @@ package SeoulMilk1_BE.auth.dto.request;
 
 import SeoulMilk1_BE.user.domain.User;
 import SeoulMilk1_BE.user.domain.type.Role;
-import SeoulMilk1_BE.user.domain.type.Team;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -21,7 +20,7 @@ public record SignUpRequest(
         String email,
         String phone,
         Role role,
-        Team team
+        String team
 ) {
     public User toUser(PasswordEncoder passwordEncoder) {
         return User.builder()
