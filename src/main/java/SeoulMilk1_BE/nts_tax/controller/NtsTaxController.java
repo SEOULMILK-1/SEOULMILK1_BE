@@ -33,12 +33,18 @@ public class NtsTaxController {
         return ApiResponse.onSuccess(ocrService.callOcrApi(userId, file));
     }
 
-    @Operation(summary = "OCR 텍스트 수정", description = "OCR에서 추출한 텍스트를 수정")
-    @PutMapping("/ocr/{ntsTaxId}")
+    @Operation(summary = "세금명세서 수정", description = "OCR에서 추출한 텍스트를 수정")
+    @PutMapping("/{ntsTaxId}")
     public ApiResponse<String> updateNtsTax(
             @PathVariable Long ntsTaxId,
             @RequestBody UpdateTaxRequest request
     ) {
         return ApiResponse.onSuccess(ntsTaxService.updateNtsTax(ntsTaxId, request));
+    }
+
+    @Operation(summary = "세금명세서 삭제", description = "세금명세서를 DB에서 삭제")
+    @DeleteMapping("/{ntsTaxId}")
+    public ApiResponse<String> deleteNtsTax(@PathVariable Long ntsTaxId) {
+        return ApiResponse.onSuccess(ntsTaxService.deleteNtsTax(ntsTaxId));
     }
 }

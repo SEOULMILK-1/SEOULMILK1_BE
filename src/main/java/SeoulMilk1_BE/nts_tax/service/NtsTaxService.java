@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import static SeoulMilk1_BE.global.apiPayload.code.status.ErrorStatus.TAX_NOT_FOUND;
+import static SeoulMilk1_BE.nts_tax.util.TaxConstants.DELETE_SUCCESS;
 import static SeoulMilk1_BE.nts_tax.util.TaxConstants.UPDATE_SUCCESS;
 
 @Service
@@ -38,6 +39,14 @@ public class NtsTaxService {
         ntsTax.updateNtsTax(request);
 
         return UPDATE_SUCCESS.getMessage();
+    }
+
+    @Transactional
+    public String deleteNtsTax(Long ntsTaxId) {
+        NtsTax ntsTax = findById(ntsTaxId);
+        ntsTaxRepository.delete(ntsTax);
+
+        return DELETE_SUCCESS.getMessage();
     }
 
     public NtsTax findById(Long id) {
