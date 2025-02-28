@@ -1,11 +1,11 @@
-package SeoulMilk1_BE.user.dto.response;
+package SeoulMilk1_BE.nts_tax.dto.response;
 
 import lombok.Builder;
 
 import java.util.List;
 
 @Builder
-public record OcrResponse(
+public record OcrApiResponse(
         String version,
         String requestId,
         long timestamp,
@@ -46,14 +46,5 @@ public record OcrResponse(
                 double inferConfidence
         ) {
         }
-    }
-
-    public static OcrResponse emptyResponse() {
-        return OcrResponse.builder()
-                .version("error")
-                .requestId("error")
-                .timestamp(0)
-                .images(null)
-                .build();
     }
 }

@@ -1,7 +1,7 @@
 package SeoulMilk1_BE.nts_tax.util;
 
-import SeoulMilk1_BE.nts_tax.dto.request.OcrRequest;
-import SeoulMilk1_BE.user.dto.response.OcrResponse;
+import SeoulMilk1_BE.nts_tax.dto.request.OcrApiRequest;
+import SeoulMilk1_BE.nts_tax.dto.response.OcrApiResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestHeader;
 public interface OcrClient {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    OcrResponse callOcrApi(
+    OcrApiResponse callOcrApi(
             @RequestHeader("X-OCR-SECRET") String secretKey,
-            @RequestBody OcrRequest ocrRequest
+            @RequestBody OcrApiRequest ocrApiRequest
     );
 }

@@ -1,9 +1,12 @@
 package SeoulMilk1_BE.nts_tax.service;
 
 import SeoulMilk1_BE.global.service.S3Service;
-import SeoulMilk1_BE.nts_tax.dto.request.OcrRequest;
+import SeoulMilk1_BE.nts_tax.domain.NtsTax;
+import SeoulMilk1_BE.nts_tax.dto.request.OcrApiRequest;
+import SeoulMilk1_BE.nts_tax.dto.response.CustomOcrResponse;
 import SeoulMilk1_BE.nts_tax.util.OcrClient;
-import SeoulMilk1_BE.user.dto.response.OcrResponse;
+import SeoulMilk1_BE.nts_tax.dto.response.OcrApiResponse;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,22 +27,25 @@ public class OcrService {
 
     private final S3Service s3Service;
     private final OcrClient ocrClient;
+    private final NtsTaxService ntsTaxService;
 
-    public OcrResponse callApi(MultipartFile multipartFile) {
+    public CustomOcrResponse callOcrApi(Long userId, MultipartFile multipartFile) {
         try {
             String imageUrl = s3Service.uploadFile(multipartFile);
             String ext = getFileExtension(multipartFile);
 
-            OcrRequest request = OcrRequest.from(ext, imageUrl, templateIds, multipartFile);
+            OcrApiRequest request = OcrApiRequest.from(ext, imageUrl, templateIds, multipartFile);
 
             log.info("Sending request: {}", new ObjectMapper().writeValueAsString(request));
-            OcrResponse response = ocrClient.callOcrApi(secret, request);
+            OcrApiResponse response = ocrClient.callOcrApi(secret, request);
             log.info("OCR API Response: {}", response);
 
-            return response;
-        } catch (Exception e) {
+            NtsTax ntsTax = ntsTaxService.saveNtsTax(response, userId, imageUrl);
+
+            return CustomOcrResponse.from(ntsTax);
+        } catch (JsonProcessingException e) {
             log.error("OCR API 호출 중 오류 발생", e);
-            return OcrResponse.emptyResponse();
+            return CustomOcrResponse.from(e.getMessage());
         }
     }
 
