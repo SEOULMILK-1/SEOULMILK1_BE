@@ -2,6 +2,7 @@ package SeoulMilk1_BE.nts_tax.domain;
 
 import SeoulMilk1_BE.global.domain.BaseTimeEntity;
 import SeoulMilk1_BE.nts_tax.domain.type.*;
+import SeoulMilk1_BE.nts_tax.dto.request.UpdateTaxRequest;
 import SeoulMilk1_BE.user.domain.User;
 import SeoulMilk1_BE.nts_tax.dto.response.OcrApiResponse;
 import jakarta.persistence.*;
@@ -219,6 +220,14 @@ public class NtsTax extends BaseTimeEntity {
                 .user(user)
                 .taxImgUrl(imageUrl)
                 .build();
+    }
+
+    public void updateNtsTax(UpdateTaxRequest request) {
+        this.issueId = formatInputData(request.issueId());
+        this.suId = formatInputData(request.suId());
+        this.ipId = formatInputData(request.ipId());
+        this.issueDate = formatInputData(request.issueDate());
+        this.chargeTotal = stringToLong(request.chargeTotal());
     }
 
     private static String getInferText(OcrApiResponse response, String fieldName) {

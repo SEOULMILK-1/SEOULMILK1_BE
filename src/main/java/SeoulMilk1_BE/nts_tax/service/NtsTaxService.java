@@ -1,6 +1,7 @@
 package SeoulMilk1_BE.nts_tax.service;
 
 import SeoulMilk1_BE.nts_tax.domain.NtsTax;
+import SeoulMilk1_BE.nts_tax.dto.request.UpdateTaxRequest;
 import SeoulMilk1_BE.nts_tax.exception.NtsTaxNotFoundException;
 import SeoulMilk1_BE.nts_tax.repository.NtsTaxRepository;
 import SeoulMilk1_BE.nts_tax.dto.response.OcrApiResponse;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import static SeoulMilk1_BE.global.apiPayload.code.status.ErrorStatus.TAX_NOT_FOUND;
+import static SeoulMilk1_BE.nts_tax.util.TaxConstants.UPDATE_SUCCESS;
 
 @Service
 @RequiredArgsConstructor
@@ -28,6 +30,19 @@ public class NtsTaxService {
         ntsTaxRepository.save(ntsTax);
 
         return findByIssueId(ntsTax.getIssueId());
+    }
+
+    @Transactional
+    public String updateNtsTax(Long ntsTaxId, UpdateTaxRequest request) {
+        NtsTax ntsTax = findById(ntsTaxId);
+        ntsTax.updateNtsTax(request);
+
+        return UPDATE_SUCCESS.getMessage();
+    }
+
+    public NtsTax findById(Long id) {
+        return ntsTaxRepository.findById(id)
+                .orElseThrow(() -> new NtsTaxNotFoundException(TAX_NOT_FOUND));
     }
 
     public NtsTax findByIssueId(String issueId) {
