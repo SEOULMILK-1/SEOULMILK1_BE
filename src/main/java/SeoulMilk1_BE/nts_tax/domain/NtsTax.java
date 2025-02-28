@@ -248,7 +248,7 @@ public class NtsTax extends BaseTimeEntity {
     }
 
     private static String formatInputData(String inputData) {
-        if (inputData == null || inputData.isEmpty()) {
+        if (!StringUtils.hasText(inputData) || inputData.isEmpty()) {
             return "";
         }
 
@@ -256,7 +256,7 @@ public class NtsTax extends BaseTimeEntity {
     }
 
     private static String formatName(String name) {
-        if (name == null || name.isEmpty()) {
+        if (!StringUtils.hasText(name) || name.isEmpty()) {
             return "";
         }
 

@@ -34,7 +34,7 @@ public record CustomOcrResponse(
     }
 
     private static String formatIssueId(String issueId) {
-        if (issueId == null || issueId.length() != 24) {
+        if (!StringUtils.hasText(issueId) || issueId.length() != 24) {
             return issueId;
         }
 
