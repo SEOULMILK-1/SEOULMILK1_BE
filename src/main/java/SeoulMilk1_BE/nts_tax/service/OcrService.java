@@ -34,7 +34,7 @@ public class OcrService {
             String imageUrl = s3Service.uploadFile(multipartFile);
             String ext = getFileExtension(multipartFile);
 
-            OcrApiRequest request = OcrApiRequest.from(ext, imageUrl, templateIds, multipartFile);
+            OcrApiRequest request = OcrApiRequest.of(ext, imageUrl, templateIds, multipartFile);
 
             log.info("Sending request: {}", new ObjectMapper().writeValueAsString(request));
             OcrApiResponse response = ocrClient.callOcrApi(secret, request);

@@ -23,7 +23,7 @@ public record OcrApiRequest(
             List<Integer> templateIds
     ) {}
 
-    public static OcrApiRequest from(String ext, String imageUrl, String templateIds, MultipartFile file) {
+    public static OcrApiRequest of(String ext, String imageUrl, String templateIds, MultipartFile file) {
         return OcrApiRequest.builder()
                 .version("V2")
                 .requestId(UUID.randomUUID().toString())
