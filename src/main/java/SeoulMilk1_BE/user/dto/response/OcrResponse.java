@@ -1,7 +1,10 @@
 package SeoulMilk1_BE.user.dto.response;
 
+import lombok.Builder;
+
 import java.util.List;
 
+@Builder
 public record OcrResponse(
         String version,
         String requestId,
@@ -18,8 +21,6 @@ public record OcrResponse(
             List<Field> fields,
             Title title
     ) {
-
-
         public record MatchedTemplate(
                 int id,
                 String name
@@ -55,7 +56,14 @@ public record OcrResponse(
                 double height
         ) {
         }
+    }
 
-
+    public static OcrResponse emptyResponse() {
+        return OcrResponse.builder()
+                .version("error")
+                .requestId("error")
+                .timestamp(0)
+                .images(null)
+                .build();
     }
 }

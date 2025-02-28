@@ -29,6 +29,6 @@ public class NtsTaxController {
             @AuthenticationPrincipal Long userId,
             @RequestParam MultipartFile file
     ) {
-        return ApiResponse.onSuccess(ocrService.callApi("POST", file));
+        return ApiResponse.onSuccess(ocrService.callApi(file));
     }
 }
