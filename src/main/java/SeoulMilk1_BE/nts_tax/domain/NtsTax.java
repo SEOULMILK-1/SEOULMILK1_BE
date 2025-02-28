@@ -235,7 +235,7 @@ public class NtsTax extends BaseTimeEntity {
             return 0L;
         }
 
-        return Long.parseLong(inputText.replace(",", ""));
+        return Long.parseLong(inputText.replace(",", "").replace(".", ""));
     }
 
     private static String formatInputData(String inputData) {
