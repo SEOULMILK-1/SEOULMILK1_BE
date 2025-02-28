@@ -34,7 +34,6 @@ public record OcrResponse(
 
         public record Field(
                 String name,
-                Bounding bounding,
                 String valueType,
                 String inferText,
                 double inferConfidence
@@ -43,17 +42,8 @@ public record OcrResponse(
 
         public record Title(
                 String name,
-                Bounding bounding,
                 String inferText,
                 double inferConfidence
-        ) {
-        }
-
-        public record Bounding(
-                double top,
-                double left,
-                double width,
-                double height
         ) {
         }
     }
