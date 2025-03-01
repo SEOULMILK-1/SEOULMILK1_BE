@@ -4,11 +4,11 @@ import SeoulMilk1_BE.user.domain.Team;
 import lombok.Builder;
 
 @Builder
-public record HqSearchCsResponse(
+public record HqSearchCsNameResponse(
         String csName
 ) {
-    public static HqSearchCsResponse from(Team team) {
-        return HqSearchCsResponse.builder()
+    public static HqSearchCsNameResponse from(Team team) {
+        return HqSearchCsNameResponse.builder()
                 .csName(team.getName())
                 .build();
     }

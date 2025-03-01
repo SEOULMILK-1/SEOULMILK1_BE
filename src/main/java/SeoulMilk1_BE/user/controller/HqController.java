@@ -2,7 +2,7 @@ package SeoulMilk1_BE.user.controller;
 
 import SeoulMilk1_BE.global.apiPayload.ApiResponse;
 import SeoulMilk1_BE.nts_tax.dto.response.HqTaxResponseList;
-import SeoulMilk1_BE.user.dto.response.HqSearchCsResponseList;
+import SeoulMilk1_BE.user.dto.response.HqSearchCsNameResponseList;
 import SeoulMilk1_BE.user.service.HqService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -47,7 +47,7 @@ public class HqController {
 
     @Operation(summary = "고객센터명 조회", description = "고객센터 지점 검색에 사용되는 키워드를 입력해주세요")
     @GetMapping("/search/cs")
-    public ApiResponse<HqSearchCsResponseList> searchCs(@RequestParam(required = false) String keyword) {
-        return ApiResponse.onSuccess(hqService.searchCs(keyword));
+    public ApiResponse<HqSearchCsNameResponseList> searchCs(@RequestParam(required = false) String keyword) {
+        return ApiResponse.onSuccess(hqService.searchCsName(keyword));
     }
 }
