@@ -2,7 +2,6 @@ package SeoulMilk1_BE.user.domain;
 
 import SeoulMilk1_BE.global.domain.BaseTimeEntity;
 import SeoulMilk1_BE.user.domain.type.Role;
-import SeoulMilk1_BE.user.domain.type.Team;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -19,6 +18,10 @@ public class User extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
     private Long id;
+
+    @JoinColumn(name = "team_id")
+    @OneToOne(fetch = FetchType.LAZY)
+    private Team team;
 
     @Column(name = "employee_id", nullable = false)
     private Long employeeId;
@@ -43,10 +46,6 @@ public class User extends BaseTimeEntity {
 
     @Column(name = "account")
     private String account;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "team", nullable = false)
-    private Team team;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false)

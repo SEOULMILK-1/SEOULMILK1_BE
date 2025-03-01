@@ -23,7 +23,7 @@ import static SeoulMilk1_BE.global.apiPayload.code.status.ErrorStatus.USER_NOT_F
 
 @Slf4j
 @RequiredArgsConstructor
-@Order(3)
+@Order(4)
 @DummyDataInit
 public class CommentInitializer implements ApplicationRunner {
     private final CommentRepository commentRepository;

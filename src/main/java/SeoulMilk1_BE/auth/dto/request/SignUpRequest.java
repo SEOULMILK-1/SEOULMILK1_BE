@@ -1,8 +1,8 @@
 package SeoulMilk1_BE.auth.dto.request;
 
+import SeoulMilk1_BE.user.domain.Team;
 import SeoulMilk1_BE.user.domain.User;
 import SeoulMilk1_BE.user.domain.type.Role;
-import SeoulMilk1_BE.user.domain.type.Team;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
