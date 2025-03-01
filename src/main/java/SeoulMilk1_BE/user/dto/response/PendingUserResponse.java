@@ -2,6 +2,7 @@ package SeoulMilk1_BE.user.dto.response;
 
 import SeoulMilk1_BE.user.domain.User;
 import SeoulMilk1_BE.user.domain.type.Role;
+import SeoulMilk1_BE.user.domain.type.Team;
 import lombok.Builder;
 import org.springframework.util.StringUtils;
 
@@ -15,7 +16,7 @@ public record PendingUserResponse(
         String name,
         String phone,
         Role role,
-        String team,
+        Team team,
         String createdAt
 ) {
     public static PendingUserResponse from(User user) {
