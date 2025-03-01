@@ -5,6 +5,9 @@ import SeoulMilk1_BE.nts_tax.dto.response.HqTaxResponse;
 import SeoulMilk1_BE.nts_tax.dto.response.HqTaxResponseList;
 import SeoulMilk1_BE.nts_tax.repository.NtsTaxRepository;
 import SeoulMilk1_BE.nts_tax.repository.NtsTaxRepositoryCustom;
+import SeoulMilk1_BE.user.dto.response.HqSearchCsResponse;
+import SeoulMilk1_BE.user.dto.response.HqSearchCsResponseList;
+import SeoulMilk1_BE.user.repository.TeamRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -24,6 +27,7 @@ public class HqService {
 
     private final NtsTaxRepository ntsTaxRepository;
     private final NtsTaxRepositoryCustom ntsTaxRepositoryCustom;
+    private final TeamRepository teamRepository;
 
     public HqTaxResponseList getTaxInfo(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
@@ -48,6 +52,14 @@ public class HqService {
         List<HqTaxResponse> responseList = hqTaxResponsePage.getContent();
 
         return HqTaxResponseList.from(responseList);
+    }
+
+    public HqSearchCsResponseList searchCs(String keyword) {
+        List<HqSearchCsResponse> responseList = teamRepository.findByNameContaining(keyword).stream()
+                .map(HqSearchCsResponse::from)
+                .toList();
+
+        return HqSearchCsResponseList.from(responseList);
     }
 
     private static String formatInputData(String inputData) {
