@@ -63,6 +63,10 @@ dependencies {
 
 	// OpenFeign
 	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+
+	// codef
+	implementation 'io.codef.api:easycodef-java:1.0.6'
+	implementation 'org.json:json:20210307'
 }
 
 tasks.named('test') {
