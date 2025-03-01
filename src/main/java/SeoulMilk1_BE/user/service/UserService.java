@@ -1,6 +1,7 @@
 package SeoulMilk1_BE.user.service;
 
 import SeoulMilk1_BE.user.domain.User;
+import SeoulMilk1_BE.user.dto.response.UserResponse;
 import SeoulMilk1_BE.user.exception.UserNotFoundException;
 import SeoulMilk1_BE.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +17,10 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-
+    public UserResponse getUserInfo(Long userId) {
+        User user = findUser(userId);
+        return UserResponse.from(user);
+    }
 
     public User findUser(Long userId) {
         return userRepository.findById(userId)
