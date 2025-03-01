@@ -7,6 +7,8 @@ import SeoulMilk1_BE.nts_tax.repository.NtsTaxRepository;
 import SeoulMilk1_BE.nts_tax.repository.NtsTaxRepositoryCustom;
 import SeoulMilk1_BE.user.dto.response.HqSearchCsNameResponse;
 import SeoulMilk1_BE.user.dto.response.HqSearchCsNameResponseList;
+import SeoulMilk1_BE.user.dto.response.HqSearchCsResponse;
+import SeoulMilk1_BE.user.dto.response.HqSearchCsResponseList;
 import SeoulMilk1_BE.user.repository.TeamRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -60,6 +62,14 @@ public class HqService {
                 .toList();
 
         return HqSearchCsNameResponseList.from(responseList);
+    }
+
+    public HqSearchCsResponseList searchCs(String keyword) {
+        List<HqSearchCsResponse> responseList = teamRepository.findByNameContaining(keyword).stream()
+                .map(HqSearchCsResponse::from)
+                .toList();
+
+        return HqSearchCsResponseList.from(responseList);
     }
 
     private static String formatInputData(String inputData) {

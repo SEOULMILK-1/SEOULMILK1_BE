@@ -3,6 +3,7 @@ package SeoulMilk1_BE.user.controller;
 import SeoulMilk1_BE.global.apiPayload.ApiResponse;
 import SeoulMilk1_BE.nts_tax.dto.response.HqTaxResponseList;
 import SeoulMilk1_BE.user.dto.response.HqSearchCsNameResponseList;
+import SeoulMilk1_BE.user.dto.response.HqSearchCsResponseList;
 import SeoulMilk1_BE.user.service.HqService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -13,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "Hq", description = "본사 직원 관련 API")
+@Tag(name = "HQ", description = "본사 직원 관련 API")
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -45,9 +46,17 @@ public class HqController {
         return ApiResponse.onSuccess(hqService.searchTax(page, size, keyword, startDate, endDate, months));
     }
 
-    @Operation(summary = "고객센터명 조회", description = "고객센터 지점 검색에 사용되는 키워드를 입력해주세요")
-    @GetMapping("/search/cs")
+    @Operation(summary = "고객센터명 조회", description = "고객센터 지점 검색에 사용되는 키워드를 입력해주세요 <br>" +
+            "키워드를 포함하는 모든 고객센터 지점명이 제공됩니다")
+    @GetMapping("/search/cs/name")
     public ApiResponse<HqSearchCsNameResponseList> searchCs(@RequestParam(required = false) String keyword) {
         return ApiResponse.onSuccess(hqService.searchCsName(keyword));
+    }
+
+    @Operation(summary = "고객센터 지점 조회", description = "키워드를 포함하는 고객센터 검색에 사용되는 API입니다 <br>" +
+            "고객센터 정보들이 제공됩니다")
+    @GetMapping("/search/cs/info")
+    public ApiResponse<HqSearchCsResponseList> searchCsInfo(@RequestParam(required = false) String keyword) {
+        return ApiResponse.onSuccess(hqService.searchCs(keyword));
     }
 }
