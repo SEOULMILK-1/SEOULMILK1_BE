@@ -53,7 +53,7 @@ public class UserInitializer implements ApplicationRunner {
                     .profileImageUrl("image.png")
                     .isAssigned(true)
                     .role(HQ_USER)
-                    .team(AGENCY_TP)
+                    .team(CS_TP)
                     .build();
 
             User DUMMY_USER2 = User.builder()
@@ -64,8 +64,8 @@ public class UserInitializer implements ApplicationRunner {
                     .phone("01055559999")
                     .profileImageUrl("image.png")
                     .isAssigned(true)
-                    .role(AGENCY_USER)
-                    .team(AGENCY_YI)
+                    .role(CS_USER)
+                    .team(CS_YI)
                     .build();
 
             userList.add(DUMMY_ADMIN);

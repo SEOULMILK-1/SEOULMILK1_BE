@@ -13,7 +13,7 @@ import java.util.Collections;
 public enum Role {
     ADMIN("ROLE_ADMIN"),
     HQ_USER("ROLE_HQ_USER"),
-    AGENCY_USER("ROLE_AGENCY_USER"),
+    CS_USER("ROLE_CS_USER"),
     ;
 
     private final String authority;
