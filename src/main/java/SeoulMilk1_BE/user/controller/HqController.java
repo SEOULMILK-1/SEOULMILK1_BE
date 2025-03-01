@@ -23,9 +23,8 @@ public class HqController {
     private final HqService hqService;
 
     @Operation(summary = "이번 달 세금계산서 조회", description = "page : 조회할 페이지 번호 <br> size : 한 페이지에 조회할 사용자 수")
-    @GetMapping("/tax")
+    @GetMapping("")
     public ApiResponse<HqTaxResponseList> getTaxInfo(
-            @AuthenticationPrincipal Long userId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
         return ApiResponse.onSuccess(hqService.getTaxInfo(page, size));
