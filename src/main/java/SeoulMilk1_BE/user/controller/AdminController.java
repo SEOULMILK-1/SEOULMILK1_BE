@@ -1,6 +1,7 @@
 package SeoulMilk1_BE.user.controller;
 
 import SeoulMilk1_BE.global.apiPayload.ApiResponse;
+import SeoulMilk1_BE.user.dto.response.PendingUserResponseList;
 import SeoulMilk1_BE.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -21,7 +22,7 @@ public class AdminController {
             "page : 조회할 페이지 번호 <br> " +
             "size : 한 페이지에 조회할 사용자 수")
     @GetMapping("/pending")
-    public ApiResponse<?> findPendingUsers(
+    public ApiResponse<PendingUserResponseList> findPendingUsers(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
@@ -34,9 +35,9 @@ public class AdminController {
         return ApiResponse.onSuccess(userService.approvePendingUser(userId));
     }
 
-    @Operation(summary = "승인 대기중인 사용자 거절", description = "승인 대기중인 본사/대리점 사용자 거절")
-    @PostMapping("/reject/{userId}")
-    public ApiResponse<?> rejectPendingUser(@PathVariable Long userId) {
-        return ApiResponse.onSuccess(userService.rejectPendingUser(userId));
+    @Operation(summary = "회원 삭제", description = "회원을 삭제하는 기능")
+    @DeleteMapping("/{userId}")
+    public ApiResponse<?> deleteUser(@PathVariable Long userId) {
+        return ApiResponse.onSuccess(userService.deleteUser(userId));
     }
 }

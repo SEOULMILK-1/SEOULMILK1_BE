@@ -15,8 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 import static SeoulMilk1_BE.global.apiPayload.code.status.ErrorStatus.USER_NOT_FOUND;
-import static SeoulMilk1_BE.user.util.UserConstants.APPROVED;
-import static SeoulMilk1_BE.user.util.UserConstants.REJECTED;
+import static SeoulMilk1_BE.user.util.UserConstants.*;
 
 @Service
 @RequiredArgsConstructor
@@ -42,17 +41,14 @@ public class UserService {
     public String approvePendingUser(Long userId) {
         User user = findUser(userId);
         user.assign();
-        // 승인된 유저에게 알림 가도록 기능 구현
         return APPROVED.getMessage();
     }
 
     @Transactional
-    public String rejectPendingUser(Long userId) {
+    public String deleteUser(Long userId) {
         User user = findUser(userId);
-        // 승인 거절된 유저에게 알림 가도록 기능 구현
-        // 승인 거절된 유저를 DB에서 삭제할지 그냥 isAssigned = false로 할지 추후 결정후 구현
-        // isAssigned = false로 하면 승인 대기에 남아있는 문제점 있긴 함
-        return REJECTED.getMessage();
+        userRepository.delete(user);
+        return DELETED.getMessage();
     }
 
     public User findUser(Long userId) {
