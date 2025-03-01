@@ -24,8 +24,7 @@ public class HqService {
 
     public HqTaxResponseList getTaxInfo(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-//        String thisMonth = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMM"));
-        String thisMonth = "202406";
+        String thisMonth = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMM"));
 
         Page<NtsTax> ntsTaxList = ntsTaxRepository.findAllByIssueDateStartsWith(thisMonth, pageable);
 
