@@ -19,6 +19,10 @@ public class User extends BaseTimeEntity {
     @Column(name = "user_id")
     private Long id;
 
+    @JoinColumn(name = "team_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Team team;
+
     @Column(name = "employee_id", nullable = false)
     private Long employeeId;
 
@@ -43,16 +47,13 @@ public class User extends BaseTimeEntity {
     @Column(name = "account")
     private String account;
 
-    @Column(name = "team", nullable = false)
-    private String team;
-
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false)
     private Role role;
 
     @Builder
     public User(Long employeeId, String password, String name, String email, Boolean isAssigned,
-                String phone, String profileImageUrl, String account, Role role, String team) {
+                String phone, String profileImageUrl, String account, Role role, Team team) {
         this.employeeId = employeeId;
         this.password = password;
         this.name = name;

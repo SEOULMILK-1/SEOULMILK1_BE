@@ -2,6 +2,7 @@ package SeoulMilk1_BE.user.controller;
 
 import SeoulMilk1_BE.global.apiPayload.ApiResponse;
 import SeoulMilk1_BE.user.dto.response.PendingUserResponseList;
+import SeoulMilk1_BE.user.service.AdminService;
 import SeoulMilk1_BE.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -16,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/admin")
 public class AdminController {
 
-    private final UserService userService;
+    private final AdminService adminService;
 
     @Operation(summary = "승인 대기중인 본사/대리점 사용자 조회", description = "승인 대기중인 본사/대리점 사용자 조회 <br><br> " +
             "page : 조회할 페이지 번호 <br> " +
@@ -26,18 +27,18 @@ public class AdminController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
-        return ApiResponse.onSuccess(userService.findPendingUsers(page, size));
+        return ApiResponse.onSuccess(adminService.findPendingUsers(page, size));
     }
 
     @Operation(summary = "승인 대기중인 사용자 승인", description = "승인 대기중인 본사/대리점 사용자 승인")
     @PostMapping("/approve/{userId}")
     public ApiResponse<?> approvePendingUser(@PathVariable Long userId) {
-        return ApiResponse.onSuccess(userService.approvePendingUser(userId));
+        return ApiResponse.onSuccess(adminService.approvePendingUser(userId));
     }
 
     @Operation(summary = "회원 삭제", description = "회원을 삭제하는 기능")
     @DeleteMapping("/{userId}")
     public ApiResponse<?> deleteUser(@PathVariable Long userId) {
-        return ApiResponse.onSuccess(userService.deleteUser(userId));
+        return ApiResponse.onSuccess(adminService.deleteUser(userId));
     }
 }

@@ -40,7 +40,7 @@ public class AuthController {
         return ApiResponse.onSuccess(authService.validateEmployeeId(employeeId));
     }
 
-    @Operation(summary = "회원가입", description = "ROLE에 관리자라면 ADMIN, 본사 사용자라면 HQ_USER, 고객센터 사용자라면 CUSTOMER_USER를 입력해주세요.")
+    @Operation(summary = "회원가입", description = "ROLE에 관리자라면 ADMIN, 본사 사용자라면 HQ_USER, 고객센터 사용자라면 CS_USER를 입력해주세요.")
     @PostMapping("/sign-up")
     public ApiResponse<?> signUp(@Valid @RequestBody SignUpRequest request) {
         return ApiResponse.onSuccess(authService.signUp(request));

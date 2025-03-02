@@ -1,0 +1,84 @@
+package SeoulMilk1_BE.nts_tax.repository;
+
+import SeoulMilk1_BE.nts_tax.dto.response.HqTaxResponse;
+import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.jpa.impl.JPAQuery;
+import com.querydsl.jpa.impl.JPAQueryFactory;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.support.PageableExecutionUtils;
+import org.springframework.stereotype.Repository;
+import org.springframework.util.StringUtils;
+
+import java.time.LocalDate;
+import java.util.List;
+
+import static SeoulMilk1_BE.nts_tax.domain.QNtsTax.ntsTax;
+
+@Repository
+@RequiredArgsConstructor
+public class NtsTaxRepositoryImpl implements NtsTaxRepositoryCustom {
+
+    private final JPAQueryFactory queryFactory;
+
+    @Override
+    public Page<HqTaxResponse> findTax(Pageable pageable, String keyword, String startDate, String endDate, Long months) {
+        List<HqTaxResponse> results = queryFactory.select(
+                        Projections.constructor(HqTaxResponse.class,
+                                ntsTax.id,
+                                Expressions.stringTemplate("CONCAT(SUBSTRING(issueDate, 5, 2), '월 세금계산서')").as("formattedIssueDate"),
+                                ntsTax.issueDate,
+                                ntsTax.suDeptName,
+                                ntsTax.suPersName
+                        )
+                )
+                .from(ntsTax)
+                .where(containsKeyword(keyword),
+                        betweenDate(startDate, endDate),
+                        betweenMonths(months))
+                .offset((pageable.getOffset()))
+                .orderBy(ntsTax.issueDate.desc())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        JPAQuery<Long> countQuery = queryFactory.select(ntsTax.id)
+                .from(ntsTax)
+                .where(containsKeyword(keyword),
+                        betweenDate(startDate, endDate),
+                        betweenMonths(months));
+
+        return PageableExecutionUtils.getPage(results, pageable, countQuery::fetchOne);
+    }
+
+
+    private BooleanExpression containsKeyword(String keyword) {
+        return StringUtils.hasText(keyword) ? ntsTax.suDeptName.containsIgnoreCase(keyword) : null;
+    }
+
+    private BooleanExpression betweenDate(String startDate, String endDate) {
+        String start = StringUtils.hasText(startDate) ? startDate : null;
+        String end = StringUtils.hasText(endDate) ? endDate : null;
+
+        if (start == null && end == null) {
+            return null;
+        } else if (start == null) {
+            return ntsTax.issueDate.loe(end);
+        } else if (end == null) {
+            return ntsTax.issueDate.goe(start);
+        }
+
+        return ntsTax.issueDate.between(start, end);
+    }
+
+    private BooleanExpression betweenMonths(Long months) {
+        if (months != null) {
+            String targetDate = String.valueOf(LocalDate.now().minusMonths(months));
+            return ntsTax.issueDate.goe(targetDate);
+        }
+
+        return null;
+    }
+}
