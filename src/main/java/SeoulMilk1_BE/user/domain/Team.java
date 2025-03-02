@@ -1,5 +1,6 @@
 package SeoulMilk1_BE.user.domain;
 
+import SeoulMilk1_BE.user.dto.request.UpdateUserRequest;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -47,5 +48,10 @@ public class Team {
         this.businessNumber = businessNumber;
         this.bank = bank;
         this.account = account;
+    }
+
+    public void updateTeam(UpdateUserRequest request) {
+        this.bank = request.bank();
+        this.account = request.account();
     }
 }

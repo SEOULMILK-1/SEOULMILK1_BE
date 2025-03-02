@@ -2,6 +2,7 @@ package SeoulMilk1_BE.user.domain;
 
 import SeoulMilk1_BE.global.domain.BaseTimeEntity;
 import SeoulMilk1_BE.user.domain.type.Role;
+import SeoulMilk1_BE.user.dto.request.UpdateUserRequest;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -68,5 +69,16 @@ public class User extends BaseTimeEntity {
 
     public void assign() {
         this.isAssigned = true;
+    }
+
+    public void updateUser(UpdateUserRequest request) {
+        this.employeeId = request.employeeId();
+        this.email = request.email();
+        this.phone = formatPhone(request.phone());
+        this.account = request.account();
+    }
+
+    private static String formatPhone(String phone) {
+        return phone.replace("-", "");
     }
 }

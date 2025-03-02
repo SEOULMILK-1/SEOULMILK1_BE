@@ -1,6 +1,7 @@
 package SeoulMilk1_BE.user.controller;
 
 import SeoulMilk1_BE.global.apiPayload.ApiResponse;
+import SeoulMilk1_BE.user.dto.request.UpdateUserRequest;
 import SeoulMilk1_BE.user.dto.response.UserDetailResponse;
 import SeoulMilk1_BE.user.dto.response.UserResponse;
 import SeoulMilk1_BE.user.service.UserService;
@@ -10,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -32,5 +34,11 @@ public class UserController {
     @GetMapping("/detail")
     public ApiResponse<UserDetailResponse> getUserDetail(@AuthenticationPrincipal Long userId) {
         return ApiResponse.onSuccess(userService.getUserDetail(userId));
+    }
+
+    @Operation(summary = "유저 정보 수정", description = "유저 정보 수정 (관리자, 고객센터 직원 공통 사용)")
+    @PutMapping("/update")
+    public ApiResponse<String> updateUser(@AuthenticationPrincipal Long userId, UpdateUserRequest request) {
+        return ApiResponse.onSuccess(userService.updateUser(userId, request));
     }
 }
