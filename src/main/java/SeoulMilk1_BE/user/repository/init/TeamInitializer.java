@@ -28,11 +28,11 @@ public class TeamInitializer implements ApplicationRunner {
             List<Team> teamList = new ArrayList<>();
 
             Team TEAM_ADMIN = Team.builder()
-                    .name("서울우유협동조합")
+                    .name("관리자")
                     .build();
 
             Team TEAM_HQ = Team.builder()
-                    .name("서울우유협동조합")
+                    .name("경영총괄팀")
                     .build();
 
             Team TEAM_CS = Team.builder()
