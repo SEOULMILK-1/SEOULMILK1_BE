@@ -5,9 +5,9 @@ public record CodefApiRequest(
         String ipId,
         String issueId,
         String chargeTotal,
-        String transDate
+        String issueDate
 ) {
-    public static CodefApiRequest of(String suId, String ipIp, String issueId, Long chargeTotal, String transDate) {
-        return new CodefApiRequest(suId, ipIp, issueId, Long.toString(chargeTotal), transDate);
+    public static CodefApiRequest of(String suId, String ipIp, String issueId, Long chargeTotal, String issueDate) {
+        return new CodefApiRequest(suId, ipIp, issueId, Long.toString(chargeTotal), issueDate);
     }
 }

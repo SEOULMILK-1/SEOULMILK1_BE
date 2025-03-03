@@ -64,7 +64,7 @@ public class NtsTaxService {
     @Transactional
     public String validateNtsTax(Long ntsTaxId) {
         NtsTax ntsTax = ntsTaxRepository.findById(ntsTaxId).orElseThrow(() -> new GeneralException(TAX_NOT_FOUND));
-        CodefApiRequest request = CodefApiRequest.of(ntsTax.getSuId(), ntsTax.getIpId(), ntsTax.getIssueId(), ntsTax.getChargeTotal(), ntsTax.getTransDate());
+        CodefApiRequest request = CodefApiRequest.of(ntsTax.getSuId(), ntsTax.getIpId(), ntsTax.getIssueId(), ntsTax.getChargeTotal(), ntsTax.getIssueDate());
         String result = codefService.validateNtsTax(request);
 
         if (result.equals("성공")) {

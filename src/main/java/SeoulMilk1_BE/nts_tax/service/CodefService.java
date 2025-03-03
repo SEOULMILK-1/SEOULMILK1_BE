@@ -151,7 +151,7 @@ public class CodefService extends EasyCodefConstant {
         jsonRequest.put("supplierRegNumber", request.suId());
         jsonRequest.put("contractorRegNumber", request.ipId());
         jsonRequest.put("approvalNo", request.issueId());
-        jsonRequest.put("reportingDate", request.transDate());
+        jsonRequest.put("reportingDate", request.issueDate());
         jsonRequest.put("supplyValue", request.chargeTotal());
 
         return jsonRequest;
