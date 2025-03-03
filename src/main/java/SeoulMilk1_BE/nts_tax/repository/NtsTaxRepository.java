@@ -1,11 +1,17 @@
 package SeoulMilk1_BE.nts_tax.repository;
 
 import SeoulMilk1_BE.nts_tax.domain.NtsTax;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import java.util.Optional;
 
 public interface NtsTaxRepository extends JpaRepository<NtsTax, Long> {
 
     Optional<NtsTax> findByIssueId(String issueId);
+
+    @Query("SELECT nts FROM NtsTax nts WHERE nts.issueDate LIKE %:yearMonth%")
+    Page<NtsTax> findAllByIssueDateStartsWith(String yearMonth, Pageable pageable);
 }

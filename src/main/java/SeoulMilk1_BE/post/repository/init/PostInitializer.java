@@ -20,7 +20,7 @@ import static SeoulMilk1_BE.global.apiPayload.code.status.ErrorStatus.USER_NOT_F
 
 @Slf4j
 @RequiredArgsConstructor
-@Order(2)
+@Order(3)
 @DummyDataInit
 public class PostInitializer implements ApplicationRunner {
 
