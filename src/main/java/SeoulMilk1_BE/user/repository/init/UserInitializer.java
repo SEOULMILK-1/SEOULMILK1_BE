@@ -34,10 +34,6 @@ public class UserInitializer implements ApplicationRunner {
         if (userRepository.count() > 0) {
             log.info("[User] 더미 데이터 존재");
         } else {
-            Team adminTeam = teamRepository.findById(1L)
-                    .orElseThrow(() -> new TeamNotFoundException(TEAM_NOT_FOUND));
-            Team hqTeam = teamRepository.findById(2L)
-                    .orElseThrow(() -> new TeamNotFoundException(TEAM_NOT_FOUND));
             Team csTeam = teamRepository.findById(3L)
                     .orElseThrow(() -> new TeamNotFoundException(TEAM_NOT_FOUND));
 
@@ -52,7 +48,6 @@ public class UserInitializer implements ApplicationRunner {
                     .profileImageUrl("image.png")
                     .isAssigned(true)
                     .role(ADMIN)
-                    .team(adminTeam)
                     .build();
 
             User DUMMY_USER1 = User.builder()
@@ -64,7 +59,6 @@ public class UserInitializer implements ApplicationRunner {
                     .profileImageUrl("image.png")
                     .isAssigned(true)
                     .role(HQ_USER)
-                    .team(hqTeam)
                     .build();
 
             User DUMMY_USER2 = User.builder()
