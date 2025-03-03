@@ -1,7 +1,6 @@
 package SeoulMilk1_BE.nts_tax.service;
 
 import SeoulMilk1_BE.auth.util.RSAUtil;
-import SeoulMilk1_BE.nts_tax.domain.NtsTax;
 import SeoulMilk1_BE.nts_tax.dto.request.CodefApiRequest;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -39,7 +38,6 @@ public class CodefService extends EasyCodefConstant {
     @Value("${codef.client-publickey}")
     private String publicKey;
     private final RSAUtil rsaUtil;
-    private final NtsTaxService ntsTaxService;
 
     private static final URL url;
 

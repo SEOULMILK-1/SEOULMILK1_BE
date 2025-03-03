@@ -1,11 +1,9 @@
 package SeoulMilk1_BE.nts_tax.service;
 
-import SeoulMilk1_BE.global.apiPayload.code.status.ErrorStatus;
 import SeoulMilk1_BE.global.apiPayload.exception.GeneralException;
 import SeoulMilk1_BE.nts_tax.domain.NtsTax;
 import SeoulMilk1_BE.nts_tax.dto.request.CodefApiRequest;
 import SeoulMilk1_BE.nts_tax.dto.request.UpdateTaxRequest;
-import SeoulMilk1_BE.nts_tax.dto.response.PaymentResolutionResponse;
 import SeoulMilk1_BE.nts_tax.exception.NtsTaxNotFoundException;
 import SeoulMilk1_BE.nts_tax.repository.NtsTaxRepository;
 import SeoulMilk1_BE.nts_tax.dto.response.OcrApiResponse;
