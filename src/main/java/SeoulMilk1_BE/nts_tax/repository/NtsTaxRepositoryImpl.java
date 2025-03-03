@@ -30,7 +30,7 @@ public class NtsTaxRepositoryImpl implements NtsTaxRepositoryCustom {
         List<HqSearchTaxResponse> results = queryFactory.select(
                         Projections.constructor(HqSearchTaxResponse.class,
                                 ntsTax.id,
-                                Expressions.stringTemplate("CONCAT(SUBSTRING(issueDate, 3, 2), '년 ', SUBSTRING(issueDate, 5, 2), '월 세금계산서')").as("formattedTitle"),
+                                Expressions.stringTemplate("CONCAT(ntsTax.suDeptName, ' ', SUBSTRING(issueDate, 3, 2), '년 ', SUBSTRING(issueDate, 5, 2), '월 세금계산서')").as("formattedTitle"),
                                 Expressions.stringTemplate("CONCAT(SUBSTRING(issueDate, 1, 4), '.', SUBSTRING(issueDate, 5, 2), '.', SUBSTRING(issueDate, 7, 2))").as("formattedIssueDate"),
                                 ntsTax.suDeptName,
                                 ntsTax.suPersName
@@ -60,7 +60,7 @@ public class NtsTaxRepositoryImpl implements NtsTaxRepositoryCustom {
         List<CsSearchTaxResponse> results = queryFactory.select(
                         Projections.constructor(CsSearchTaxResponse.class,
                                 ntsTax.id,
-                                Expressions.stringTemplate("CONCAT(SUBSTRING(issueDate, 3, 2), '년 ', SUBSTRING(issueDate, 5, 2), '월 세금계산서')").as("formattedTitle"),
+                                Expressions.stringTemplate("CONCAT(ntsTax.suDeptName, ' ', SUBSTRING(issueDate, 3, 2), '년 ', SUBSTRING(issueDate, 5, 2), '월 세금계산서')").as("formattedTitle"),
                                 Expressions.stringTemplate("CONCAT(SUBSTRING(issueDate, 1, 4), '.', SUBSTRING(issueDate, 5, 2), '.', SUBSTRING(issueDate, 7, 2))").as("formattedIssueDate"),
                                 ntsTax.suDeptName,
                                 ntsTax.suPersName
