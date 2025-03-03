@@ -1,7 +1,9 @@
 package SeoulMilk1_BE.nts_tax.dto.request;
 
 import SeoulMilk1_BE.nts_tax.domain.NtsTax;
+import lombok.Builder;
 
+@Builder
 public record CodefApiRequest(
         String suId,
         String ipId,
@@ -10,7 +12,13 @@ public record CodefApiRequest(
         String issueDate
 ) {
     public static CodefApiRequest from(NtsTax ntsTax) {
-        return new CodefApiRequest(ntsTax.getSuId(), ntsTax.getIpId(), ntsTax.getIssueId(), Long.toString(ntsTax.getChargeTotal()), ntsTax.getIssueDate());
+        return CodefApiRequest.builder()
+                .suId(ntsTax.getSuId())
+                .ipId(ntsTax.getIpId())
+                .issueId(ntsTax.getIssueId())
+                .chargeTotal(Long.toString(ntsTax.getChargeTotal()))
+                .issueDate(ntsTax.getIssueDate())
+                .build();
     }
 
 }
