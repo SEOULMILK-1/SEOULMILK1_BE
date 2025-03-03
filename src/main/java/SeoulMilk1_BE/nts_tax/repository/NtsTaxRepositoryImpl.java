@@ -1,7 +1,7 @@
 package SeoulMilk1_BE.nts_tax.repository;
 
+import SeoulMilk1_BE.nts_tax.dto.response.CsSearchTaxResponse;
 import SeoulMilk1_BE.nts_tax.dto.response.HqSearchTaxResponse;
-import SeoulMilk1_BE.nts_tax.dto.response.HqTaxResponse;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
@@ -56,12 +56,12 @@ public class NtsTaxRepositoryImpl implements NtsTaxRepositoryCustom {
 
 
     @Override
-    public Page<HqTaxResponse> findTaxUsedInCS(Pageable pageable, Long userId, String startDate, String endDate, Long months) {
-        List<HqTaxResponse> results = queryFactory.select(
-                        Projections.constructor(HqTaxResponse.class,
+    public Page<CsSearchTaxResponse> findTaxUsedInCS(Pageable pageable, Long userId, String startDate, String endDate, Long months) {
+        List<CsSearchTaxResponse> results = queryFactory.select(
+                        Projections.constructor(CsSearchTaxResponse.class,
                                 ntsTax.id,
-                                Expressions.stringTemplate("CONCAT(SUBSTRING(issueDate, 5, 2), '월 세금계산서')").as("formattedIssueDate"),
-                                ntsTax.issueDate,
+                                Expressions.stringTemplate("CONCAT(SUBSTRING(issueDate, 3, 2), '년 ', SUBSTRING(issueDate, 5, 2), '월 세금계산서')").as("formattedTitle"),
+                                Expressions.stringTemplate("CONCAT(SUBSTRING(issueDate, 1, 4), '.', SUBSTRING(issueDate, 5, 2), '.', SUBSTRING(issueDate, 7, 2))").as("formattedIssueDate"),
                                 ntsTax.suDeptName,
                                 ntsTax.suPersName
                         )
