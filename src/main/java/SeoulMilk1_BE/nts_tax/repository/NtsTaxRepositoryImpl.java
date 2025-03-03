@@ -1,5 +1,6 @@
 package SeoulMilk1_BE.nts_tax.repository;
 
+import SeoulMilk1_BE.nts_tax.dto.response.HqSearchTaxResponse;
 import SeoulMilk1_BE.nts_tax.dto.response.HqTaxResponse;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -25,12 +26,12 @@ public class NtsTaxRepositoryImpl implements NtsTaxRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public Page<HqTaxResponse> findTax(Pageable pageable, String keyword, String startDate, String endDate, Long months) {
-        List<HqTaxResponse> results = queryFactory.select(
-                        Projections.constructor(HqTaxResponse.class,
+    public Page<HqSearchTaxResponse> findTaxUsedInHQ(Pageable pageable, String keyword, String startDate, String endDate, Long months) {
+        List<HqSearchTaxResponse> results = queryFactory.select(
+                        Projections.constructor(HqSearchTaxResponse.class,
                                 ntsTax.id,
-                                Expressions.stringTemplate("CONCAT(SUBSTRING(issueDate, 5, 2), '월 세금계산서')").as("formattedIssueDate"),
-                                ntsTax.issueDate,
+                                Expressions.stringTemplate("CONCAT(SUBSTRING(issueDate, 3, 2), '년 ', SUBSTRING(issueDate, 5, 2), '월 세금계산서')").as("formattedTitle"),
+                                Expressions.stringTemplate("CONCAT(SUBSTRING(issueDate, 1, 4), '.', SUBSTRING(issueDate, 5, 2), '.', SUBSTRING(issueDate, 7, 2))").as("formattedIssueDate"),
                                 ntsTax.suDeptName,
                                 ntsTax.suPersName
                         )
@@ -54,8 +55,41 @@ public class NtsTaxRepositoryImpl implements NtsTaxRepositoryCustom {
     }
 
 
+    @Override
+    public Page<HqTaxResponse> findTaxUsedInCS(Pageable pageable, Long userId, String startDate, String endDate, Long months) {
+        List<HqTaxResponse> results = queryFactory.select(
+                        Projections.constructor(HqTaxResponse.class,
+                                ntsTax.id,
+                                Expressions.stringTemplate("CONCAT(SUBSTRING(issueDate, 5, 2), '월 세금계산서')").as("formattedIssueDate"),
+                                ntsTax.issueDate,
+                                ntsTax.suDeptName,
+                                ntsTax.suPersName
+                        )
+                )
+                .from(ntsTax)
+                .where(equalUser(userId),
+                        betweenDate(startDate, endDate),
+                        betweenMonths(months))
+                .offset((pageable.getOffset()))
+                .orderBy(ntsTax.issueDate.desc())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        JPAQuery<Long> countQuery = queryFactory.select(ntsTax.id)
+                .from(ntsTax)
+                .where(betweenDate(startDate, endDate),
+                        betweenMonths(months));
+
+        return PageableExecutionUtils.getPage(results, pageable, countQuery::fetchOne);
+    }
+
+
     private BooleanExpression containsKeyword(String keyword) {
         return StringUtils.hasText(keyword) ? ntsTax.suDeptName.containsIgnoreCase(keyword) : null;
+    }
+
+    private BooleanExpression equalUser(Long userId) {
+        return ntsTax.user.id.eq(userId);
     }
 
     private BooleanExpression betweenDate(String startDate, String endDate) {

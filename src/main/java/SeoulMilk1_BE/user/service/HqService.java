@@ -1,6 +1,8 @@
 package SeoulMilk1_BE.user.service;
 
 import SeoulMilk1_BE.nts_tax.domain.NtsTax;
+import SeoulMilk1_BE.nts_tax.dto.response.HqSearchTaxResponse;
+import SeoulMilk1_BE.nts_tax.dto.response.HqSearchTaxResponseList;
 import SeoulMilk1_BE.nts_tax.dto.response.HqTaxResponse;
 import SeoulMilk1_BE.nts_tax.dto.response.HqTaxResponseList;
 import SeoulMilk1_BE.nts_tax.repository.NtsTaxRepository;
@@ -44,16 +46,16 @@ public class HqService {
         return HqTaxResponseList.from(responseList);
     }
 
-    public HqTaxResponseList searchTax(int page, int size, String keyword, String startDate, String endDate, Long months) {
+    public HqSearchTaxResponseList searchTax(int page, int size, String keyword, String startDate, String endDate, Long months) {
         String start = formatInputData(startDate);
         String end = formatInputData(endDate);
 
         Pageable pageable = PageRequest.of(page, size);
-        Page<HqTaxResponse> hqTaxResponsePage = ntsTaxRepositoryCustom.findTax(pageable, keyword, start, end, months);
+        Page<HqSearchTaxResponse> hqTaxResponsePage = ntsTaxRepositoryCustom.findTaxUsedInHQ(pageable, keyword, start, end, months);
 
-        List<HqTaxResponse> responseList = hqTaxResponsePage.getContent();
+        List<HqSearchTaxResponse> responseList = hqTaxResponsePage.getContent();
 
-        return HqTaxResponseList.from(responseList);
+        return HqSearchTaxResponseList.from(responseList);
     }
 
     public HqSearchCsNameResponseList searchCsName(String keyword) {

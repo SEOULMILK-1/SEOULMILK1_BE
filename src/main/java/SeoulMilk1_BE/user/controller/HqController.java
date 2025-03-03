@@ -1,6 +1,7 @@
 package SeoulMilk1_BE.user.controller;
 
 import SeoulMilk1_BE.global.apiPayload.ApiResponse;
+import SeoulMilk1_BE.nts_tax.dto.response.HqSearchTaxResponseList;
 import SeoulMilk1_BE.nts_tax.dto.response.HqTaxResponseList;
 import SeoulMilk1_BE.user.dto.response.HqSearchCsNameResponseList;
 import SeoulMilk1_BE.user.dto.response.HqSearchCsResponseList;
@@ -36,7 +37,7 @@ public class HqController {
             "months : 기간(ex. 1개월, 3개월, 6개월 등)에 사용된 숫자를 입력해주세요 <br><br>" +
             "page : 조회할 페이지 번호 <br> size : 한 페이지에 조회할 세금계산서 수")
     @GetMapping("/search/tax")
-    public ApiResponse<HqTaxResponseList> searchTax(
+    public ApiResponse<HqSearchTaxResponseList> searchTax(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(required = false) String keyword,
