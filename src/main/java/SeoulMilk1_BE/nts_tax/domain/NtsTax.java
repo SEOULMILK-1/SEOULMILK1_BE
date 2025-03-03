@@ -198,6 +198,9 @@ public class NtsTax extends BaseTimeEntity {
     @Column(name = "trans_date", length = 12)
     private String transDate;
 
+    @Enumerated(EnumType.STRING)
+    private Status status;
+
     public static NtsTax toNtsTax(OcrApiResponse response, User user, String imageUrl) {
         return NtsTax.builder()
                 .issueId(formatInputData(getInferText(response, "승인번호")))
@@ -261,5 +264,19 @@ public class NtsTax extends BaseTimeEntity {
         }
 
         return name.split(" ")[0];
+    }
+
+    public void updateStatus(int status) {
+        switch (status) {
+            case 0:
+                this.status = Status.APPROVE;
+                break;
+            case 1:
+                this.status = Status.REFUSED;
+                break;
+            default:
+                this.status = Status.DONE;
+                break;
+        }
     }
 }
