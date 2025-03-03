@@ -24,19 +24,19 @@ public class UserController {
 
     private final UserService userService;
 
-    @Operation(summary = "유저 정보 조회", description = "홈 화면의 사이드바 유저 정보 조회 (관리자, 본사 직원, 고객센터 직원 공통 사용)")
+    @Operation(summary = "유저 정보 조회", description = "홈 화면의 사이드바 유저 정보 조회 (관리자, 본사 직원, 대리점 직원 공통 사용)")
     @GetMapping("")
     public ApiResponse<UserResponse> getUserInfo(@AuthenticationPrincipal Long userId) {
         return ApiResponse.onSuccess(userService.getUserInfo(userId));
     }
 
-    @Operation(summary = "유저 상세 정보 조회", description = "유저 상세 정보 조회 (관리자, 본사 직원, 고객센터 직원 공통 사용)")
+    @Operation(summary = "유저 상세 정보 조회", description = "유저 상세 정보 조회 (관리자, 본사 직원, 대리점 직원 공통 사용)")
     @GetMapping("/detail")
     public ApiResponse<UserDetailResponse> getUserDetail(@AuthenticationPrincipal Long userId) {
         return ApiResponse.onSuccess(userService.getUserDetail(userId));
     }
 
-    @Operation(summary = "유저 정보 수정", description = "유저 정보 수정 (관리자, 고객센터 직원 공통 사용)")
+    @Operation(summary = "유저 정보 수정", description = "유저 정보 수정 (본사 직원, 대리점 직원 공통 사용)")
     @PutMapping("/update")
     public ApiResponse<String> updateUser(@AuthenticationPrincipal Long userId, UpdateUserRequest request) {
         return ApiResponse.onSuccess(userService.updateUser(userId, request));
