@@ -34,7 +34,7 @@ public class NtsTaxController {
     }
 
     @Operation(summary = "세금명세서 검증", description = "검증할 세금계산서 id를 PathVariable로 넘겨주세요!!")
-    @PostMapping(path = "/validate/{ntsTaxId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(path = "/validate/{ntsTaxId}")
     public ApiResponse<String> validateNtsTax(
             @PathVariable("ntsTaxId") Long ntsTaxId
     ) {
