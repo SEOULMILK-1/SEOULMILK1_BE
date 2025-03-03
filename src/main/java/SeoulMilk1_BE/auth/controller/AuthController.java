@@ -3,6 +3,7 @@ package SeoulMilk1_BE.auth.controller;
 import SeoulMilk1_BE.auth.dto.request.LoginRequest;
 import SeoulMilk1_BE.auth.dto.request.SignUpRequest;
 import SeoulMilk1_BE.auth.dto.response.LoginResponse;
+import SeoulMilk1_BE.auth.dto.response.SearchCsNameResponseList;
 import SeoulMilk1_BE.auth.service.AuthService;
 import SeoulMilk1_BE.global.apiPayload.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -38,6 +39,12 @@ public class AuthController {
     @GetMapping("/validation/employee-id")
     public ApiResponse<?> validateEmployeeId(@Valid @RequestParam Long employeeId) {
         return ApiResponse.onSuccess(authService.validateEmployeeId(employeeId));
+    }
+
+    @Operation(summary = "모든 대리점명 조회", description = "모든 대리점 이름을 리스트로 제공합니다.")
+    @GetMapping("/search/cs")
+    public ApiResponse<SearchCsNameResponseList> searchCs() {
+        return ApiResponse.onSuccess(authService.searchCsName());
     }
 
     @Operation(summary = "회원가입", description = "ROLE에 관리자라면 ADMIN, 본사 사용자라면 HQ_USER, 대리점 사용자라면 CS_USER를 입력해주세요.")
