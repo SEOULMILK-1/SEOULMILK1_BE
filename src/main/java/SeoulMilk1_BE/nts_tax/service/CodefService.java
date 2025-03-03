@@ -54,24 +54,21 @@ public class CodefService extends EasyCodefConstant {
         }
     }
 
-    public JsonNode validateNtsTax(Long id) {
-        NtsTax ntsTax = ntsTaxService.findById(id);
-        CodefApiRequest request = CodefApiRequest.of(ntsTax.getSuId(), ntsTax.getIpId(), ntsTax.getIssueId(), ntsTax.getChargeTotal(), ntsTax.getTransDate());
-
+    public String validateNtsTax(CodefApiRequest request) {
         String accessToken = (String) publishToken().get("access_token");
-        String resultLv1 = getIssuedTaxInvoiceInfo(accessToken, request);
-        return decodeResult(resultLv1);
+        String result = getIssuedTaxInvoiceInfo(accessToken, request);
+        return extractResult(result);
     }
 
     /**
      * 결과 값 디코딩
      **/
-    private JsonNode decodeResult(String result) {
+    private String extractResult(String result) {
         try {
             String decode = URLDecoder.decode(result, StandardCharsets.UTF_8);
             ObjectMapper mapper = new ObjectMapper();
             JsonNode jsonNode = mapper.readTree(decode);
-            return jsonNode;
+            return jsonNode.path("result").path("message").asText();
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
