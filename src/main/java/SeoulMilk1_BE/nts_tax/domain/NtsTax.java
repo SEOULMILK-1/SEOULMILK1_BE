@@ -222,6 +222,7 @@ public class NtsTax extends BaseTimeEntity {
                 .erZet(LocalDateTime.now().format(DateTimeFormatter.ofPattern("HHmmss")))
                 .user(user)
                 .taxImgUrl(imageUrl)
+                .status(Status.WAIT)
                 .build();
     }
 

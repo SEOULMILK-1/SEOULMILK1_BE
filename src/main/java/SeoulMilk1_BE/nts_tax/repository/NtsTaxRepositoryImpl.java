@@ -1,5 +1,6 @@
 package SeoulMilk1_BE.nts_tax.repository;
 
+import SeoulMilk1_BE.nts_tax.domain.type.Status;
 import SeoulMilk1_BE.nts_tax.dto.response.CsSearchTaxResponse;
 import SeoulMilk1_BE.nts_tax.dto.response.HqSearchTaxResponse;
 import com.querydsl.core.types.Projections;
@@ -26,20 +27,22 @@ public class NtsTaxRepositoryImpl implements NtsTaxRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public Page<HqSearchTaxResponse> findTaxUsedInHQ(Pageable pageable, String keyword, String startDate, String endDate, Long months) {
+    public Page<HqSearchTaxResponse> findTaxUsedInHQ(Pageable pageable, String keyword, String startDate, String endDate, Long months, Status status) {
         List<HqSearchTaxResponse> results = queryFactory.select(
                         Projections.constructor(HqSearchTaxResponse.class,
                                 ntsTax.id,
                                 Expressions.stringTemplate("CONCAT(ntsTax.suDeptName, ' ', SUBSTRING(issueDate, 3, 2), '년 ', SUBSTRING(issueDate, 5, 2), '월 세금계산서')").as("formattedTitle"),
                                 Expressions.stringTemplate("CONCAT(SUBSTRING(issueDate, 1, 4), '.', SUBSTRING(issueDate, 5, 2), '.', SUBSTRING(issueDate, 7, 2))").as("formattedIssueDate"),
                                 ntsTax.suDeptName,
-                                ntsTax.suPersName
+                                ntsTax.suPersName,
+                                ntsTax.status
                         )
                 )
                 .from(ntsTax)
                 .where(containsKeyword(keyword),
                         betweenDate(startDate, endDate),
-                        betweenMonths(months))
+                        betweenMonths(months),
+                        betweenStatus(status))
                 .offset((pageable.getOffset()))
                 .orderBy(ntsTax.issueDate.desc())
                 .limit(pageable.getPageSize())
@@ -49,7 +52,8 @@ public class NtsTaxRepositoryImpl implements NtsTaxRepositoryCustom {
                 .from(ntsTax)
                 .where(containsKeyword(keyword),
                         betweenDate(startDate, endDate),
-                        betweenMonths(months));
+                        betweenMonths(months),
+                        betweenStatus(status));
 
         return PageableExecutionUtils.getPage(results, pageable, countQuery::fetchOne);
     }
@@ -111,6 +115,14 @@ public class NtsTaxRepositoryImpl implements NtsTaxRepositoryCustom {
         if (months != null) {
             String targetDate = String.valueOf(LocalDate.now().minusMonths(months));
             return ntsTax.issueDate.goe(targetDate);
+        }
+
+        return null;
+    }
+
+    private BooleanExpression betweenStatus(Status status) {
+        if (status != null) {
+            return ntsTax.status.eq(status);
         }
 
         return null;

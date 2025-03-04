@@ -1,6 +1,7 @@
 package SeoulMilk1_BE.user.controller;
 
 import SeoulMilk1_BE.global.apiPayload.ApiResponse;
+import SeoulMilk1_BE.nts_tax.domain.type.Status;
 import SeoulMilk1_BE.nts_tax.dto.response.HqSearchTaxResponseList;
 import SeoulMilk1_BE.nts_tax.dto.response.HqTaxResponseList;
 import SeoulMilk1_BE.user.dto.response.HqSearchCsNameResponseList;
@@ -43,8 +44,9 @@ public class HqController {
             @RequestParam(required = false) String keyword,
             @RequestParam(required = false) String startDate,
             @RequestParam(required = false) String endDate,
-            @RequestParam(required = false) Long months) {
-        return ApiResponse.onSuccess(hqService.searchTax(page, size, keyword, startDate, endDate, months));
+            @RequestParam(required = false) Long months,
+            @RequestParam(required = false) Status status) {
+        return ApiResponse.onSuccess(hqService.searchTax(page, size, keyword, startDate, endDate, months, status));
     }
 
     @Operation(summary = "대리점명 조회", description = "대리점 검색에 사용되는 키워드를 입력해주세요 <br>" +

@@ -1,6 +1,7 @@
 package SeoulMilk1_BE.nts_tax.dto.response;
 
 import SeoulMilk1_BE.nts_tax.domain.NtsTax;
+import SeoulMilk1_BE.nts_tax.domain.type.Status;
 import lombok.Builder;
 
 @Builder
@@ -9,7 +10,8 @@ public record HqSearchTaxResponse(
         String title,
         String taxDate,
         String team,
-        String name
+        String name,
+        Status status
 ) {
     public static HqSearchTaxResponse from(NtsTax ntsTax) {
         return HqSearchTaxResponse.builder()
@@ -18,6 +20,7 @@ public record HqSearchTaxResponse(
                 .taxDate(ntsTax.getIssueDate())
                 .team(ntsTax.getSuDeptName())
                 .name(ntsTax.getSuPersName())
+                .status(ntsTax.getStatus())
                 .build();
     }
 }
