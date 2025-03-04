@@ -1,5 +1,6 @@
 package SeoulMilk1_BE.user.service;
 
+import SeoulMilk1_BE.nts_tax.domain.type.Status;
 import SeoulMilk1_BE.nts_tax.dto.response.CsSearchTaxResponse;
 import SeoulMilk1_BE.nts_tax.dto.response.CsSearchTaxResponseList;
 import SeoulMilk1_BE.nts_tax.repository.NtsTaxRepositoryCustom;
@@ -20,12 +21,12 @@ public class CsService {
 
     private final NtsTaxRepositoryCustom ntsTaxRepositoryCustom;
 
-    public CsSearchTaxResponseList searchTax(Long userId, int page, int size, String startDate, String endDate, Long months) {
+    public CsSearchTaxResponseList searchTax(Long userId, int page, int size, String startDate, String endDate, Long months, Status status) {
         String start = formatInputData(startDate);
         String end = formatInputData(endDate);
 
         Pageable pageable = PageRequest.of(page, size);
-        Page<CsSearchTaxResponse> hqTaxResponsePage = ntsTaxRepositoryCustom.findTaxUsedInCS(pageable, userId, start, end, months);
+        Page<CsSearchTaxResponse> hqTaxResponsePage = ntsTaxRepositoryCustom.findTaxUsedInCS(pageable, userId, start, end, months, status);
 
         List<CsSearchTaxResponse> responseList = hqTaxResponsePage.getContent();
 

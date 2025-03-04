@@ -60,20 +60,22 @@ public class NtsTaxRepositoryImpl implements NtsTaxRepositoryCustom {
 
 
     @Override
-    public Page<CsSearchTaxResponse> findTaxUsedInCS(Pageable pageable, Long userId, String startDate, String endDate, Long months) {
+    public Page<CsSearchTaxResponse> findTaxUsedInCS(Pageable pageable, Long userId, String startDate, String endDate, Long months, Status status) {
         List<CsSearchTaxResponse> results = queryFactory.select(
                         Projections.constructor(CsSearchTaxResponse.class,
                                 ntsTax.id,
                                 Expressions.stringTemplate("CONCAT(ntsTax.suDeptName, ' ', SUBSTRING(issueDate, 3, 2), '년 ', SUBSTRING(issueDate, 5, 2), '월 세금계산서')").as("formattedTitle"),
                                 Expressions.stringTemplate("CONCAT(SUBSTRING(issueDate, 1, 4), '.', SUBSTRING(issueDate, 5, 2), '.', SUBSTRING(issueDate, 7, 2))").as("formattedIssueDate"),
                                 ntsTax.suDeptName,
-                                ntsTax.suPersName
+                                ntsTax.suPersName,
+                                ntsTax.status
                         )
                 )
                 .from(ntsTax)
                 .where(equalUser(userId),
                         betweenDate(startDate, endDate),
-                        betweenMonths(months))
+                        betweenMonths(months),
+                        betweenStatus(status))
                 .offset((pageable.getOffset()))
                 .orderBy(ntsTax.issueDate.desc())
                 .limit(pageable.getPageSize())
@@ -82,7 +84,8 @@ public class NtsTaxRepositoryImpl implements NtsTaxRepositoryCustom {
         JPAQuery<Long> countQuery = queryFactory.select(ntsTax.id)
                 .from(ntsTax)
                 .where(betweenDate(startDate, endDate),
-                        betweenMonths(months));
+                        betweenMonths(months),
+                        betweenStatus(status));
 
         return PageableExecutionUtils.getPage(results, pageable, countQuery::fetchOne);
     }
