@@ -7,18 +7,28 @@ import SeoulMilk1_BE.payment_resolution.dto.request.PaymentResolutionDto;
 import SeoulMilk1_BE.payment_resolution.dto.response.PaymentResolutionInsertResponse;
 import SeoulMilk1_BE.payment_resolution.repository.PaymentResolutionRepository;
 import SeoulMilk1_BE.payment_resolution.utils.PaymentResolutionConstants;
+import SeoulMilk1_BE.user.service.TeamService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class PaymentResolutionService {
     private final PaymentResolutionRepository paymentResolutionRepository;
+    private final TeamService teamService;
 
     @Transactional
     public PaymentResolutionInsertResponse createPaymentResolution(PaymentResolutionDto request) {
-        PaymentResolution paymentResolution = PaymentResolutionDto.of(request);
+        Optional<Integer> countResult = teamService.findAboutPayment(request.paymentRecipient(), LocalDateTime.now().getMonthValue());
+        int count = 1;
+        if (countResult != null) {
+            count = countResult.get();
+        }
+        PaymentResolution paymentResolution = PaymentResolutionDto.of(count, request);
         paymentResolutionRepository.save(paymentResolution);
         return PaymentResolutionInsertResponse.of(paymentResolution.getId(), paymentResolution.getModifiedAt());
     }

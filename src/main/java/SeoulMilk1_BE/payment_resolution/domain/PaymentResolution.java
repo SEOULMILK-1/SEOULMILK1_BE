@@ -39,7 +39,8 @@ public class PaymentResolution extends BaseTimeEntity {
     private List<PaymentDetails> paymentDetailsList = new ArrayList<>();
 
     @Builder
-    public PaymentResolution(String paymentRecipient, String recipientBusinessNumber, Long totalPaymentAmount, String paymentMethod, String paymentAccount, String paymentPrincipal, String principalBusinessNumber, String approver, LocalDateTime scheduledPaymentDate, List<PaymentDetails> paymentDetailsList, Long totalSupplyAmount, Long totalAllAmount) {
+    public PaymentResolution(String name, String paymentRecipient, String recipientBusinessNumber, Long totalPaymentAmount, String paymentMethod, String paymentAccount, String paymentPrincipal, String principalBusinessNumber, String approver, LocalDateTime scheduledPaymentDate, List<PaymentDetails> paymentDetailsList, Long totalSupplyAmount, Long totalAllAmount) {
+        this.name = name;
         this.paymentRecipient = paymentRecipient;
         this.recipientBusinessNumber = recipientBusinessNumber;
         this.totalPaymentAmount = totalPaymentAmount;

@@ -3,16 +3,17 @@ package SeoulMilk1_BE.payment_resolution.dto.request;
 import SeoulMilk1_BE.nts_tax.domain.NtsTax;
 import SeoulMilk1_BE.payment_resolution.domain.PaymentDetails;
 import SeoulMilk1_BE.payment_resolution.domain.PaymentResolution;
-import SeoulMilk1_BE.payment_resolution.domain.type.Status;
 import SeoulMilk1_BE.user.domain.User;
 import lombok.Builder;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Builder
 public record PaymentResolutionDto(
+        String name,
         String paymentRecipient,
         String recipientBusinessNumber,
         Long totalPaymentAmount,
@@ -60,8 +61,10 @@ public record PaymentResolutionDto(
                 .build();
     }
 
-    public static PaymentResolution of(PaymentResolutionDto request) {
+    public static PaymentResolution of(int count, PaymentResolutionDto request) {
+        String name = request.paymentRecipient + " " + LocalDateTime.now().getYear() + "년 " + LocalDateTime.now().getMonthValue() + "월 지급결의서(" + count + ")";
         return PaymentResolution.builder()
+                .name(name)
                 .paymentRecipient(request.paymentRecipient())
                 .recipientBusinessNumber(request.recipientBusinessNumber())
                 .totalPaymentAmount(request.totalPaymentAmount())
@@ -79,6 +82,7 @@ public record PaymentResolutionDto(
 
     public static PaymentResolutionDto byId(PaymentResolution paymentResolution) {
         return PaymentResolutionDto.builder()
+                .name(paymentResolution.getName())
                 .paymentRecipient(paymentResolution.getPaymentRecipient())
                 .recipientBusinessNumber(paymentResolution.getRecipientBusinessNumber())
                 .totalPaymentAmount(paymentResolution.getTotalPaymentAmount())
