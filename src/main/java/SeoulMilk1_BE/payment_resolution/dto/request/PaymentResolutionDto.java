@@ -74,7 +74,6 @@ public record PaymentResolutionDto(
                 .paymentDetailsList(request.paymentDetails())
                 .totalSupplyAmount(request.totalSupplyAmount())
                 .totalAllAmount(request.totalAllAmount())
-                .status(Status.DONE)
                 .build();
     }
 

@@ -1,13 +1,11 @@
 package SeoulMilk1_BE.payment_resolution.domain;
 
 import SeoulMilk1_BE.global.domain.BaseTimeEntity;
-import SeoulMilk1_BE.payment_resolution.domain.type.Status;
 import SeoulMilk1_BE.payment_resolution.dto.request.PaymentResolutionDto;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -33,8 +31,6 @@ public class PaymentResolution extends BaseTimeEntity {
     private LocalDateTime scheduledPaymentDate;
     private Long totalSupplyAmount;
     private Long totalAllAmount;
-    @Enumerated(EnumType.STRING)
-    private Status status;
 
     @ElementCollection
     @CollectionTable(name = "payment_details",
@@ -42,7 +38,7 @@ public class PaymentResolution extends BaseTimeEntity {
     private List<PaymentDetails> paymentDetailsList = new ArrayList<>();
 
     @Builder
-    public PaymentResolution(String paymentRecipient, String recipientBusinessNumber, Long totalPaymentAmount, String paymentMethod, String paymentAccount, String paymentPrincipal, String principalBusinessNumber, String approver, LocalDateTime scheduledPaymentDate, List<PaymentDetails> paymentDetailsList, Long totalSupplyAmount, Long totalAllAmount, Status status) {
+    public PaymentResolution(String paymentRecipient, String recipientBusinessNumber, Long totalPaymentAmount, String paymentMethod, String paymentAccount, String paymentPrincipal, String principalBusinessNumber, String approver, LocalDateTime scheduledPaymentDate, List<PaymentDetails> paymentDetailsList, Long totalSupplyAmount, Long totalAllAmount) {
         this.paymentRecipient = paymentRecipient;
         this.recipientBusinessNumber = recipientBusinessNumber;
         this.totalPaymentAmount = totalPaymentAmount;
@@ -55,7 +51,6 @@ public class PaymentResolution extends BaseTimeEntity {
         this.paymentDetailsList = paymentDetailsList;
         this.totalSupplyAmount = totalSupplyAmount;
         this.totalAllAmount = totalAllAmount;
-        this.status = status;
     }
 
     public void updatePaymentResolution(PaymentResolutionDto request) {
