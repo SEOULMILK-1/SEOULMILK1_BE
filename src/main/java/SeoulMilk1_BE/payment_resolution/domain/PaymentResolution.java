@@ -38,7 +38,7 @@ public class PaymentResolution extends BaseTimeEntity {
 
     @ElementCollection
     @CollectionTable(name = "payment_details",
-            joinColumns = @JoinColumn(name = "payment_approval_id"))
+            joinColumns = @JoinColumn(name = "payment_resolution_id"))
     private List<PaymentDetails> paymentDetailsList = new ArrayList<>();
 
     @Builder
@@ -53,7 +53,7 @@ public class PaymentResolution extends BaseTimeEntity {
         this.approver = approver;
         this.scheduledPaymentDate = scheduledPaymentDate;
         this.paymentDetailsList = paymentDetailsList;
-        this.totalPaymentAmount = totalPaymentAmount;
+        this.totalSupplyAmount = totalSupplyAmount;
         this.totalAllAmount = totalAllAmount;
         this.status = status;
     }

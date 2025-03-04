@@ -67,6 +67,7 @@ public record PaymentResolutionDto(
                 .totalPaymentAmount(request.totalPaymentAmount())
                 .paymentMethod(request.paymentMethod())
                 .paymentAccount(request.paymentAccount())
+                .paymentPrincipal(request.paymentPrincipal())
                 .principalBusinessNumber(request.principalBusinessNumber())
                 .approver(request.approver())
                 .scheduledPaymentDate(request.scheduledPaymentDate())
