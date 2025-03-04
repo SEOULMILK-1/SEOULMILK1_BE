@@ -13,4 +13,5 @@ public class CodefConfigProperties {
     private String client_password;
     private String client_publickey;
     private String client_pfx;
+    private String client_url;
 }

@@ -30,19 +30,6 @@ public class CodefService extends EasyCodefConstant {
     private final CodefConfigProperties properties;
     private final RSAUtil rsaUtil;
 
-    private static final URL url;
-
-    /**
-     제3자 발급 사실 조회 OpenAPI URL 세팅
-     **/
-    static {
-        try {
-            url = new URL("https://development.codef.io/v1/kr/public/nt/third-party/tax-invoice-issue");
-        } catch (MalformedURLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     public String validateNtsTax(CodefApiRequest request) {
         String accessToken = (String) publishToken().get("access_token");
         String result = getIssuedTaxInvoiceInfo(accessToken, request);
@@ -166,6 +153,7 @@ public class CodefService extends EasyCodefConstant {
     private String getIssuedTaxInvoiceInfo(String accessToken, CodefApiRequest request) {
         BufferedReader br = null;
         try {
+            URL url = new URL(properties.getClient_url());
             HttpURLConnection con = getHttpURLConnection(accessToken, url);
 
 
