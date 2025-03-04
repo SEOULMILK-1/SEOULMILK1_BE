@@ -20,6 +20,7 @@ public class PaymentResolution extends BaseTimeEntity {
     @Column(name = "payment_resolution_id")
     private Long id;
 
+    private String name;
     private String paymentRecipient;             // 지급 대상
     private String recipientBusinessNumber;      // 지급 대상 사업자 등록 번호
     private Long totalPaymentAmount;             // 정산 지급 총액
