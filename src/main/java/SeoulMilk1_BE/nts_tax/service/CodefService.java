@@ -2,6 +2,7 @@ package SeoulMilk1_BE.nts_tax.service;
 
 import SeoulMilk1_BE.auth.util.RSAUtil;
 import SeoulMilk1_BE.nts_tax.dto.request.CodefApiRequest;
+import SeoulMilk1_BE.nts_tax.util.CodefConfigProperties;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -10,7 +11,6 @@ import io.codef.api.EasyCodefConstant;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.codec.binary.Base64;
 import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
@@ -27,16 +27,7 @@ import java.util.HashMap;
 @Service
 @RequiredArgsConstructor
 public class CodefService extends EasyCodefConstant {
-    @Value("${codef.client-id}")
-    private String clientId;
-    @Value("${codef.client-secret}")
-    private String clientSecret;
-    @Value("${codef.client-pfx}")
-    private String certFile;
-    @Value("${codef.client-password}")
-    private String password;
-    @Value("${codef.client-publickey}")
-    private String publicKey;
+    private final CodefConfigProperties properties;
     private final RSAUtil rsaUtil;
 
     private static final URL url;
@@ -87,7 +78,7 @@ public class CodefService extends EasyCodefConstant {
             con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
 
             // 클라이언트아이디, 시크릿코드 Base64 인코딩
-            String auth = clientId + ":" + clientSecret;
+            String auth = properties.getClient_id() + ":" + properties.getClient_secret();
             byte[] authEncBytes = Base64.encodeBase64(auth.getBytes());
             String authStringEnc = new String(authEncBytes);
             String authHeader = "Basic " + authStringEnc;
@@ -139,15 +130,15 @@ public class CodefService extends EasyCodefConstant {
     /**
      * 기본 요청 값 세팅
      **/
-    private JSONObject setRequestJsonObject(CodefApiRequest request) throws Exception {
+    private JSONObject setRequestJsonObject(CodefApiRequest request){
         JSONObject jsonRequest = new JSONObject();
         jsonRequest.put("organization", "0004");
 
         // 사용자 관련
         jsonRequest.put("loginType", "0");
         jsonRequest.put("certType", "pfx");
-        jsonRequest.put("certFile", certFile);
-        jsonRequest.put("certPassword", rsaUtil.encryptRSA(password, publicKey));
+        jsonRequest.put("certFile", properties.getClient_pfx());
+        jsonRequest.put("certPassword", rsaUtil.encryptRSA(properties.getClient_password(), properties.getClient_publickey()));
         jsonRequest.put("supplierRegNumber", request.suId());
         jsonRequest.put("contractorRegNumber", request.ipId());
         jsonRequest.put("approvalNo", request.issueId());
