@@ -33,6 +33,14 @@ public class NtsTaxController {
         return ApiResponse.onSuccess(ocrService.callOcrApi(userId, file));
     }
 
+    @Operation(summary = "세금명세서 검증", description = "검증할 세금계산서 id를 PathVariable로 넘겨주세요!!")
+    @PostMapping(path = "/validate/{ntsTaxId}")
+    public ApiResponse<String> validateNtsTax(
+            @PathVariable("ntsTaxId") Long ntsTaxId
+    ) {
+        return ApiResponse.onSuccess(ntsTaxService.validateNtsTax(ntsTaxId));
+    }
+
     @Operation(summary = "세금명세서 수정", description = "OCR에서 추출한 텍스트를 수정")
     @PutMapping("/{ntsTaxId}")
     public ApiResponse<String> updateNtsTax(
