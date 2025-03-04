@@ -6,8 +6,10 @@ import SeoulMilk1_BE.auth.dto.response.LoginResponse;
 import SeoulMilk1_BE.auth.dto.response.SearchCsNameResponse;
 import SeoulMilk1_BE.auth.dto.response.SearchCsNameResponseList;
 import SeoulMilk1_BE.auth.util.JwtTokenProvider;
+import SeoulMilk1_BE.user.domain.Team;
 import SeoulMilk1_BE.user.domain.User;
 import SeoulMilk1_BE.user.exception.PasswordNotMatchException;
+import SeoulMilk1_BE.user.exception.TeamNotFoundException;
 import SeoulMilk1_BE.user.exception.UserNotFoundException;
 import SeoulMilk1_BE.user.repository.TeamRepository;
 import SeoulMilk1_BE.user.repository.UserRepository;
@@ -20,8 +22,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static SeoulMilk1_BE.global.apiPayload.code.status.ErrorStatus.PASSWORD_NOT_MATCH;
-import static SeoulMilk1_BE.global.apiPayload.code.status.ErrorStatus.USER_NOT_FOUND;
+import static SeoulMilk1_BE.global.apiPayload.code.status.ErrorStatus.*;
+import static SeoulMilk1_BE.user.domain.type.Role.CS_USER;
 import static SeoulMilk1_BE.user.util.UserConstants.*;
 
 @Slf4j
@@ -63,6 +65,13 @@ public class AuthService {
     public String signUp(SignUpRequest request) {
         User user = request.toUser(passwordEncoder);
         userRepository.save(user);
+
+        if (user.getRole() == CS_USER) {
+            Team team = teamRepository.findById(request.csId())
+                    .orElseThrow(() -> new TeamNotFoundException(TEAM_NOT_FOUND));
+
+            team.updateTeam(request.bank(), request.account());
+        }
 
         return PENDING.getMessage();
     }

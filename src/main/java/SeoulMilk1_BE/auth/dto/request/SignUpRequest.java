@@ -21,7 +21,9 @@ public record SignUpRequest(
         String email,
         String phone,
         Role role,
-        Team team
+        Long csId,
+        String bank,
+        String account
 ) {
     public User toUser(PasswordEncoder passwordEncoder) {
         return User.builder()
@@ -31,7 +33,6 @@ public record SignUpRequest(
                 .email(email)
                 .phone(phone)
                 .role(role)
-                .team(team)
                 .isAssigned(false)
                 .build();
     }

@@ -50,8 +50,8 @@ public class Team {
         this.account = account;
     }
 
-    public void updateTeam(UpdateUserRequest request) {
-        this.bank = request.bank();
-        this.account = request.account();
+    public void updateTeam(String bank, String account) {
+        this.bank = bank;
+        this.account = account;
     }
 }

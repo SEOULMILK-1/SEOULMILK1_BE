@@ -39,7 +39,7 @@ public class UserService {
 
         if (user.getRole() == CS_USER) {
             Team team = user.getTeam();
-            team.updateTeam(request);
+            team.updateTeam(request.bank(), request.account());
         }
 
         return UPDATE_SUCCESS.getMessage();
