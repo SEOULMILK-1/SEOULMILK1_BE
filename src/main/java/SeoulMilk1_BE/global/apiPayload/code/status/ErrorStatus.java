@@ -38,6 +38,7 @@ public enum ErrorStatus implements BaseErrorCode {
     IPTYPECODE_NOT_FOUND(HttpStatus.NOT_FOUND, "TAX403", "해당 구분 코드를 찾을 수 없습니다."),
     TAX_NOT_FOUND(HttpStatus.NOT_FOUND, "TAX404", "해당 세금 계산서를 찾을 수 없습니다."),
     OCR_LOAD_ERROR(HttpStatus.BAD_REQUEST, "TAX405", "OCR 로드 중 에러가 발생했습니다."),
+    ENCRYPTION_FAILED(HttpStatus.BAD_REQUEST, "TAX406", "RSA 암호화 중 에러가 발생했습니다."),
 
     // 게시글 관련 에러
     POST_NOT_FOUND(HttpStatus.NOT_FOUND, "POST400", "해당 게시글을 찾을 수 없습니다."),

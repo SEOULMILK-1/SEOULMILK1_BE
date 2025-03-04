@@ -1,6 +1,8 @@
 package SeoulMilk1_BE.nts_tax.service;
 
+import SeoulMilk1_BE.global.apiPayload.exception.GeneralException;
 import SeoulMilk1_BE.nts_tax.domain.NtsTax;
+import SeoulMilk1_BE.nts_tax.dto.request.CodefApiRequest;
 import SeoulMilk1_BE.nts_tax.dto.request.UpdateTaxRequest;
 import SeoulMilk1_BE.nts_tax.exception.NtsTaxNotFoundException;
 import SeoulMilk1_BE.nts_tax.repository.NtsTaxRepository;
@@ -12,8 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import static SeoulMilk1_BE.global.apiPayload.code.status.ErrorStatus.TAX_NOT_FOUND;
-import static SeoulMilk1_BE.nts_tax.util.TaxConstants.DELETE_SUCCESS;
-import static SeoulMilk1_BE.nts_tax.util.TaxConstants.UPDATE_SUCCESS;
+import static SeoulMilk1_BE.nts_tax.util.TaxConstants.*;
 
 @Service
 @RequiredArgsConstructor
@@ -22,6 +23,7 @@ public class NtsTaxService {
 
     private final NtsTaxRepository ntsTaxRepository;
     private final UserService userService;
+    private final CodefService codefService;
 
     @Transactional
     public NtsTax saveNtsTax(OcrApiResponse ocrApiResponse, Long userId, String imageUrl) {
@@ -57,5 +59,20 @@ public class NtsTaxService {
     public NtsTax findByIssueId(String issueId) {
         return ntsTaxRepository.findByIssueId(issueId)
                 .orElseThrow(() -> new NtsTaxNotFoundException(TAX_NOT_FOUND));
+    }
+
+    @Transactional
+    public String validateNtsTax(Long ntsTaxId) {
+        NtsTax ntsTax = ntsTaxRepository.findById(ntsTaxId).orElseThrow(() -> new GeneralException(TAX_NOT_FOUND));
+        CodefApiRequest request = CodefApiRequest.from(ntsTax);
+        String result = codefService.validateNtsTax(request);
+
+        if (result.equals("성공")) {
+            ntsTax.updateStatus(0);
+        } else {
+            ntsTax.updateStatus(1);
+        }
+
+        return VALIDATE_SUCCESS.getMessage();
     }
 }
