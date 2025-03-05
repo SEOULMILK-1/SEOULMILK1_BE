@@ -3,7 +3,8 @@ package SeoulMilk1_BE.payment_resolution.service;
 import SeoulMilk1_BE.global.apiPayload.code.status.ErrorStatus;
 import SeoulMilk1_BE.global.apiPayload.exception.GeneralException;
 import SeoulMilk1_BE.payment_resolution.domain.PaymentResolution;
-import SeoulMilk1_BE.payment_resolution.dto.request.PaymentResolutionDto;
+import SeoulMilk1_BE.payment_resolution.dto.request.PaymentResolutionRequest;
+import SeoulMilk1_BE.payment_resolution.dto.response.PaymentResolutionReadResponse;
 import SeoulMilk1_BE.payment_resolution.dto.response.PaymentResolutionInsertResponse;
 import SeoulMilk1_BE.payment_resolution.repository.PaymentResolutionRepository;
 import SeoulMilk1_BE.payment_resolution.utils.PaymentResolutionConstants;
@@ -22,24 +23,24 @@ public class PaymentResolutionService {
     private final TeamService teamService;
 
     @Transactional
-    public PaymentResolutionInsertResponse createPaymentResolution(PaymentResolutionDto request) {
+    public PaymentResolutionInsertResponse createPaymentResolution(PaymentResolutionRequest request) {
         Optional<Integer> countResult = teamService.findAboutPayment(request.paymentRecipient(), LocalDateTime.now().getMonthValue());
         int count = 1;
         if (countResult != null) {
             count = countResult.get();
         }
-        PaymentResolution paymentResolution = PaymentResolutionDto.of(count, request);
+        PaymentResolution paymentResolution = PaymentResolutionReadResponse.of(count, request);
         paymentResolutionRepository.save(paymentResolution);
         return PaymentResolutionInsertResponse.of(paymentResolution.getId(), paymentResolution.getModifiedAt());
     }
 
-    public PaymentResolutionDto readPaymentResolution(Long id) {
+    public PaymentResolutionReadResponse readPaymentResolution(Long id) {
         PaymentResolution paymentResolution = paymentResolutionRepository.findById(id).orElseThrow(() -> new GeneralException(ErrorStatus.PAYMENT_RESOLUTION_NOT_FOUND));
-        return PaymentResolutionDto.byId(paymentResolution);
+        return PaymentResolutionReadResponse.byId(paymentResolution);
     }
 
     @Transactional
-    public PaymentResolutionInsertResponse updatePaymentResolution(Long id, PaymentResolutionDto request) {
+    public PaymentResolutionInsertResponse updatePaymentResolution(Long id, PaymentResolutionReadResponse request) {
         PaymentResolution paymentResolution = paymentResolutionRepository.findById(id).orElseThrow(() -> new GeneralException(ErrorStatus.PAYMENT_RESOLUTION_NOT_FOUND));
         paymentResolution.updatePaymentResolution(request);
         return PaymentResolutionInsertResponse.of(paymentResolution.getId(), paymentResolution.getModifiedAt());

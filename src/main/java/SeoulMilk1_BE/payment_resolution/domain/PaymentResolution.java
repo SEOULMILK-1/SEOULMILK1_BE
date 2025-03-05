@@ -1,7 +1,7 @@
 package SeoulMilk1_BE.payment_resolution.domain;
 
 import SeoulMilk1_BE.global.domain.BaseTimeEntity;
-import SeoulMilk1_BE.payment_resolution.dto.request.PaymentResolutionDto;
+import SeoulMilk1_BE.payment_resolution.dto.response.PaymentResolutionReadResponse;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -55,7 +55,7 @@ public class PaymentResolution extends BaseTimeEntity {
         this.totalAllAmount = totalAllAmount;
     }
 
-    public void updatePaymentResolution(PaymentResolutionDto request) {
+    public void updatePaymentResolution(PaymentResolutionReadResponse request) {
         this.paymentRecipient = request.paymentRecipient();
         this.recipientBusinessNumber = request.recipientBusinessNumber();
         this.totalPaymentAmount = request.totalPaymentAmount();
