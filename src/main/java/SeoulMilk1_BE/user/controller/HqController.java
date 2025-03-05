@@ -45,7 +45,7 @@ public class HqController {
             @RequestParam(required = false) String startDate,
             @RequestParam(required = false) String endDate,
             @RequestParam(required = false) Long months,
-            @RequestParam(required = false) Status status) {
+            @RequestParam(defaultValue = "APPROVE") Status status) {
         return ApiResponse.onSuccess(hqService.searchTax(page, size, keyword, startDate, endDate, months, status));
     }
 

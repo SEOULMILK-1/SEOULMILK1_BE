@@ -128,6 +128,6 @@ public class NtsTaxRepositoryImpl implements NtsTaxRepositoryCustom {
             return ntsTax.status.eq(status);
         }
 
-        return null;
+        return ntsTax.status.eq(Status.APPROVE);
     }
 }
