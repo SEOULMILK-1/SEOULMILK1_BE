@@ -11,7 +11,7 @@ public record HqSearchTaxResponse(
         String taxDate,
         String team,
         String name,
-        ValidStatus status
+        String status
 ) {
     public static HqSearchTaxResponse from(NtsTax ntsTax) {
         return HqSearchTaxResponse.builder()
@@ -20,7 +20,7 @@ public record HqSearchTaxResponse(
                 .taxDate(ntsTax.getIssueDate())
                 .team(ntsTax.getSuDeptName())
                 .name(ntsTax.getSuPersName())
-                .status(ntsTax.getValidStatus())
+                .status(ntsTax.getIsPaymentWritten() ? "반영" : "미반영")
                 .build();
     }
 }

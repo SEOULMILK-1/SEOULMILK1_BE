@@ -1,7 +1,6 @@
 package SeoulMilk1_BE.user.controller;
 
 import SeoulMilk1_BE.global.apiPayload.ApiResponse;
-import SeoulMilk1_BE.nts_tax.domain.type.ValidStatus;
 import SeoulMilk1_BE.nts_tax.dto.response.HqSearchTaxResponseList;
 import SeoulMilk1_BE.nts_tax.dto.response.HqTaxDetailResponse;
 import SeoulMilk1_BE.nts_tax.dto.response.HqTaxResponseList;
@@ -44,7 +43,7 @@ public class HqController {
             @RequestParam(required = false) String startDate,
             @RequestParam(required = false) String endDate,
             @RequestParam(required = false) Long months,
-            @RequestParam(defaultValue = "APPROVE") ValidStatus status) {
+            @RequestParam(required = false) Boolean status) {
         return ApiResponse.onSuccess(hqService.searchTax(page, size, keyword, startDate, endDate, months, status));
     }
 

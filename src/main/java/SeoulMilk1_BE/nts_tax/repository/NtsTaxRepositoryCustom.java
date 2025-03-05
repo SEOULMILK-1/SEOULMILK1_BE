@@ -8,7 +8,7 @@ import org.springframework.data.domain.Pageable;
 
 public interface NtsTaxRepositoryCustom {
 
-    Page<HqSearchTaxResponse> findTaxUsedInHQ(Pageable pageable, String keyword, String startDate, String endDate, Long months, ValidStatus status);
+    Page<HqSearchTaxResponse> findTaxUsedInHQ(Pageable pageable, String keyword, String startDate, String endDate, Long months, Boolean status);
 
     Page<CsSearchTaxResponse> findTaxUsedInCS(Pageable pageable, Long userId, String startDate, String endDate, Long months, ValidStatus status);
 }
