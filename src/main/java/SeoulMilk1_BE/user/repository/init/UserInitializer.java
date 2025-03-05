@@ -34,7 +34,13 @@ public class UserInitializer implements ApplicationRunner {
         if (userRepository.count() > 0) {
             log.info("[User] 더미 데이터 존재");
         } else {
-            Team csTeam = teamRepository.findById(1L)
+            Team TEAM1 = teamRepository.findById(1L)
+                    .orElseThrow(() -> new TeamNotFoundException(TEAM_NOT_FOUND));
+            Team TEAM2 = teamRepository.findById(2L)
+                    .orElseThrow(() -> new TeamNotFoundException(TEAM_NOT_FOUND));
+            Team TEAM3 = teamRepository.findById(3L)
+                    .orElseThrow(() -> new TeamNotFoundException(TEAM_NOT_FOUND));
+            Team TEAM4 = teamRepository.findById(4L)
                     .orElseThrow(() -> new TeamNotFoundException(TEAM_NOT_FOUND));
 
             List<User> userList = new ArrayList<>();
@@ -70,12 +76,75 @@ public class UserInitializer implements ApplicationRunner {
                     .profileImageUrl("image.png")
                     .isAssigned(true)
                     .role(CS_USER)
-                    .team(csTeam)
+                    .team(TEAM1)
+                    .build();
+
+            User DUMMY_UNASSIGNED_USER1 = User.builder()
+                    .employeeId(100001L)
+                    .password(passwordEncoder.encode("password"))
+                    .name("박지민")
+                    .email("park.jimin@naver.com")
+                    .phone("01011112233")
+                    .profileImageUrl("image.png")
+                    .isAssigned(false)
+                    .role(HQ_USER)
+                    .build();
+
+            User DUMMY_UNASSIGNED_USER2 = User.builder()
+                    .employeeId(100002L)
+                    .password(passwordEncoder.encode("password"))
+                    .name("이수진")
+                    .email("lee.sujin@naver.com")
+                    .phone("01022223344")
+                    .profileImageUrl("image.png")
+                    .isAssigned(false)
+                    .role(CS_USER)
+                    .team(TEAM2)
+                    .build();
+
+            User DUMMY_UNASSIGNED_USER3 = User.builder()
+                    .employeeId(100003L)
+                    .password(passwordEncoder.encode("password"))
+                    .name("정우성")
+                    .email("jung.woosung@naver.com")
+                    .phone("01033334455")
+                    .profileImageUrl("image.png")
+                    .isAssigned(false)
+                    .role(HQ_USER)
+                    .build();
+
+            User DUMMY_UNASSIGNED_USER4 = User.builder()
+                    .employeeId(100004L)
+                    .password(passwordEncoder.encode("password"))
+                    .name("최영수")
+                    .email("choi.youngsoo@naver.com")
+                    .phone("01044445566")
+                    .profileImageUrl("image.png")
+                    .isAssigned(false)
+                    .role(CS_USER)
+                    .team(TEAM3)
+                    .build();
+
+            User DUMMY_UNASSIGNED_USER5 = User.builder()
+                    .employeeId(100005L)
+                    .password(passwordEncoder.encode("password"))
+                    .name("김하늘")
+                    .email("kim.hanul@naver.com")
+                    .phone("01055556677")
+                    .profileImageUrl("image.png")
+                    .isAssigned(false)
+                    .role(CS_USER)
+                    .team(TEAM4)
                     .build();
 
             userList.add(DUMMY_ADMIN);
             userList.add(DUMMY_USER1);
             userList.add(DUMMY_USER2);
+            userList.add(DUMMY_UNASSIGNED_USER1);
+            userList.add(DUMMY_UNASSIGNED_USER2);
+            userList.add(DUMMY_UNASSIGNED_USER3);
+            userList.add(DUMMY_UNASSIGNED_USER4);
+            userList.add(DUMMY_UNASSIGNED_USER5);
 
             userRepository.saveAll(userList);
         }
