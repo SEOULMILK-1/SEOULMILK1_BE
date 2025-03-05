@@ -8,6 +8,7 @@ import SeoulMilk1_BE.nts_tax.dto.request.UpdateTaxRequest;
 import SeoulMilk1_BE.nts_tax.exception.NtsTaxNotFoundException;
 import SeoulMilk1_BE.nts_tax.repository.NtsTaxRepository;
 import SeoulMilk1_BE.nts_tax.dto.response.OcrApiResponse;
+import SeoulMilk1_BE.payment_resolution.domain.PaymentDetails;
 import SeoulMilk1_BE.user.domain.User;
 import SeoulMilk1_BE.user.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -79,9 +80,12 @@ public class NtsTaxService {
     }
 
     @Transactional
-    public void updatePaymentWritten(String issueId) {
-        NtsTax ntsTax = findByIssueId(issueId);
-        ntsTax.updatePaymentWritten();
+    public void updatePaymentWritten(List<PaymentDetails> paymentDetails) {
+        paymentDetails.forEach(paymentDetail -> {
+            String issueId = paymentDetail.getNtsTaxNum();
+            NtsTax ntsTax = findByIssueId(issueId);
+            ntsTax.updatePaymentWritten();
+        });
     }
 
     public NtsTax findById(Long id) {

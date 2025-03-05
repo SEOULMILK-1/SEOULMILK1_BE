@@ -39,7 +39,7 @@ public class PaymentResolutionService {
         PaymentResolution paymentResolution = PaymentResolutionReadResponse.of(count, request);
         paymentResolutionRepository.save(paymentResolution);
 
-        ntsTaxService.updatePaymentWritten(request.paymentDetails().get(0).getNtsTaxNum());
+        ntsTaxService.updatePaymentWritten(request.paymentDetails());
 
         return PaymentResolutionInsertResponse.of(paymentResolution.getId(), paymentResolution.getModifiedAt());
     }
