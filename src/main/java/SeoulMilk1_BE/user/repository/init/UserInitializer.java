@@ -34,7 +34,7 @@ public class UserInitializer implements ApplicationRunner {
         if (userRepository.count() > 0) {
             log.info("[User] 더미 데이터 존재");
         } else {
-            Team csTeam = teamRepository.findById(3L)
+            Team csTeam = teamRepository.findById(1L)
                     .orElseThrow(() -> new TeamNotFoundException(TEAM_NOT_FOUND));
 
             List<User> userList = new ArrayList<>();
