@@ -38,8 +38,14 @@ public class Team {
     @Column(name = "account")
     private String account;
 
+    @Column(name = "payment_resolution_recent_month")
+    private Integer paymentResolutionRecentMonth;
+
+    @Column(name = "payment_resolution_count")
+    private Integer paymentResolutionCount;
+
     @Builder
-    public Team(String name, String address, String phone, String email, String businessNumber, String bank, String account) {
+    public Team(String name, String address, String phone, String email, String businessNumber, String bank, String account, Integer paymentResolutionRecentMonth, Integer paymentResolutionCount) {
         this.name = name;
         this.address = address;
         this.phone = phone;
@@ -47,5 +53,15 @@ public class Team {
         this.businessNumber = businessNumber;
         this.bank = bank;
         this.account = account;
+        this.paymentResolutionRecentMonth = paymentResolutionRecentMonth;
+        this.paymentResolutionCount = paymentResolutionCount;
+    }
+
+    public void updatePaymentCount() {
+        paymentResolutionCount += 1;
+    }
+    public void updatePaymentMonth(int month) {
+        this.paymentResolutionRecentMonth = month;
+        this.paymentResolutionCount = 1;
     }
 }
