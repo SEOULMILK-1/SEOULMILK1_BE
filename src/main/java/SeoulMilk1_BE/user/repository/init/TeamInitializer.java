@@ -32,7 +32,7 @@ public class TeamInitializer implements ApplicationRunner {
                     .build();
 
             Team TEAM_HQ = Team.builder()
-                    .name("서울우유협동조합")
+                    .name("서울우유협동조합2")
                     .build();
 
             Team TEAM_CS = Team.builder()
