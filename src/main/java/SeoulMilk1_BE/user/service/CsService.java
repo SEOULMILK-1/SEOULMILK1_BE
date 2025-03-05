@@ -26,11 +26,13 @@ public class CsService {
         String end = formatInputData(endDate);
 
         Pageable pageable = PageRequest.of(page, size);
-        Page<CsSearchTaxResponse> hqTaxResponsePage = ntsTaxRepository.findTaxUsedInCS(pageable, userId, start, end, months, status);
+        Page<CsSearchTaxResponse> csTaxResponsePage = ntsTaxRepository.findTaxUsedInCS(pageable, userId, start, end, months, status);
 
-        List<CsSearchTaxResponse> responseList = hqTaxResponsePage.getContent();
+        Long totalElements = csTaxResponsePage.getTotalElements();
+        Integer totalPages = csTaxResponsePage.getTotalPages();
+        List<CsSearchTaxResponse> responseList = csTaxResponsePage.getContent();
 
-        return CsSearchTaxResponseList.from(responseList);
+        return CsSearchTaxResponseList.of(totalElements, totalPages, responseList);
     }
 
     private static String formatInputData(String inputData) {

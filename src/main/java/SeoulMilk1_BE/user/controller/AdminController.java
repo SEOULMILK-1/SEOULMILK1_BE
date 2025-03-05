@@ -22,7 +22,7 @@ public class AdminController {
     @Operation(summary = "승인 대기중인 본사/대리점 사용자 조회", description = "승인 대기중인 본사/대리점 사용자 조회 <br><br> " +
             "page : 조회할 페이지 번호 <br> " +
             "size : 한 페이지에 조회할 사용자 수")
-    @GetMapping("")
+    @GetMapping("/pending")
     public ApiResponse<PendingUserResponseList> findPendingUsers(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
@@ -33,7 +33,7 @@ public class AdminController {
     @Operation(summary = "본사/대리점 유저 조회", description = "본사/대리점 사용자 전체 조회 <br><br> " +
             "page : 조회할 페이지 번호 <br> " +
             "size : 한 페이지에 조회할 사용자 수")
-    @GetMapping("/pending")
+    @GetMapping("/user")
     public ApiResponse<UserManageResponseList> findAllUsers(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size

@@ -52,9 +52,11 @@ public class HqService {
         Pageable pageable = PageRequest.of(page, size);
         Page<HqSearchTaxResponse> hqTaxResponsePage = ntsTaxRepository.findTaxUsedInHQ(pageable, keyword, start, end, months, status);
 
+        Long totalElements = hqTaxResponsePage.getTotalElements();
+        Integer totalPages = hqTaxResponsePage.getTotalPages();
         List<HqSearchTaxResponse> responseList = hqTaxResponsePage.getContent();
 
-        return HqSearchTaxResponseList.from(responseList);
+        return HqSearchTaxResponseList.of(totalElements, totalPages, responseList);
     }
 
     public HqSearchCsNameResponseList searchCsName(String keyword) {

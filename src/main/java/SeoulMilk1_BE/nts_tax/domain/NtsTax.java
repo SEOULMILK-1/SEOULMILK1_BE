@@ -31,7 +31,7 @@ public class NtsTax extends BaseTimeEntity {
     private Long id;
 
     @JoinColumn(name = "team_id")
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Team team;
 
     @Column(name = "issue_id", nullable = false, length = 24)
