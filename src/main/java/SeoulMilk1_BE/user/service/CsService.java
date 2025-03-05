@@ -3,7 +3,7 @@ package SeoulMilk1_BE.user.service;
 import SeoulMilk1_BE.nts_tax.domain.type.Status;
 import SeoulMilk1_BE.nts_tax.dto.response.CsSearchTaxResponse;
 import SeoulMilk1_BE.nts_tax.dto.response.CsSearchTaxResponseList;
-import SeoulMilk1_BE.nts_tax.repository.NtsTaxRepositoryCustom;
+import SeoulMilk1_BE.nts_tax.repository.NtsTaxRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -19,14 +19,14 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class CsService {
 
-    private final NtsTaxRepositoryCustom ntsTaxRepositoryCustom;
+    private final NtsTaxRepository ntsTaxRepository;
 
     public CsSearchTaxResponseList searchTax(Long userId, int page, int size, String startDate, String endDate, Long months, Status status) {
         String start = formatInputData(startDate);
         String end = formatInputData(endDate);
 
         Pageable pageable = PageRequest.of(page, size);
-        Page<CsSearchTaxResponse> hqTaxResponsePage = ntsTaxRepositoryCustom.findTaxUsedInCS(pageable, userId, start, end, months, status);
+        Page<CsSearchTaxResponse> hqTaxResponsePage = ntsTaxRepository.findTaxUsedInCS(pageable, userId, start, end, months, status);
 
         List<CsSearchTaxResponse> responseList = hqTaxResponsePage.getContent();
 

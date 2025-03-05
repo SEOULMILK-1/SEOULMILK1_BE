@@ -7,7 +7,6 @@ import SeoulMilk1_BE.nts_tax.dto.response.HqSearchTaxResponseList;
 import SeoulMilk1_BE.nts_tax.dto.response.HqTaxResponse;
 import SeoulMilk1_BE.nts_tax.dto.response.HqTaxResponseList;
 import SeoulMilk1_BE.nts_tax.repository.NtsTaxRepository;
-import SeoulMilk1_BE.nts_tax.repository.NtsTaxRepositoryCustom;
 import SeoulMilk1_BE.user.dto.response.HqSearchCsNameResponse;
 import SeoulMilk1_BE.user.dto.response.HqSearchCsNameResponseList;
 import SeoulMilk1_BE.user.dto.response.HqSearchCsResponse;
@@ -31,7 +30,6 @@ import java.util.List;
 public class HqService {
 
     private final NtsTaxRepository ntsTaxRepository;
-    private final NtsTaxRepositoryCustom ntsTaxRepositoryCustom;
     private final TeamRepository teamRepository;
 
     public HqTaxResponseList getTaxInfo(int page, int size) {
@@ -52,7 +50,7 @@ public class HqService {
         String end = formatInputData(endDate);
 
         Pageable pageable = PageRequest.of(page, size);
-        Page<HqSearchTaxResponse> hqTaxResponsePage = ntsTaxRepositoryCustom.findTaxUsedInHQ(pageable, keyword, start, end, months, status);
+        Page<HqSearchTaxResponse> hqTaxResponsePage = ntsTaxRepository.findTaxUsedInHQ(pageable, keyword, start, end, months, status);
 
         List<HqSearchTaxResponse> responseList = hqTaxResponsePage.getContent();
 

@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.Optional;
 
-public interface NtsTaxRepository extends JpaRepository<NtsTax, Long> {
+public interface NtsTaxRepository extends JpaRepository<NtsTax, Long>, NtsTaxRepositoryCustom {
 
     Optional<NtsTax> findByIssueId(String issueId);
 
