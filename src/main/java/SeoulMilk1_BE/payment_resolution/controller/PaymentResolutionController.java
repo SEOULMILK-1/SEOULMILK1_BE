@@ -4,6 +4,7 @@ import SeoulMilk1_BE.global.apiPayload.ApiResponse;
 import SeoulMilk1_BE.nts_tax.domain.NtsTax;
 import SeoulMilk1_BE.nts_tax.service.NtsTaxService;
 import SeoulMilk1_BE.payment_resolution.dto.request.PaymentResolutionRequest;
+import SeoulMilk1_BE.payment_resolution.dto.response.PaymentResolutionListResponse;
 import SeoulMilk1_BE.payment_resolution.dto.response.PaymentResolutionReadResponse;
 import SeoulMilk1_BE.payment_resolution.dto.response.PaymentResolutionInsertResponse;
 import SeoulMilk1_BE.payment_resolution.service.PaymentResolutionService;
@@ -58,5 +59,13 @@ public class PaymentResolutionController {
         return ApiResponse.onSuccess(paymentResolutionService.readPaymentResolution(id));
     }
 
-
+    @Operation(summary = "지급결의서 목록 조회", description = "period(path variable): 조회 희망하는 기간 (1 -> 최근 1달치, 3 -> 최근 3달치) <br>" +
+            "page: 조회할 페이지 번호" +
+            "size: 한 페이지에 조회할 사용자 수")
+    @GetMapping("/list/{period}")
+    public ApiResponse<PaymentResolutionListResponse> readPaymentResolutionList(@PathVariable("period") int period,
+                                                                                @RequestParam(defaultValue = "0") int page,
+                                                                                @RequestParam(defaultValue = "10") int size) {
+        return ApiResponse.onSuccess(paymentResolutionService.readPaymentResolutionList(period, page, size));
+    }
 }

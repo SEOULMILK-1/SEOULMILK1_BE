@@ -4,6 +4,7 @@ import SeoulMilk1_BE.global.apiPayload.code.status.ErrorStatus;
 import SeoulMilk1_BE.global.apiPayload.exception.GeneralException;
 import SeoulMilk1_BE.payment_resolution.domain.PaymentResolution;
 import SeoulMilk1_BE.payment_resolution.dto.request.PaymentResolutionRequest;
+import SeoulMilk1_BE.payment_resolution.dto.response.PaymentResolutionListResponse;
 import SeoulMilk1_BE.payment_resolution.dto.response.PaymentResolutionReadResponse;
 import SeoulMilk1_BE.payment_resolution.dto.response.PaymentResolutionInsertResponse;
 import SeoulMilk1_BE.payment_resolution.repository.PaymentResolutionRepository;
@@ -51,4 +52,8 @@ public class PaymentResolutionService {
         paymentResolutionRepository.deleteById(id);
         return PaymentResolutionConstants.DELETE_SUCCESS.getMessage();
     }
+
+//    public PaymentResolutionListResponse readPaymentResolutionList(int period, int page, int size) {
+//        paymentResolutionRepository.
+//    }
 }

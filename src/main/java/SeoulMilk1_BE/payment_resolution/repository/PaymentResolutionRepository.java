@@ -8,4 +8,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface PaymentResolutionRepository extends JpaRepository<PaymentResolution, Long> {
     Page<PaymentResolution> findAllByOrderByModifiedAtDesc(Pageable pageable);
+//    Page<Payment>
 }

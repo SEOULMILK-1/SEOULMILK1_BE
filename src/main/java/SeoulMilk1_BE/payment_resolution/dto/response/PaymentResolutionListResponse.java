@@ -6,7 +6,7 @@ public record PaymentResolutionListResponse(
         Long paymentResolutionId,
         String paymentResolutionName,
         LocalDateTime createdAt,
-        String csName
+        String paymentRecipient
 ) {
 
 }
