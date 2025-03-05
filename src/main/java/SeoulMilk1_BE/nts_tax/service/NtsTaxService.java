@@ -57,16 +57,6 @@ public class NtsTaxService {
         return DELETE_SUCCESS.getMessage();
     }
 
-    public NtsTax findById(Long id) {
-        return ntsTaxRepository.findById(id)
-                .orElseThrow(() -> new NtsTaxNotFoundException(TAX_NOT_FOUND));
-    }
-
-    public NtsTax findByIssueId(String issueId) {
-        return ntsTaxRepository.findByIssueId(issueId)
-                .orElseThrow(() -> new NtsTaxNotFoundException(TAX_NOT_FOUND));
-    }
-
     @Transactional
     public String validateNtsTax(Long ntsTaxId) {
         NtsTax ntsTax = ntsTaxRepository.findById(ntsTaxId).orElseThrow(() -> new GeneralException(TAX_NOT_FOUND));
@@ -86,5 +76,21 @@ public class NtsTaxService {
         LocalDateTime deadline = LocalDateTime.now().minusMonths(period);
         List<NtsTax> ntsTaxList = ntsTaxRepository.findAllByPeriod(deadline);
         return ntsTaxList;
+    }
+
+    @Transactional
+    public void updatePaymentWritten(String issueId) {
+        NtsTax ntsTax = findByIssueId(issueId);
+        ntsTax.updatePaymentWritten();
+    }
+
+    public NtsTax findById(Long id) {
+        return ntsTaxRepository.findById(id)
+                .orElseThrow(() -> new NtsTaxNotFoundException(TAX_NOT_FOUND));
+    }
+
+    public NtsTax findByIssueId(String issueId) {
+        return ntsTaxRepository.findByIssueId(issueId)
+                .orElseThrow(() -> new NtsTaxNotFoundException(TAX_NOT_FOUND));
     }
 }

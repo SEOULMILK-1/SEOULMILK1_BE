@@ -245,6 +245,21 @@ public class NtsTax extends BaseTimeEntity {
         this.chargeTotal = stringToLong(request.chargeTotal());
     }
 
+    public void updateStatus(int status) {
+        switch (status) {
+            case 0:
+                this.validStatus = ValidStatus.APPROVE;
+                break;
+            case 1:
+                this.validStatus = ValidStatus.REFUSED;
+                break;
+        }
+    }
+
+    public void updatePaymentWritten() {
+        this.isPaymentWritten = true;
+    }
+
     private static String getInferText(OcrApiResponse response, String fieldName) {
         return response.images().stream()
                 .flatMap(image -> image.fields().stream())
@@ -280,16 +295,5 @@ public class NtsTax extends BaseTimeEntity {
         }
 
         return name.split(" ")[0];
-    }
-
-    public void updateStatus(int status) {
-        switch (status) {
-            case 0:
-                this.validStatus = ValidStatus.APPROVE;
-                break;
-            case 1:
-                this.validStatus = ValidStatus.REFUSED;
-                break;
-        }
     }
 }
