@@ -14,6 +14,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 import static SeoulMilk1_BE.global.apiPayload.code.status.ErrorStatus.TAX_NOT_FOUND;
 import static SeoulMilk1_BE.nts_tax.util.TaxConstants.*;
 
@@ -77,5 +80,11 @@ public class NtsTaxService {
         }
 
         return VALIDATE_SUCCESS.getMessage();
+    }
+
+    public List<NtsTax> findByPeriod(int period) {
+        LocalDateTime deadline = LocalDateTime.now().minusMonths(period);
+        List<NtsTax> ntsTaxList = ntsTaxRepository.findAllByPeriod(deadline);
+        return ntsTaxList;
     }
 }

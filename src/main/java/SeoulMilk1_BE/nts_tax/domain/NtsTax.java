@@ -3,6 +3,7 @@ package SeoulMilk1_BE.nts_tax.domain;
 import SeoulMilk1_BE.global.domain.BaseTimeEntity;
 import SeoulMilk1_BE.nts_tax.domain.type.*;
 import SeoulMilk1_BE.nts_tax.dto.request.UpdateTaxRequest;
+import SeoulMilk1_BE.user.domain.Team;
 import SeoulMilk1_BE.user.domain.User;
 import SeoulMilk1_BE.nts_tax.dto.response.OcrApiResponse;
 import jakarta.persistence.*;
@@ -28,6 +29,10 @@ public class NtsTax extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "nts_tax_id")
     private Long id;
+
+    @JoinColumn(name = "team_id")
+    @OneToOne(fetch = FetchType.LAZY)
+    private Team team;
 
     @Column(name = "issue_id", nullable = false, length = 24)
     private String issueId;
@@ -203,6 +208,7 @@ public class NtsTax extends BaseTimeEntity {
 
     public static NtsTax toNtsTax(OcrApiResponse response, User user, String imageUrl) {
         return NtsTax.builder()
+                .team(user.getTeam()) // 소속 추가
                 .issueId(formatInputData(getInferText(response, "승인번호")))
                 .arap(AR)   // 임시 지정
                 .suId(formatInputData(getInferText(response, "공급자 등록번호")))
