@@ -23,7 +23,8 @@ public class CsController {
 
     private final CsService csService;
 
-    @Operation(summary = "세금계산서 검색", description = "months : 기간(ex. 1개월, 3개월, 6개월 등)에 사용된 숫자를 입력해주세요 <br><br>" +
+    @Operation(summary = "세금계산서 검색", description = "검색 조건을 설정하지 않으면 세금계산서 전체 목록이 조회됩니다.<br><br>" +
+            "months : 기간(ex. 1개월, 3개월, 6개월 등)에 사용된 숫자를 입력해주세요 <br><br>" +
             "page : 조회할 페이지 번호 <br> size : 한 페이지에 조회할 세금계산서 수")
     @GetMapping("/search/tax")
     public ApiResponse<CsSearchTaxResponseList> searchTax(
