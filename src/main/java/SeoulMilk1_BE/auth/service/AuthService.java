@@ -1,7 +1,8 @@
 package SeoulMilk1_BE.auth.service;
 
 import SeoulMilk1_BE.auth.dto.request.LoginRequest;
-import SeoulMilk1_BE.auth.dto.request.SignUpRequest;
+import SeoulMilk1_BE.auth.dto.request.SignUpCSRequest;
+import SeoulMilk1_BE.auth.dto.request.SignUpHQRequest;
 import SeoulMilk1_BE.auth.dto.response.LoginResponse;
 import SeoulMilk1_BE.auth.dto.response.SearchCsNameResponse;
 import SeoulMilk1_BE.auth.dto.response.SearchCsNameResponseList;
@@ -62,16 +63,21 @@ public class AuthService {
     }
 
     @Transactional
-    public String signUp(SignUpRequest request) {
+    public String signUpHQ(SignUpHQRequest request) {
         User user = request.toUser(passwordEncoder);
         userRepository.save(user);
 
-        if (user.getRole() == CS_USER) {
-            Team team = teamRepository.findById(request.csId())
-                    .orElseThrow(() -> new TeamNotFoundException(TEAM_NOT_FOUND));
+        return PENDING.getMessage();
+    }
 
-            team.updateTeam(request.bank(), request.account());
-        }
+    @Transactional
+    public String signUpCS(SignUpCSRequest request) {
+        Team team = teamRepository.findById(request.csId())
+                .orElseThrow(() -> new TeamNotFoundException(TEAM_NOT_FOUND));
+        team.updateTeam(request.bank(), request.account());
+
+        User user = request.toUser(passwordEncoder, team);
+        userRepository.save(user);
 
         return PENDING.getMessage();
     }
