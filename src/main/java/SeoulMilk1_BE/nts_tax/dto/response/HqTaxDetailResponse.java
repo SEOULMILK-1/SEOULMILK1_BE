@@ -11,6 +11,7 @@ import java.util.Locale;
 public record HqTaxDetailResponse(
         String status,
         String title,
+        String taxImageUrl,
         String issueId,
         String suId,
         String ipId,
@@ -21,6 +22,7 @@ public record HqTaxDetailResponse(
         return HqTaxDetailResponse.builder()
                 .status(ntsTax.getIsPaymentWritten() ? "반영" : "미반영")
                 .title(getTitle(ntsTax.getSuDeptName(), ntsTax.getIssueDate()))
+                .taxImageUrl(ntsTax.getTaxImgUrl())
                 .issueId(formatIssueId(ntsTax.getIssueId()))
                 .suId(formatSuAndIpId(ntsTax.getSuId()))
                 .ipId(formatSuAndIpId(ntsTax.getIpId()))

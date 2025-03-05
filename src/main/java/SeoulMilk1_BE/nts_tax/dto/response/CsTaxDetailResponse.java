@@ -12,6 +12,7 @@ import java.util.Locale;
 public record CsTaxDetailResponse(
         ValidStatus status,
         String title,
+        String taxImageUrl,
         String issueId,
         String suId,
         String ipId,
@@ -22,6 +23,7 @@ public record CsTaxDetailResponse(
         return CsTaxDetailResponse.builder()
                 .status(ntsTax.getValidStatus())
                 .title(getTitle(ntsTax.getSuDeptName(), ntsTax.getIssueDate()))
+                .taxImageUrl(ntsTax.getTaxImgUrl())
                 .issueId(formatIssueId(ntsTax.getIssueId()))
                 .suId(formatSuAndIpId(ntsTax.getSuId()))
                 .ipId(formatSuAndIpId(ntsTax.getIpId()))
