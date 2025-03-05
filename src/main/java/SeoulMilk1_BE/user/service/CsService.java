@@ -1,6 +1,6 @@
 package SeoulMilk1_BE.user.service;
 
-import SeoulMilk1_BE.nts_tax.domain.type.Status;
+import SeoulMilk1_BE.nts_tax.domain.type.ValidStatus;
 import SeoulMilk1_BE.nts_tax.dto.response.CsSearchTaxResponse;
 import SeoulMilk1_BE.nts_tax.dto.response.CsSearchTaxResponseList;
 import SeoulMilk1_BE.nts_tax.repository.NtsTaxRepository;
@@ -21,7 +21,7 @@ public class CsService {
 
     private final NtsTaxRepository ntsTaxRepository;
 
-    public CsSearchTaxResponseList searchTax(Long userId, int page, int size, String startDate, String endDate, Long months, Status status) {
+    public CsSearchTaxResponseList searchTax(Long userId, int page, int size, String startDate, String endDate, Long months, ValidStatus status) {
         String start = formatInputData(startDate);
         String end = formatInputData(endDate);
 

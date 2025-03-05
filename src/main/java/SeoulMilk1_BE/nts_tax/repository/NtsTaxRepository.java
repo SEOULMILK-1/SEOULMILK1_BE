@@ -18,9 +18,7 @@ public interface NtsTaxRepository extends JpaRepository<NtsTax, Long>, NtsTaxRep
     @Query("SELECT nts FROM NtsTax nts WHERE nts.issueDate LIKE %:yearMonth%")
     Page<NtsTax> findAllByIssueDateStartsWith(String yearMonth, Pageable pageable);
 
-    @Query(
-            "SELECT nts FROM NtsTax nts WHERE nts.modifiedAt > :deadline AND nts.status = 'APPROVE'"
-    )
+    @Query("SELECT nts FROM NtsTax nts WHERE nts.modifiedAt > :deadline AND nts.validStatus = 'APPROVE'")
     List<NtsTax> findAllByPeriod(@Param("deadline") LocalDateTime deadline);
 
 }

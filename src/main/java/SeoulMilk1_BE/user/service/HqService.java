@@ -1,7 +1,7 @@
 package SeoulMilk1_BE.user.service;
 
 import SeoulMilk1_BE.nts_tax.domain.NtsTax;
-import SeoulMilk1_BE.nts_tax.domain.type.Status;
+import SeoulMilk1_BE.nts_tax.domain.type.ValidStatus;
 import SeoulMilk1_BE.nts_tax.dto.response.HqSearchTaxResponse;
 import SeoulMilk1_BE.nts_tax.dto.response.HqSearchTaxResponseList;
 import SeoulMilk1_BE.nts_tax.dto.response.HqTaxResponse;
@@ -45,7 +45,7 @@ public class HqService {
         return HqTaxResponseList.from(responseList);
     }
 
-    public HqSearchTaxResponseList searchTax(int page, int size, String keyword, String startDate, String endDate, Long months, Status status) {
+    public HqSearchTaxResponseList searchTax(int page, int size, String keyword, String startDate, String endDate, Long months, ValidStatus status) {
         String start = formatInputData(startDate);
         String end = formatInputData(endDate);
 

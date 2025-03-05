@@ -1,7 +1,7 @@
 package SeoulMilk1_BE.user.controller;
 
 import SeoulMilk1_BE.global.apiPayload.ApiResponse;
-import SeoulMilk1_BE.nts_tax.domain.type.Status;
+import SeoulMilk1_BE.nts_tax.domain.type.ValidStatus;
 import SeoulMilk1_BE.nts_tax.dto.response.CsSearchTaxResponseList;
 import SeoulMilk1_BE.user.service.CsService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -34,7 +34,7 @@ public class CsController {
             @RequestParam(required = false) String startDate,
             @RequestParam(required = false) String endDate,
             @RequestParam(required = false) Long months,
-            @RequestParam(required = false) Status status) {
+            @RequestParam(required = false) ValidStatus status) {
         return ApiResponse.onSuccess(csService.searchTax(userId, page, size, startDate, endDate, months, status));
     }
 }
