@@ -18,7 +18,7 @@ public record HqTaxResponse(
         return HqTaxResponse.builder()
                 .ntsTaxId(ntsTax.getId())
                 .title(getMonth() + " 세금계산서")
-                .taxDate(getFormattedTaxDate(ntsTax))
+                .taxDate(getFormattedTaxDate(ntsTax.getIssueDate()))
                 .team(ntsTax.getSuDeptName())
                 .name(ntsTax.getSuPersName())
                 .build();
@@ -29,8 +29,7 @@ public record HqTaxResponse(
         return currentDate.format(DateTimeFormatter.ofPattern("MM월"));
     }
 
-    private static String getFormattedTaxDate(NtsTax ntsTax) {
-        String issueDate = ntsTax.getIssueDate();
+    private static String getFormattedTaxDate(String issueDate) {
         return issueDate.substring(0, 4) + "." + issueDate.substring(4, 6) + "." + issueDate.substring(6, 8);
     }
 }

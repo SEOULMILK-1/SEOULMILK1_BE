@@ -1,5 +1,6 @@
 package SeoulMilk1_BE.user.domain;
 
+import SeoulMilk1_BE.user.dto.request.UpdateUserRequest;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -63,5 +64,10 @@ public class Team {
     public void updatePaymentMonth(int month) {
         this.paymentResolutionRecentMonth = month;
         this.paymentResolutionCount = 1;
+    }
+
+    public void updateTeam(String bank, String account) {
+        this.bank = bank;
+        this.account = account;
     }
 }

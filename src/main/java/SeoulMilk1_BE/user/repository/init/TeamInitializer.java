@@ -27,14 +27,6 @@ public class TeamInitializer implements ApplicationRunner {
         } else {
             List<Team> teamList = new ArrayList<>();
 
-            Team TEAM_ADMIN = Team.builder()
-                    .name("서울우유협동조합")
-                    .build();
-
-            Team TEAM_HQ = Team.builder()
-                    .name("서울우유협동조합2")
-                    .build();
-
             Team TEAM_CS = Team.builder()
                     .name("서울우유용산고객센터")
                     .build();
@@ -55,8 +47,6 @@ public class TeamInitializer implements ApplicationRunner {
                     .name("서울우유대덕대리점")
                     .build();
 
-            teamList.add(TEAM_ADMIN);
-            teamList.add(TEAM_HQ);
             teamList.add(TEAM_CS);
             teamList.add(TEAM_TP);
             teamList.add(TEAM_DJ);

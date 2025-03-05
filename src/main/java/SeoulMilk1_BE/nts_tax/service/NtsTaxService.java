@@ -1,6 +1,7 @@
 package SeoulMilk1_BE.nts_tax.service;
 
 import SeoulMilk1_BE.global.apiPayload.exception.GeneralException;
+import SeoulMilk1_BE.global.service.S3Service;
 import SeoulMilk1_BE.nts_tax.domain.NtsTax;
 import SeoulMilk1_BE.nts_tax.dto.request.CodefApiRequest;
 import SeoulMilk1_BE.nts_tax.dto.request.UpdateTaxRequest;
@@ -27,6 +28,7 @@ public class NtsTaxService {
     private final NtsTaxRepository ntsTaxRepository;
     private final UserService userService;
     private final CodefService codefService;
+    private final S3Service s3Service;
 
     @Transactional
     public NtsTax saveNtsTax(OcrApiResponse ocrApiResponse, Long userId, String imageUrl) {
@@ -49,6 +51,7 @@ public class NtsTaxService {
     @Transactional
     public String deleteNtsTax(Long ntsTaxId) {
         NtsTax ntsTax = findById(ntsTaxId);
+        s3Service.deleteImageFromS3(ntsTax.getTaxImgUrl());
         ntsTaxRepository.delete(ntsTax);
 
         return DELETE_SUCCESS.getMessage();

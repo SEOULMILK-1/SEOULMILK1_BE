@@ -3,6 +3,8 @@ package SeoulMilk1_BE.user.service;
 import SeoulMilk1_BE.user.domain.User;
 import SeoulMilk1_BE.user.dto.response.PendingUserResponse;
 import SeoulMilk1_BE.user.dto.response.PendingUserResponseList;
+import SeoulMilk1_BE.user.dto.response.UserManageResponse;
+import SeoulMilk1_BE.user.dto.response.UserManageResponseList;
 import SeoulMilk1_BE.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -34,6 +36,18 @@ public class AdminService {
                 .toList();
 
         return PendingUserResponseList.of(userPage, responseList);
+    }
+
+    public UserManageResponseList findAllUsers(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+
+        Page<User> userPage = userRepository.findAll(pageable);
+
+        List<UserManageResponse> responseList = userPage.stream()
+                .map(UserManageResponse::from)
+                .toList();
+
+        return UserManageResponseList.of(userPage, responseList);
     }
 
     @Transactional

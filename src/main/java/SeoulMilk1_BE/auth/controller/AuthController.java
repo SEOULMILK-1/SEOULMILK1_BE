@@ -1,8 +1,10 @@
 package SeoulMilk1_BE.auth.controller;
 
 import SeoulMilk1_BE.auth.dto.request.LoginRequest;
-import SeoulMilk1_BE.auth.dto.request.SignUpRequest;
+import SeoulMilk1_BE.auth.dto.request.SignUpCSRequest;
+import SeoulMilk1_BE.auth.dto.request.SignUpHQRequest;
 import SeoulMilk1_BE.auth.dto.response.LoginResponse;
+import SeoulMilk1_BE.auth.dto.response.SearchCsNameResponseList;
 import SeoulMilk1_BE.auth.service.AuthService;
 import SeoulMilk1_BE.global.apiPayload.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -40,10 +42,22 @@ public class AuthController {
         return ApiResponse.onSuccess(authService.validateEmployeeId(employeeId));
     }
 
-    @Operation(summary = "회원가입", description = "ROLE에 관리자라면 ADMIN, 본사 사용자라면 HQ_USER, 고객센터 사용자라면 CS_USER를 입력해주세요.")
-    @PostMapping("/sign-up")
-    public ApiResponse<?> signUp(@Valid @RequestBody SignUpRequest request) {
-        return ApiResponse.onSuccess(authService.signUp(request));
+    @Operation(summary = "모든 대리점명 조회", description = "모든 대리점 이름을 리스트로 제공합니다.")
+    @GetMapping("/search/cs")
+    public ApiResponse<SearchCsNameResponseList> searchCs() {
+        return ApiResponse.onSuccess(authService.searchCsName());
+    }
+
+    @Operation(summary = "본사 회원가입", description = "본사 회원가입 API입니다.")
+    @PostMapping("/sign-up/hq")
+    public ApiResponse<?> signUp(@Valid @RequestBody SignUpHQRequest request) {
+        return ApiResponse.onSuccess(authService.signUpHQ(request));
+    }
+
+    @Operation(summary = "대리점 회원가입", description = "대리점 회원가입 API입니다.")
+    @PostMapping("/sign-up/cs")
+    public ApiResponse<?> signUp(@Valid @RequestBody SignUpCSRequest request) {
+        return ApiResponse.onSuccess(authService.signUpCS(request));
     }
 
     @Operation(summary = "로그인", description = "access token은 header에 Authorization: Bearer 로, refresh token은 쿠키로 전달됩니다. <br><br>" +
