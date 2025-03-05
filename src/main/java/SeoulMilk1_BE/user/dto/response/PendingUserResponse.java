@@ -25,7 +25,7 @@ public record PendingUserResponse(
                 .name(user.getName())
                 .phone(formatPhone(user.getPhone()))
                 .role(user.getRole())
-                .team(user.getTeam().getName())
+                .team(user.getTeam() != null ? user.getTeam().getName() : null)
                 .createdAt(formatCreatedAt(user.getCreatedAt()))
                 .build();
     }
