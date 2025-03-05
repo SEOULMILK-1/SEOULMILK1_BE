@@ -8,6 +8,7 @@ import SeoulMilk1_BE.nts_tax.dto.request.UpdateTaxRequest;
 import SeoulMilk1_BE.nts_tax.exception.NtsTaxNotFoundException;
 import SeoulMilk1_BE.nts_tax.repository.NtsTaxRepository;
 import SeoulMilk1_BE.nts_tax.dto.response.OcrApiResponse;
+import SeoulMilk1_BE.payment_resolution.domain.PaymentDetails;
 import SeoulMilk1_BE.user.domain.User;
 import SeoulMilk1_BE.user.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -57,16 +58,6 @@ public class NtsTaxService {
         return DELETE_SUCCESS.getMessage();
     }
 
-    public NtsTax findById(Long id) {
-        return ntsTaxRepository.findById(id)
-                .orElseThrow(() -> new NtsTaxNotFoundException(TAX_NOT_FOUND));
-    }
-
-    public NtsTax findByIssueId(String issueId) {
-        return ntsTaxRepository.findByIssueId(issueId)
-                .orElseThrow(() -> new NtsTaxNotFoundException(TAX_NOT_FOUND));
-    }
-
     @Transactional
     public String validateNtsTax(Long ntsTaxId) {
         NtsTax ntsTax = ntsTaxRepository.findById(ntsTaxId).orElseThrow(() -> new GeneralException(TAX_NOT_FOUND));
@@ -86,5 +77,24 @@ public class NtsTaxService {
         LocalDateTime deadline = LocalDateTime.now().minusMonths(period);
         List<NtsTax> ntsTaxList = ntsTaxRepository.findAllByPeriod(deadline);
         return ntsTaxList;
+    }
+
+    @Transactional
+    public void updatePaymentWritten(List<PaymentDetails> paymentDetails) {
+        paymentDetails.forEach(paymentDetail -> {
+            String issueId = paymentDetail.getNtsTaxNum();
+            NtsTax ntsTax = findByIssueId(issueId);
+            ntsTax.updatePaymentWritten();
+        });
+    }
+
+    public NtsTax findById(Long id) {
+        return ntsTaxRepository.findById(id)
+                .orElseThrow(() -> new NtsTaxNotFoundException(TAX_NOT_FOUND));
+    }
+
+    public NtsTax findByIssueId(String issueId) {
+        return ntsTaxRepository.findByIssueId(issueId)
+                .orElseThrow(() -> new NtsTaxNotFoundException(TAX_NOT_FOUND));
     }
 }

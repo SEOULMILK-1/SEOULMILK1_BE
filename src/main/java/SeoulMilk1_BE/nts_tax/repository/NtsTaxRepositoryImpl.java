@@ -1,6 +1,6 @@
 package SeoulMilk1_BE.nts_tax.repository;
 
-import SeoulMilk1_BE.nts_tax.domain.type.Status;
+import SeoulMilk1_BE.nts_tax.domain.type.ValidStatus;
 import SeoulMilk1_BE.nts_tax.dto.response.CsSearchTaxResponse;
 import SeoulMilk1_BE.nts_tax.dto.response.HqSearchTaxResponse;
 import com.querydsl.core.types.Projections;
@@ -27,7 +27,7 @@ public class NtsTaxRepositoryImpl implements NtsTaxRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public Page<HqSearchTaxResponse> findTaxUsedInHQ(Pageable pageable, String keyword, String startDate, String endDate, Long months, Status status) {
+    public Page<HqSearchTaxResponse> findTaxUsedInHQ(Pageable pageable, String keyword, String startDate, String endDate, Long months, Boolean status) {
         List<HqSearchTaxResponse> results = queryFactory.select(
                         Projections.constructor(HqSearchTaxResponse.class,
                                 ntsTax.id,
@@ -35,14 +35,16 @@ public class NtsTaxRepositoryImpl implements NtsTaxRepositoryCustom {
                                 Expressions.stringTemplate("CONCAT(SUBSTRING(issueDate, 1, 4), '.', SUBSTRING(issueDate, 5, 2), '.', SUBSTRING(issueDate, 7, 2))").as("formattedIssueDate"),
                                 ntsTax.suDeptName,
                                 ntsTax.suPersName,
-                                ntsTax.status
+                                Expressions.cases()
+                                        .when(ntsTax.isPaymentWritten.isTrue()).then("반영")
+                                        .otherwise("미반영").as("status")
                         )
                 )
                 .from(ntsTax)
                 .where(containsKeyword(keyword),
                         betweenDate(startDate, endDate),
                         betweenMonths(months),
-                        betweenStatus(status))
+                        betweenHqStatus(status))
                 .offset((pageable.getOffset()))
                 .orderBy(ntsTax.issueDate.desc())
                 .limit(pageable.getPageSize())
@@ -53,14 +55,13 @@ public class NtsTaxRepositoryImpl implements NtsTaxRepositoryCustom {
                 .where(containsKeyword(keyword),
                         betweenDate(startDate, endDate),
                         betweenMonths(months),
-                        betweenStatus(status));
+                        betweenHqStatus(status));
 
         return PageableExecutionUtils.getPage(results, pageable, countQuery::fetchOne);
     }
 
-
     @Override
-    public Page<CsSearchTaxResponse> findTaxUsedInCS(Pageable pageable, Long userId, String startDate, String endDate, Long months, Status status) {
+    public Page<CsSearchTaxResponse> findTaxUsedInCS(Pageable pageable, Long userId, String startDate, String endDate, Long months, ValidStatus status) {
         List<CsSearchTaxResponse> results = queryFactory.select(
                         Projections.constructor(CsSearchTaxResponse.class,
                                 ntsTax.id,
@@ -68,7 +69,7 @@ public class NtsTaxRepositoryImpl implements NtsTaxRepositoryCustom {
                                 Expressions.stringTemplate("CONCAT(SUBSTRING(issueDate, 1, 4), '.', SUBSTRING(issueDate, 5, 2), '.', SUBSTRING(issueDate, 7, 2))").as("formattedIssueDate"),
                                 ntsTax.suDeptName,
                                 ntsTax.suPersName,
-                                ntsTax.status
+                                ntsTax.validStatus
                         )
                 )
                 .from(ntsTax)
@@ -123,11 +124,21 @@ public class NtsTaxRepositoryImpl implements NtsTaxRepositoryCustom {
         return null;
     }
 
-    private BooleanExpression betweenStatus(Status status) {
+    private BooleanExpression betweenHqStatus(Boolean status) {
+        if (status == null) {
+            return null;
+        } else if (status) {
+            return ntsTax.isPaymentWritten.isTrue();
+        } else {
+            return ntsTax.isPaymentWritten.isFalse();
+        }
+    }
+
+    private BooleanExpression betweenStatus(ValidStatus status) {
         if (status != null) {
-            return ntsTax.status.eq(status);
+            return ntsTax.validStatus.eq(status);
         }
 
-        return ntsTax.status.eq(Status.APPROVE);
+        return ntsTax.validStatus.eq(ValidStatus.APPROVE);
     }
 }
