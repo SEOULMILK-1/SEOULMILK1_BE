@@ -9,13 +9,19 @@ import SeoulMilk1_BE.payment_resolution.dto.response.PaymentResolutionReadRespon
 import SeoulMilk1_BE.payment_resolution.dto.response.PaymentResolutionInsertResponse;
 import SeoulMilk1_BE.payment_resolution.repository.PaymentResolutionRepository;
 import SeoulMilk1_BE.payment_resolution.utils.PaymentResolutionConstants;
+import SeoulMilk1_BE.post.dto.response.post.PostListResponse;
 import SeoulMilk1_BE.user.service.TeamService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -53,7 +59,9 @@ public class PaymentResolutionService {
         return PaymentResolutionConstants.DELETE_SUCCESS.getMessage();
     }
 
-//    public PaymentResolutionListResponse readPaymentResolutionList(int period, int page, int size) {
-//        paymentResolutionRepository.
-//    }
+    public List<PaymentResolutionListResponse> readPaymentResolutionList(int period, int page, int size) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        List<PaymentResolution> result = paymentResolutionRepository.findListByDeadline(LocalDateTime.now().minusMonths(period), pageRequest).getContent();
+        return result.stream().map(p -> PaymentResolutionListResponse.from(p)).collect(Collectors.toList());
+    }
 }

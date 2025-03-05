@@ -21,7 +21,6 @@ public record PaymentResolutionRequest(
         String principalBusinessNumber,
         String approver,
         LocalDateTime scheduledPaymentDate,
-        LocalDateTime createdAt,
         List<PaymentDetails> paymentDetails,
         Long totalSupplyAmount,
         Long totalAllAmount
@@ -52,7 +51,6 @@ public record PaymentResolutionRequest(
                 .principalBusinessNumber(user.getTeam().getBusinessNumber())
                 .approver(user.getName())
                 .scheduledPaymentDate(LocalDateTime.now().plusDays(7))
-                .createdAt(LocalDateTime.now())
                 .paymentDetails(paymentDetailsDtoList)
                 .totalSupplyAmount(supplyAmount)
                 .totalAllAmount(allAmount)

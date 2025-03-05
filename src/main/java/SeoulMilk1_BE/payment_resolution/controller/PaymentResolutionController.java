@@ -13,6 +13,7 @@ import SeoulMilk1_BE.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.query.Page;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -63,9 +64,9 @@ public class PaymentResolutionController {
             "page: 조회할 페이지 번호" +
             "size: 한 페이지에 조회할 사용자 수")
     @GetMapping("/list/{period}")
-    public ApiResponse<PaymentResolutionListResponse> readPaymentResolutionList(@PathVariable("period") int period,
-                                                                                @RequestParam(defaultValue = "0") int page,
-                                                                                @RequestParam(defaultValue = "10") int size) {
+    public ApiResponse<List<PaymentResolutionListResponse>> readPaymentResolutionList(@PathVariable("period") int period,
+                                                                                     @RequestParam(defaultValue = "0") int page,
+                                                                                     @RequestParam(defaultValue = "10") int size) {
         return ApiResponse.onSuccess(paymentResolutionService.readPaymentResolutionList(period, page, size));
     }
 }
