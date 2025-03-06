@@ -33,8 +33,7 @@ public class NtsTaxRepositoryImpl implements NtsTaxRepositoryCustom {
                                 ntsTax.id,
                                 ntsTax.title,
                                 Expressions.stringTemplate("CONCAT(SUBSTRING(issueDate, 1, 4), '.', SUBSTRING(issueDate, 5, 2), '.', SUBSTRING(issueDate, 7, 2))").as("formattedIssueDate"),
-                                ntsTax.suDeptName,
-                                ntsTax.suPersName,
+                                ntsTax.team.name,
                                 Expressions.cases()
                                         .when(ntsTax.isPaymentWritten.isTrue()).then("반영")
                                         .otherwise("미반영").as("status")
@@ -67,8 +66,7 @@ public class NtsTaxRepositoryImpl implements NtsTaxRepositoryCustom {
                                 ntsTax.id,
                                 ntsTax.title,
                                 Expressions.stringTemplate("CONCAT(SUBSTRING(issueDate, 1, 4), '.', SUBSTRING(issueDate, 5, 2), '.', SUBSTRING(issueDate, 7, 2))").as("formattedIssueDate"),
-                                ntsTax.suDeptName,
-                                ntsTax.suPersName,
+                                ntsTax.team.name,
                                 ntsTax.validStatus
                         )
                 )

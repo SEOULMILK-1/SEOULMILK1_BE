@@ -10,7 +10,6 @@ public record HqSearchTaxResponse(
         String title,
         String taxDate,
         String team,
-        String name,
         String status
 ) {
     public static HqSearchTaxResponse from(NtsTax ntsTax) {
@@ -18,8 +17,7 @@ public record HqSearchTaxResponse(
                 .ntsTaxId(ntsTax.getId())
                 .title(ntsTax.getTitle())
                 .taxDate(ntsTax.getIssueDate())
-                .team(ntsTax.getSuDeptName())
-                .name(ntsTax.getSuPersName())
+                .team(ntsTax.getTeam().getName())
                 .status(ntsTax.getIsPaymentWritten() ? "반영" : "미반영")
                 .build();
     }

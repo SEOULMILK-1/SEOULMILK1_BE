@@ -10,7 +10,6 @@ public record CsSearchTaxResponse(
         String title,
         String taxDate,
         String team,
-        String name,
         ValidStatus status
 ) {
     public static CsSearchTaxResponse from(NtsTax ntsTax) {
@@ -18,8 +17,7 @@ public record CsSearchTaxResponse(
                 .ntsTaxId(ntsTax.getId())
                 .title(ntsTax.getTitle())
                 .taxDate(ntsTax.getIssueDate())
-                .team(ntsTax.getSuDeptName())
-                .name(ntsTax.getSuPersName())
+                .team(ntsTax.getTeam().getName())
                 .status(ntsTax.getValidStatus())
                 .build();
     }
