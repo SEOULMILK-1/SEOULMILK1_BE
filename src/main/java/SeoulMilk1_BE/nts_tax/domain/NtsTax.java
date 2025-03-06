@@ -268,7 +268,7 @@ public class NtsTax extends BaseTimeEntity {
         String year = this.issueDate.substring(2, 4);
         String month = this.issueDate.substring(4, 6);
 
-        this.title = String.format("%s %s년 %s월 세금계산서(%d)", suDeptName, year, month, count);
+        this.title = String.format("%s %s년 %s월 세금계산서(%d)", this.team.getName(), year, month, count);
     }
 
     private static String getInferText(OcrApiResponse response, String fieldName) {
