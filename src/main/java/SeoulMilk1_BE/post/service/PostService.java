@@ -13,10 +13,8 @@ import SeoulMilk1_BE.post.util.PostConstants;
 import SeoulMilk1_BE.user.domain.User;
 import SeoulMilk1_BE.user.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -50,13 +48,13 @@ public class PostService {
         // 조회 수 증가.
         post.updateViews();
 
-        return PostDetailResponse.from(post.getId(), post.getUser().getName(), post.getUser().getRole(), post.getTitle(), post.getContent(), post.getViews(), post.getPostImgUrl(), post.getModifiedAt(), comments);
+        return PostDetailResponse.from(post.getId(), post.getUser().getName(), post.getUser().getRole(), post.getTitle(), post.getContent(), post.getViews(), post.getPostImgUrl(), post.getModifiedAt(), comments, post.getPin());
     }
 
     public List<PostListResponse> findList(PostListRequest request) {
         Pageable pageable = PageRequest.of(request.page(), request.size());
-        List<Post> result = postRepository.findAllByOrderByModifiedAtDesc(pageable).getContent();
-        return result.stream().map(r -> PostListResponse.from(r.getId(), r.getTitle(), r.getUser().getName(), r.getUser().getRole())).collect(Collectors.toList());
+        List<Post> result = postRepository.findByPinAndOrder(pageable).getContent();
+        return result.stream().map(r -> PostListResponse.from(r.getId(), r.getTitle(), r.getUser().getName(), r.getUser().getRole(), r.getPin(), r.getModifiedAt())).collect(Collectors.toList());
     }
 
     public PostUpdateResponse update(Long postId, PostCreateRequest request, List<MultipartFile> files) {
@@ -97,7 +95,7 @@ public class PostService {
         }
         else {
             Post post = postRepository.findById(postId).orElseThrow(() -> new GeneralException(ErrorStatus.POST_NOT_FOUND));
-            if (post.getPin() == true)
+            if (post.getPin() != null && post.getPin() == true)
                 throw new GeneralException(ErrorStatus.ALREADY_PINED);
             post.doPin();
             return PostConstants.PIN_SUCCESS.getMessage();
@@ -107,7 +105,7 @@ public class PostService {
     @Transactional
     public String unPinPost(Long postId) {
         Post post = postRepository.findById(postId).orElseThrow(() -> new GeneralException(ErrorStatus.POST_NOT_FOUND));
-        if (post.getPin() == false)
+        if (post.getPin() == null || post.getPin() == false)
             throw new GeneralException(ErrorStatus.ALREADY_UN_PINED);
         post.unPin();
         return PostConstants.UN_PIN_SUCCESS.getMessage();

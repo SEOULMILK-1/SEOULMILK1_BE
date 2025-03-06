@@ -1,7 +1,6 @@
 package SeoulMilk1_BE.post.dto.request.post;
 
 import SeoulMilk1_BE.post.domain.Post;
-import SeoulMilk1_BE.post.domain.type.Type;
 import SeoulMilk1_BE.user.domain.User;
 
 import java.util.List;
