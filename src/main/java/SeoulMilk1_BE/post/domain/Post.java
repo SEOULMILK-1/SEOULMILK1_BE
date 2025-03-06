@@ -1,7 +1,6 @@
 package SeoulMilk1_BE.post.domain;
 
 import SeoulMilk1_BE.global.domain.BaseTimeEntity;
-import SeoulMilk1_BE.post.domain.type.Type;
 import SeoulMilk1_BE.user.domain.User;
 import jakarta.persistence.*;
 import lombok.*;
@@ -37,9 +36,6 @@ public class Post extends BaseTimeEntity {
     @Column(name = "is_valid", nullable = false)
     private Boolean isValid;
 
-    @Enumerated(EnumType.STRING)
-    private Type type;
-
     @ElementCollection
     @CollectionTable(name = "post_img_list", joinColumns = @JoinColumn(name = "post_id"))
     private List<String> postImgUrl = new ArrayList<>();
@@ -52,20 +48,18 @@ public class Post extends BaseTimeEntity {
     private Boolean pin;
 
     @Builder
-    public Post(User user, String title, String content, Long views, Boolean isValid, Type type, List postImgList) {
+    public Post(User user, String title, String content, Long views, Boolean isValid, List postImgList) {
         this.user = user;
         this.title = title;
         this.content = content;
         this.views = views;
         this.isValid = isValid;
-        this.type = type;
         this.postImgUrl = postImgList;
     }
 
-    public void updatePost(String title, String content, Type type, List<String> postImgUrl) {
+    public void updatePost(String title, String content, List<String> postImgUrl) {
         this.title = title;
         this.content = content;
-        this.type = type;
         this.postImgUrl = postImgUrl;
     }
 

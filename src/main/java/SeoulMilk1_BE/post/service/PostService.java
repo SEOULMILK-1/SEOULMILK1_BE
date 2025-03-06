@@ -4,7 +4,6 @@ import SeoulMilk1_BE.global.apiPayload.code.status.ErrorStatus;
 import SeoulMilk1_BE.global.apiPayload.exception.GeneralException;
 import SeoulMilk1_BE.global.service.S3Service;
 import SeoulMilk1_BE.post.domain.Post;
-import SeoulMilk1_BE.post.domain.type.Type;
 import SeoulMilk1_BE.post.dto.request.post.PostCreateRequest;
 import SeoulMilk1_BE.post.dto.request.post.PostListRequest;
 import SeoulMilk1_BE.post.dto.response.comment.CommentReadResponse;
@@ -38,7 +37,7 @@ public class PostService {
         List<String> postImgList = s3Service.uploadFiles(files);
         User user = userService.findUser(request.userId());
 
-        Post post = PostCreateRequest.of(user, request.title(), request.content(), Type.valueOf(request.type()), postImgList);
+        Post post = PostCreateRequest.of(user, request.title(), request.content(), postImgList);
 
         postRepository.save(post);
 
@@ -51,19 +50,19 @@ public class PostService {
         // 조회 수 증가.
         post.updateViews();
 
-        return PostDetailResponse.from(post.getId(), post.getUser().getName(), post.getTitle(), post.getContent(), post.getType(), post.getViews(), post.getPostImgUrl(), post.getCreatedAt(), post.getModifiedAt(), comments);
+        return PostDetailResponse.from(post.getId(), post.getUser().getName(), post.getUser().getRole(), post.getTitle(), post.getContent(), post.getViews(), post.getPostImgUrl(), post.getModifiedAt(), comments);
     }
 
     public List<PostListResponse> findList(PostListRequest request) {
         Pageable pageable = PageRequest.of(request.page(), request.size());
         List<Post> result = postRepository.findAllByOrderByModifiedAtDesc(pageable).getContent();
-        return result.stream().map(r -> PostListResponse.from(r.getId(), r.getTitle(), r.getUser().getName())).collect(Collectors.toList());
+        return result.stream().map(r -> PostListResponse.from(r.getId(), r.getTitle(), r.getUser().getName(), r.getUser().getRole())).collect(Collectors.toList());
     }
 
     public PostUpdateResponse update(Long postId, PostCreateRequest request, List<MultipartFile> files) {
         List<String> postImgList = s3Service.uploadFiles(files);
         Post post = postRepository.findById(postId).orElseThrow();
-        post.updatePost(request.title(), request.content(), Type.valueOf(request.type()), postImgList);
+        post.updatePost(request.title(), request.content(), postImgList);
 
         return PostUpdateResponse.from(post.getId(), post.getModifiedAt());
     }
