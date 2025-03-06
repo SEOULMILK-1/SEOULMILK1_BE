@@ -16,7 +16,7 @@ public record HqSearchTaxResponse(
     public static HqSearchTaxResponse from(NtsTax ntsTax) {
         return HqSearchTaxResponse.builder()
                 .ntsTaxId(ntsTax.getId())
-                .title(ntsTax.getIssueDate())
+                .title(ntsTax.getTitle())
                 .taxDate(ntsTax.getIssueDate())
                 .team(ntsTax.getSuDeptName())
                 .name(ntsTax.getSuPersName())

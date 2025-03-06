@@ -16,7 +16,7 @@ public record CsSearchTaxResponse(
     public static CsSearchTaxResponse from(NtsTax ntsTax) {
         return CsSearchTaxResponse.builder()
                 .ntsTaxId(ntsTax.getId())
-                .title(ntsTax.getIssueDate())
+                .title(ntsTax.getTitle())
                 .taxDate(ntsTax.getIssueDate())
                 .team(ntsTax.getSuDeptName())
                 .name(ntsTax.getSuPersName())

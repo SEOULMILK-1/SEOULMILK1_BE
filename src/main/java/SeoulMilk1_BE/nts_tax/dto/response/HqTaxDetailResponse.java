@@ -21,7 +21,7 @@ public record HqTaxDetailResponse(
     public static HqTaxDetailResponse from(NtsTax ntsTax) {
         return HqTaxDetailResponse.builder()
                 .status(ntsTax.getIsPaymentWritten() ? "반영" : "미반영")
-                .title(getTitle(ntsTax.getSuDeptName(), ntsTax.getIssueDate()))
+                .title(ntsTax.getTitle())
                 .taxImageUrl(ntsTax.getTaxImgUrl())
                 .issueId(formatIssueId(ntsTax.getIssueId()))
                 .suId(formatSuAndIpId(ntsTax.getSuId()))
@@ -29,13 +29,6 @@ public record HqTaxDetailResponse(
                 .taxDate(getFormattedTaxDate(ntsTax.getIssueDate()))
                 .chargeTotal(formatChargeTotal(ntsTax.getChargeTotal()))
                 .build();
-    }
-
-    private static String getTitle(String suDeptName, String issueDate) {
-        String year = issueDate.substring(0, 4);
-        String month = issueDate.substring(4, 6);
-
-        return String.format("%s %s년 %s월 세금계산서", suDeptName, year, month);
     }
 
     private static String formatIssueId(String issueId) {
