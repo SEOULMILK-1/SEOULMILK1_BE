@@ -204,7 +204,14 @@ public class NtsTax extends BaseTimeEntity {
     private String transDate;
 
     @Enumerated(EnumType.STRING)
-    private Status status;
+    @Column(name = "valid_status", nullable = false)
+    private ValidStatus validStatus;
+
+    @Column(name = "is_payment_written", nullable = false)
+    private Boolean isPaymentWritten;
+
+    @Column(name = "title")
+    private String title;
 
     public static NtsTax toNtsTax(OcrApiResponse response, User user, String imageUrl) {
         return NtsTax.builder()
@@ -228,7 +235,9 @@ public class NtsTax extends BaseTimeEntity {
                 .erZet(LocalDateTime.now().format(DateTimeFormatter.ofPattern("HHmmss")))
                 .user(user)
                 .taxImgUrl(imageUrl)
-                .status(Status.WAIT)
+                .validStatus(ValidStatus.WAIT)
+                .isPaymentWritten(false)
+                .title(getInferText(response, "공급자 상호 법인명") + " " + getInferText(response, "작성일자") + " 세금계산서")
                 .build();
     }
 
@@ -238,6 +247,30 @@ public class NtsTax extends BaseTimeEntity {
         this.ipId = formatInputData(request.ipId());
         this.issueDate = formatInputData(request.issueDate());
         this.chargeTotal = stringToLong(request.chargeTotal());
+    }
+
+    public void updateStatus(int status) {
+        switch (status) {
+            case 0:
+                this.validStatus = ValidStatus.APPROVE;
+                break;
+            case 1:
+                this.validStatus = ValidStatus.REFUSED;
+                break;
+        }
+    }
+
+    public void updatePaymentWritten() {
+        this.isPaymentWritten = true;
+    }
+
+    public void updateTitle(Long count) {
+        String year = this.issueDate.substring(2, 4);
+        String month = this.issueDate.substring(4, 6);
+
+        this.title = String.format("%s %s년 %s월 세금계산서(%d)",
+                this.team.getName() != null ? this.team.getName() : this.suDeptName,
+                year, month, count);
     }
 
     private static String getInferText(OcrApiResponse response, String fieldName) {
@@ -275,19 +308,5 @@ public class NtsTax extends BaseTimeEntity {
         }
 
         return name.split(" ")[0];
-    }
-
-    public void updateStatus(int status) {
-        switch (status) {
-            case 0:
-                this.status = Status.APPROVE;
-                break;
-            case 1:
-                this.status = Status.REFUSED;
-                break;
-            default:
-                this.status = Status.DONE;
-                break;
-        }
     }
 }

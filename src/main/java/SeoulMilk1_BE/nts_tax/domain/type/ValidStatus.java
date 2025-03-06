@@ -5,11 +5,10 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum Status {
+public enum ValidStatus {
     WAIT("승인대기"),
     APPROVE("승인됨"),
     REFUSED("반려됨"),
-    DONE("지급결의"),
     ;
 
     private final String message;

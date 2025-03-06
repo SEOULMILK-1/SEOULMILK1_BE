@@ -1,11 +1,8 @@
 package SeoulMilk1_BE.user.service;
 
 import SeoulMilk1_BE.nts_tax.domain.NtsTax;
-import SeoulMilk1_BE.nts_tax.domain.type.Status;
-import SeoulMilk1_BE.nts_tax.dto.response.HqSearchTaxResponse;
-import SeoulMilk1_BE.nts_tax.dto.response.HqSearchTaxResponseList;
-import SeoulMilk1_BE.nts_tax.dto.response.HqTaxResponse;
-import SeoulMilk1_BE.nts_tax.dto.response.HqTaxResponseList;
+import SeoulMilk1_BE.nts_tax.dto.response.*;
+import SeoulMilk1_BE.nts_tax.exception.NtsTaxNotFoundException;
 import SeoulMilk1_BE.nts_tax.repository.NtsTaxRepository;
 import SeoulMilk1_BE.user.dto.response.HqSearchCsNameResponse;
 import SeoulMilk1_BE.user.dto.response.HqSearchCsNameResponseList;
@@ -23,6 +20,8 @@ import org.springframework.util.StringUtils;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+
+import static SeoulMilk1_BE.global.apiPayload.code.status.ErrorStatus.TAX_NOT_FOUND;
 
 @Service
 @RequiredArgsConstructor
@@ -45,7 +44,7 @@ public class HqService {
         return HqTaxResponseList.from(responseList);
     }
 
-    public HqSearchTaxResponseList searchTax(int page, int size, String keyword, String startDate, String endDate, Long months, Status status) {
+    public HqSearchTaxResponseList searchTax(int page, int size, String keyword, String startDate, String endDate, Long months, Boolean status) {
         String start = formatInputData(startDate);
         String end = formatInputData(endDate);
 
@@ -57,6 +56,13 @@ public class HqService {
         List<HqSearchTaxResponse> responseList = hqTaxResponsePage.getContent();
 
         return HqSearchTaxResponseList.of(totalElements, totalPages, responseList);
+    }
+
+    public HqTaxDetailResponse getTaxDetail(Long ntsTaxId) {
+        NtsTax ntsTax = ntsTaxRepository.findById(ntsTaxId)
+                .orElseThrow(() -> new NtsTaxNotFoundException(TAX_NOT_FOUND));
+
+        return HqTaxDetailResponse.from(ntsTax);
     }
 
     public HqSearchCsNameResponseList searchCsName(String keyword) {

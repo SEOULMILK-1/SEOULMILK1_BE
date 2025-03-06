@@ -1,6 +1,7 @@
 package SeoulMilk1_BE.nts_tax.dto.response;
 
 import SeoulMilk1_BE.nts_tax.domain.NtsTax;
+import SeoulMilk1_BE.nts_tax.domain.type.ValidStatus;
 import lombok.Builder;
 import org.springframework.util.StringUtils;
 
@@ -8,28 +9,26 @@ import java.text.NumberFormat;
 import java.util.Locale;
 
 @Builder
-public record CustomOcrResponse(
-        Long ntsTaxId,
+public record CsTaxDetailResponse(
+        ValidStatus status,
+        String title,
+        String taxImageUrl,
         String issueId,
         String suId,
         String ipId,
-        String issueDate,
+        String taxDate,
         String chargeTotal
 ) {
-    public static CustomOcrResponse from(NtsTax ntsTax) {
-        return CustomOcrResponse.builder()
-                .ntsTaxId(ntsTax.getId())
+    public static CsTaxDetailResponse from(NtsTax ntsTax) {
+        return CsTaxDetailResponse.builder()
+                .status(ntsTax.getValidStatus())
+                .title(ntsTax.getTitle())
+                .taxImageUrl(ntsTax.getTaxImgUrl())
                 .issueId(formatIssueId(ntsTax.getIssueId()))
                 .suId(formatSuAndIpId(ntsTax.getSuId()))
                 .ipId(formatSuAndIpId(ntsTax.getIpId()))
-                .issueDate(formatIssueDate(ntsTax.getIssueDate()))
+                .taxDate(getFormattedTaxDate(ntsTax.getIssueDate()))
                 .chargeTotal(formatChargeTotal(ntsTax.getChargeTotal()))
-                .build();
-    }
-
-    public static CustomOcrResponse from(String message) {
-        return CustomOcrResponse.builder()
-                .issueId(message)
                 .build();
     }
 
@@ -38,8 +37,8 @@ public record CustomOcrResponse(
             return issueId;
         }
 
-        return issueId.substring(0, 8) + "." +
-                issueId.substring(8, 14) + "." +
+        return issueId.substring(0, 8) + "-" +
+                issueId.substring(8, 14) + "-" +
                 issueId.substring(14, 24);
     }
 
@@ -53,15 +52,12 @@ public record CustomOcrResponse(
                 id.substring(5, 10);
     }
 
-    public static String formatIssueDate(String issueDate) {
-        if (!StringUtils.hasText(issueDate) || issueDate.length() != 8) {
-            return issueDate;
-        }
-        return issueDate.substring(0, 4) + "-" + issueDate.substring(4, 6) + "-" + issueDate.substring(6, 8);
+    private static String getFormattedTaxDate(String issueDate) {
+        return issueDate.substring(0, 4) + "." + issueDate.substring(4, 6) + "." + issueDate.substring(6, 8);
     }
 
-    public static String formatChargeTotal(Long chargeTotal) {
-        NumberFormat numberFormat = NumberFormat.getInstance(Locale.US);
+    private static String formatChargeTotal(Long chargeTotal) {
+        NumberFormat numberFormat = NumberFormat.getInstance(Locale.KOREA);
         return numberFormat.format(chargeTotal);
     }
 }

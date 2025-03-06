@@ -8,6 +8,7 @@ import SeoulMilk1_BE.nts_tax.dto.request.UpdateTaxRequest;
 import SeoulMilk1_BE.nts_tax.exception.NtsTaxNotFoundException;
 import SeoulMilk1_BE.nts_tax.repository.NtsTaxRepository;
 import SeoulMilk1_BE.nts_tax.dto.response.OcrApiResponse;
+import SeoulMilk1_BE.payment_resolution.domain.PaymentDetails;
 import SeoulMilk1_BE.user.domain.User;
 import SeoulMilk1_BE.user.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -34,10 +35,17 @@ public class NtsTaxService {
     public NtsTax saveNtsTax(OcrApiResponse ocrApiResponse, Long userId, String imageUrl) {
         User user = userService.findUser(userId);
 
-        NtsTax ntsTax = NtsTax.toNtsTax(ocrApiResponse, user, imageUrl);
-        ntsTaxRepository.save(ntsTax);
+        NtsTax ocrNtsTax = NtsTax.toNtsTax(ocrApiResponse, user, imageUrl);
+        ntsTaxRepository.save(ocrNtsTax);
 
-        return findByIssueId(ntsTax.getIssueId());
+        NtsTax findNtsTax = findByIssueId(ocrNtsTax.getIssueId());
+
+        String issueYearMonth = findNtsTax.getIssueDate().substring(0, 6);
+        Long count = ntsTaxRepository.countByTeamAndIssueYearMonth(user.getTeam(), issueYearMonth);
+
+        findNtsTax.updateTitle(count);
+
+        return findNtsTax;
     }
 
     @Transactional
@@ -55,16 +63,6 @@ public class NtsTaxService {
         ntsTaxRepository.delete(ntsTax);
 
         return DELETE_SUCCESS.getMessage();
-    }
-
-    public NtsTax findById(Long id) {
-        return ntsTaxRepository.findById(id)
-                .orElseThrow(() -> new NtsTaxNotFoundException(TAX_NOT_FOUND));
-    }
-
-    public NtsTax findByIssueId(String issueId) {
-        return ntsTaxRepository.findByIssueId(issueId)
-                .orElseThrow(() -> new NtsTaxNotFoundException(TAX_NOT_FOUND));
     }
 
     @Transactional
@@ -86,5 +84,24 @@ public class NtsTaxService {
         LocalDateTime deadline = LocalDateTime.now().minusMonths(period);
         List<NtsTax> ntsTaxList = ntsTaxRepository.findAllByPeriod(deadline);
         return ntsTaxList;
+    }
+
+    @Transactional
+    public void updatePaymentWritten(List<PaymentDetails> paymentDetails) {
+        paymentDetails.forEach(paymentDetail -> {
+            String issueId = paymentDetail.getNtsTaxNum();
+            NtsTax ntsTax = findByIssueId(issueId);
+            ntsTax.updatePaymentWritten();
+        });
+    }
+
+    public NtsTax findById(Long id) {
+        return ntsTaxRepository.findById(id)
+                .orElseThrow(() -> new NtsTaxNotFoundException(TAX_NOT_FOUND));
+    }
+
+    public NtsTax findByIssueId(String issueId) {
+        return ntsTaxRepository.findByIssueId(issueId)
+                .orElseThrow(() -> new NtsTaxNotFoundException(TAX_NOT_FOUND));
     }
 }
