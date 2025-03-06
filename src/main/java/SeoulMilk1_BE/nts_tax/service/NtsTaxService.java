@@ -35,10 +35,17 @@ public class NtsTaxService {
     public NtsTax saveNtsTax(OcrApiResponse ocrApiResponse, Long userId, String imageUrl) {
         User user = userService.findUser(userId);
 
-        NtsTax ntsTax = NtsTax.toNtsTax(ocrApiResponse, user, imageUrl);
-        ntsTaxRepository.save(ntsTax);
+        NtsTax ocrNtsTax = NtsTax.toNtsTax(ocrApiResponse, user, imageUrl);
+        ntsTaxRepository.save(ocrNtsTax);
 
-        return findByIssueId(ntsTax.getIssueId());
+        NtsTax findNtsTax = findByIssueId(ocrNtsTax.getIssueId());
+
+        String issueYearMonth = findNtsTax.getIssueDate().substring(0, 6);
+        Long count = ntsTaxRepository.countByTeamAndIssueYearMonth(user.getTeam(), issueYearMonth);
+
+        findNtsTax.updateTitle(count);
+
+        return findNtsTax;
     }
 
     @Transactional

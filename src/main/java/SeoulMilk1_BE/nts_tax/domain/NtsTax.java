@@ -210,6 +210,9 @@ public class NtsTax extends BaseTimeEntity {
     @Column(name = "is_payment_written", nullable = false)
     private Boolean isPaymentWritten;
 
+    @Column(name = "title")
+    private String title;
+
     public static NtsTax toNtsTax(OcrApiResponse response, User user, String imageUrl) {
         return NtsTax.builder()
                 .team(user.getTeam()) // 소속 추가
@@ -234,6 +237,7 @@ public class NtsTax extends BaseTimeEntity {
                 .taxImgUrl(imageUrl)
                 .validStatus(ValidStatus.WAIT)
                 .isPaymentWritten(false)
+                .title(getInferText(response, "공급자 상호 법인명") + " " + getInferText(response, "작성일자") + " 세금계산서")
                 .build();
     }
 
@@ -258,6 +262,13 @@ public class NtsTax extends BaseTimeEntity {
 
     public void updatePaymentWritten() {
         this.isPaymentWritten = true;
+    }
+
+    public void updateTitle(Long count) {
+        String year = this.issueDate.substring(2, 4);
+        String month = this.issueDate.substring(4, 6);
+
+        this.title = String.format("%s %s년 %s월 세금계산서(%d)", suDeptName, year, month, count);
     }
 
     private static String getInferText(OcrApiResponse response, String fieldName) {
