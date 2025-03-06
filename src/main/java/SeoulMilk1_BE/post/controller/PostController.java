@@ -51,4 +51,16 @@ public class PostController {
     public ApiResponse<PostDeleteResponse> deletePost(@PathVariable("postId") Long postId) {
         return ApiResponse.onSuccess(postService.delete(postId));
     }
+
+    @Operation(summary = "게시글 상단 고정", description = "게시글 상단 고정")
+    @PatchMapping("/pin/{postId}")
+    public ApiResponse<String> pinPost(@PathVariable("postId") Long postId) {
+        return ApiResponse.onSuccess(postService.pinPost(postId));
+    }
+
+    @Operation(summary = "게시글 상단 고정 해제", description = "게시글 상단 고정 해제")
+    @PatchMapping("/unpin/{postId}")
+    public ApiResponse<String> unPinPost(@PathVariable("postId") Long postId) {
+        return ApiResponse.onSuccess(postService.unPinPost(postId));
+    }
 }

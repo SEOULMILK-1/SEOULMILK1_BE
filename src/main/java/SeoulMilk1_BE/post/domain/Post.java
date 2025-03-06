@@ -49,6 +49,8 @@ public class Post extends BaseTimeEntity {
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private List<Comment> commentList;
 
+    private Boolean pin;
+
     @Builder
     public Post(User user, String title, String content, Long views, Boolean isValid, Type type, List postImgList) {
         this.user = user;
@@ -74,6 +76,14 @@ public class Post extends BaseTimeEntity {
     public void deactivate() {
         this.isValid = false;
         this.inactiveDate = LocalDateTime.now().plusDays(7);
+    }
+
+    public void doPin() {
+        pin = true;
+    }
+
+    public void unPin() {
+        pin = false;
     }
 
 }
