@@ -32,9 +32,7 @@ public class HqService {
     private final TeamRepository teamRepository;
 
     public HqTaxResponseList getTaxInfo() {
-        String thisMonth = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMM"));
-
-        List<HqTaxResponse> responseList = ntsTaxRepository.findAllThisMonth(thisMonth).stream()
+        List<HqTaxResponse> responseList = ntsTaxRepository.findAllByIsPaymentWritten().stream()
                 .map(HqTaxResponse::from)
                 .toList();
 
