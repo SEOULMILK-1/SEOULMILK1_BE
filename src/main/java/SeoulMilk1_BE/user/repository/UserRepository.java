@@ -21,5 +21,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findByLoginId(String loginId);
 
-    Optional<User> findByTeamIn(List<Team> teamList);
+    List<User> findByTeamIn(List<Team> teamList);
 }
