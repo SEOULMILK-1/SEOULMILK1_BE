@@ -92,7 +92,7 @@ public class S3Service {
         }
 
         String contentType = file.getContentType();
-        if (contentType == null || !contentType.startsWith("image/")) {
+        if (contentType == null || !contentType.startsWith("multipart/")) {
             throw new GeneralException(ErrorStatus.FILE_NOT_IMAGE);
         }
     }
