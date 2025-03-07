@@ -14,7 +14,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Boolean existsByLoginId(String loginId);
 
-    @Query("SELECT u FROM User u WHERE (u.role = 'HQ_USER' OR u.role = 'AGENCY_USER') AND u.isAssigned = false")
+    @Query("SELECT u FROM User u WHERE (u.role = 'HQ_USER' OR u.role = 'CS_USER') AND u.isAssigned = false")
     Page<User> findUsersByRoleHQOrAgencyAndNotAssigned(Pageable pageable);
 
     Optional<User> findByLoginId(String loginId);
