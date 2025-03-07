@@ -73,12 +73,8 @@ public class Post extends BaseTimeEntity {
         this.inactiveDate = LocalDateTime.now().plusDays(7);
     }
 
-    public void doPin() {
-        pin = true;
-    }
-
-    public void unPin() {
-        pin = false;
+    public void updatePin() {
+        this.pin = !this.pin;
     }
 
 }

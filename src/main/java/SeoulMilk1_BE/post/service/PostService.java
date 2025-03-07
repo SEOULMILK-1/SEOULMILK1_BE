@@ -48,7 +48,7 @@ public class PostService {
         // 조회 수 증가.
         post.updateViews();
 
-        return PostDetailResponse.from(post.getId(), post.getUser().getName(), post.getUser().getRole(), post.getTitle(), post.getContent(), post.getViews(), post.getPostImgUrl(), post.getModifiedAt(), comments, post.getPin());
+        return PostDetailResponse.of(post.getId(), post.getUser().getName(), post.getUser().getRole(), post.getTitle(), post.getContent(), post.getViews(), post.getPostImgUrl(), post.getModifiedAt(), comments, post.getPin());
     }
 
     public List<PostListResponse> findList(PostListRequest request) {
@@ -88,26 +88,19 @@ public class PostService {
     // 게시글 상단 고정
     @Transactional
     public String pinPost(Long postId) {
-        int count = postRepository.countByPinTrue();
+        Post post = postRepository.findById(postId).orElseThrow(() -> new GeneralException(ErrorStatus.POST_NOT_FOUND));
+        Boolean pin = post.getPin();
 
-        if (count >= 4) {
-            return PostConstants.PIN_FAILED.getMessage();
-        }
-        else {
-            Post post = postRepository.findById(postId).orElseThrow(() -> new GeneralException(ErrorStatus.POST_NOT_FOUND));
-            if (post.getPin() != null && post.getPin() == true)
-                throw new GeneralException(ErrorStatus.ALREADY_PINED);
-            post.doPin();
+        if (pin == false) {
+            int count = postRepository.countByPinTrue();
+            if (count >= 4)
+                return PostConstants.PIN_FAILED.getMessage();
+            post.updatePin();
             return PostConstants.PIN_SUCCESS.getMessage();
         }
-    }
-
-    @Transactional
-    public String unPinPost(Long postId) {
-        Post post = postRepository.findById(postId).orElseThrow(() -> new GeneralException(ErrorStatus.POST_NOT_FOUND));
-        if (post.getPin() == null || post.getPin() == false)
-            throw new GeneralException(ErrorStatus.ALREADY_UN_PINED);
-        post.unPin();
-        return PostConstants.UN_PIN_SUCCESS.getMessage();
+        else {
+            post.updatePin();
+            return PostConstants.UN_PIN_SUCCESS.getMessage();
+        }
     }
 }
