@@ -11,7 +11,7 @@ import java.time.format.DateTimeFormatter;
 @Builder
 public record UserManageResponse(
         Long userId,
-        Long employeeId,
+        String loginId,
         String name,
         String phone,
         Role role,
@@ -22,7 +22,7 @@ public record UserManageResponse(
     public static UserManageResponse from(User user) {
         return UserManageResponse.builder()
                 .userId(user.getId())
-                .employeeId(user.getEmployeeId())
+                .loginId(user.getLoginId())
                 .name(user.getName())
                 .phone(formatPhone(user.getPhone()))
                 .role(user.getRole())

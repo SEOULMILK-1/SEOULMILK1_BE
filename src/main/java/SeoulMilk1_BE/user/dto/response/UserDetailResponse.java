@@ -12,7 +12,7 @@ public record UserDetailResponse(
     String name,
     String role,
     String teamName,
-    Long employeeId,
+    String loginId,
     String email,
     String phone,
     String bank,
@@ -22,7 +22,7 @@ public record UserDetailResponse(
         UserDetailResponseBuilder response = UserDetailResponse.builder()
             .userId(user.getId())
             .name(user.getName())
-            .employeeId(user.getEmployeeId())
+            .loginId(user.getLoginId())
             .email(user.getEmail())
             .phone(formatPhoneNumber(user.getPhone()));
 

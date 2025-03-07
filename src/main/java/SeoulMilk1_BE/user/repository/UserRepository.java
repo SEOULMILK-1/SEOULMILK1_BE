@@ -12,10 +12,10 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 
-    Boolean existsByEmployeeId(Long employeeId);
+    Boolean existsByLoginId(String loginId);
 
     @Query("SELECT u FROM User u WHERE (u.role = 'HQ_USER' OR u.role = 'AGENCY_USER') AND u.isAssigned = false")
     Page<User> findUsersByRoleHQOrAgencyAndNotAssigned(Pageable pageable);
 
-    Optional<User> findByEmployeeId(Long employeeId);
+    Optional<User> findByLoginId(String loginId);
 }

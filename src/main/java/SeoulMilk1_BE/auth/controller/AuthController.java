@@ -36,10 +36,10 @@ public class AuthController {
         return authService.getTestToken(userId);
     }
 
-    @Operation(summary = "사번 중복 검사", description = "사번 중복 검사")
-    @GetMapping("/validation/employee-id")
-    public ApiResponse<?> validateEmployeeId(@Valid @RequestParam Long employeeId) {
-        return ApiResponse.onSuccess(authService.validateEmployeeId(employeeId));
+    @Operation(summary = "아이디 중복 검사", description = "아이디 중복 검사")
+    @GetMapping("/validation/login-id")
+    public ApiResponse<?> validateEmployeeId(@Valid @RequestParam String loginId) {
+        return ApiResponse.onSuccess(authService.validateLoginId(loginId));
     }
 
     @Operation(summary = "모든 대리점명 조회", description = "모든 대리점 이름을 리스트로 제공합니다.")
