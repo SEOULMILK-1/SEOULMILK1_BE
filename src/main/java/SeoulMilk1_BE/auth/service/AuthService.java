@@ -24,7 +24,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 import static SeoulMilk1_BE.global.apiPayload.code.status.ErrorStatus.*;
-import static SeoulMilk1_BE.user.domain.type.Role.CS_USER;
 import static SeoulMilk1_BE.user.util.UserConstants.*;
 
 @Slf4j
@@ -44,10 +43,10 @@ public class AuthService {
         return jwtTokenProvider.createAccessToken(user);
     }
 
-    public String validateEmployeeId(Long employeeId) {
+    public String validateLoginId(String loginId) {
         String message = VALID_EMPLOYEE_ID.getMessage();
 
-        if (userRepository.existsByEmployeeId(employeeId)) {
+        if (userRepository.existsByLoginId(loginId)) {
             message = DUPLICATE_EMPLOYEE_ID.getMessage();
         }
 
@@ -83,7 +82,7 @@ public class AuthService {
     }
 
     public LoginResponse login(LoginRequest request, HttpServletResponse response) {
-        User user = userRepository.findByEmployeeId(request.employeeId())
+        User user = userRepository.findByLoginId(request.loginId())
                 .orElseThrow(() -> new UserNotFoundException(USER_NOT_FOUND));
 
         if (!passwordEncoder.matches(request.password(), user.getPassword())) {

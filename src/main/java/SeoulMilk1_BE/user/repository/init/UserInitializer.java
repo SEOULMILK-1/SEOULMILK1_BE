@@ -46,7 +46,7 @@ public class UserInitializer implements ApplicationRunner {
             List<User> userList = new ArrayList<>();
 
             User DUMMY_ADMIN = User.builder()
-                    .employeeId(123456L)
+                    .loginId("000000")
                     .password(passwordEncoder.encode("password"))
                     .name("관리자")
                     .email("admin@naver.com")
@@ -57,7 +57,7 @@ public class UserInitializer implements ApplicationRunner {
                     .build();
 
             User DUMMY_USER1 = User.builder()
-                    .employeeId(123789L)
+                    .loginId("123789")
                     .password(passwordEncoder.encode("password"))
                     .name("김민철")
                     .email("mincheol@naver.com")
@@ -68,7 +68,7 @@ public class UserInitializer implements ApplicationRunner {
                     .build();
 
             User DUMMY_USER2 = User.builder()
-                    .employeeId(456789L)
+                    .loginId("woojeong")
                     .password(passwordEncoder.encode("password"))
                     .name("이우정")
                     .email("woojeong@naver.com")
@@ -80,7 +80,7 @@ public class UserInitializer implements ApplicationRunner {
                     .build();
 
             User DUMMY_UNASSIGNED_USER1 = User.builder()
-                    .employeeId(100001L)
+                    .loginId("100001")
                     .password(passwordEncoder.encode("password"))
                     .name("박지민")
                     .email("park.jimin@naver.com")
@@ -91,7 +91,7 @@ public class UserInitializer implements ApplicationRunner {
                     .build();
 
             User DUMMY_UNASSIGNED_USER2 = User.builder()
-                    .employeeId(100002L)
+                    .loginId("sujiiiin")
                     .password(passwordEncoder.encode("password"))
                     .name("이수진")
                     .email("lee.sujin@naver.com")
@@ -103,7 +103,7 @@ public class UserInitializer implements ApplicationRunner {
                     .build();
 
             User DUMMY_UNASSIGNED_USER3 = User.builder()
-                    .employeeId(100003L)
+                    .loginId("100003")
                     .password(passwordEncoder.encode("password"))
                     .name("정우성")
                     .email("jung.woosung@naver.com")
@@ -114,7 +114,7 @@ public class UserInitializer implements ApplicationRunner {
                     .build();
 
             User DUMMY_UNASSIGNED_USER4 = User.builder()
-                    .employeeId(100004L)
+                    .loginId("youngsc")
                     .password(passwordEncoder.encode("password"))
                     .name("최영수")
                     .email("choi.youngsoo@naver.com")
@@ -126,7 +126,7 @@ public class UserInitializer implements ApplicationRunner {
                     .build();
 
             User DUMMY_UNASSIGNED_USER5 = User.builder()
-                    .employeeId(100005L)
+                    .loginId("skykim")
                     .password(passwordEncoder.encode("password"))
                     .name("김하늘")
                     .email("kim.hanul@naver.com")

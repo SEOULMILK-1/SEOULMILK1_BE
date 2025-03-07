@@ -24,8 +24,8 @@ public class User extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     private Team team;
 
-    @Column(name = "employee_id", nullable = false)
-    private Long employeeId;
+    @Column(name = "login_id", nullable = false)
+    private String loginId;
 
     @Column(name = "password", nullable = false)
     private String password;
@@ -53,9 +53,9 @@ public class User extends BaseTimeEntity {
     private Role role;
 
     @Builder
-    public User(Long employeeId, String password, String name, String email, Boolean isAssigned,
+    public User(String loginId, String password, String name, String email, Boolean isAssigned,
                 String phone, String profileImageUrl, String account, Role role, Team team) {
-        this.employeeId = employeeId;
+        this.loginId = loginId;
         this.password = password;
         this.name = name;
         this.email = email;
@@ -72,7 +72,7 @@ public class User extends BaseTimeEntity {
     }
 
     public void updateUser(UpdateUserRequest request) {
-        this.employeeId = request.employeeId();
+        this.loginId = request.loginId();
         this.email = request.email();
         this.phone = formatPhone(request.phone());
         this.account = request.account();
