@@ -17,7 +17,8 @@ public record UserManageResponse(
         Role role,
         String csName,
         String createdAt,
-        String isAssigned
+        String isAssigned,
+        String email
 ) {
     public static UserManageResponse from(User user) {
         return UserManageResponse.builder()
@@ -29,6 +30,7 @@ public record UserManageResponse(
                 .csName(user.getTeam() != null ? user.getTeam().getName() : null)
                 .createdAt(formatCreatedAt(user.getCreatedAt()))
                 .isAssigned(user.getIsAssigned() ? "등록" : "미등록")
+                .email(user.getEmail())
                 .build();
     }
 
