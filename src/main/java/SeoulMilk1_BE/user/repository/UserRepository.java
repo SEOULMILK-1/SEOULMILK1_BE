@@ -16,10 +16,14 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Boolean existsByLoginId(String loginId);
 
-    @Query("SELECT u FROM User u WHERE (u.role = 'HQ_USER' OR u.role = 'CS_USER') AND u.isAssigned = false")
-    Page<User> findUsersByRoleHQOrAgencyAndNotAssigned(Pageable pageable);
+    @Query("SELECT u FROM User u WHERE (u.role = 'HQ_USER' OR u.role = 'CS_USER') AND u.isAssigned = false AND u.isDeleted = false")
+    Page<User> findUsersByRoleAndIsAssigned(Pageable pageable);
 
     Optional<User> findByLoginId(String loginId);
 
-    List<User> findByTeamIn(List<Team> teamList);
+    @Query("SELECT u FROM User u WHERE u.team IN :teamList AND u.isDeleted = false")
+    List<User> findByTeamInAndIsDeleted(List<Team> teamList);
+
+    @Query("SELECT u FROM User u WHERE u.isDeleted = false")
+    Page<User> findAllByIsDeleted(Pageable pageable);
 }

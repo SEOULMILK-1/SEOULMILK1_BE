@@ -29,7 +29,7 @@ public class AdminService {
     public PendingUserResponseList findPendingUsers(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
 
-        Page<User> userPage = userRepository.findUsersByRoleHQOrAgencyAndNotAssigned(pageable);
+        Page<User> userPage = userRepository.findUsersByRoleAndIsAssigned(pageable);
 
         List<PendingUserResponse> responseList = userPage.stream()
                 .map(PendingUserResponse::from)
@@ -41,7 +41,7 @@ public class AdminService {
     public UserManageResponseList findAllUsers(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
 
-        Page<User> userPage = userRepository.findAll(pageable);
+        Page<User> userPage = userRepository.findAllByIsDeleted(pageable);
 
         List<UserManageResponse> responseList = userPage.stream()
                 .map(UserManageResponse::from)
@@ -60,7 +60,7 @@ public class AdminService {
     @Transactional
     public String deleteUser(Long userId) {
         User user = userService.findUser(userId);
-        userRepository.delete(user);
+        user.delete();
         return DELETED.getMessage();
     }
 }

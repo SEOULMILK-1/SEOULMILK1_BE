@@ -78,7 +78,7 @@ public class HqService {
 
     public HqSearchCsResponseList searchCs(String keyword) {
         List<Team> teamList = teamRepository.findByNameContaining(keyword);
-        List<HqSearchCsResponse> responseList = userRepository.findByTeamIn(teamList).stream()
+        List<HqSearchCsResponse> responseList = userRepository.findByTeamInAndIsDeleted(teamList).stream()
                 .map(HqSearchCsResponse::from)
                 .toList();
 
