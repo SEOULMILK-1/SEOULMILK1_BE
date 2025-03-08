@@ -54,6 +54,7 @@ public class UserInitializer implements ApplicationRunner {
                     .profileImageUrl("image.png")
                     .isAssigned(true)
                     .role(ADMIN)
+                    .isDeleted(false)
                     .build();
 
             User DUMMY_USER1 = User.builder()
@@ -65,6 +66,7 @@ public class UserInitializer implements ApplicationRunner {
                     .profileImageUrl("image.png")
                     .isAssigned(true)
                     .role(HQ_USER)
+                    .isDeleted(false)
                     .build();
 
             User DUMMY_USER2 = User.builder()
@@ -77,6 +79,7 @@ public class UserInitializer implements ApplicationRunner {
                     .isAssigned(true)
                     .role(CS_USER)
                     .team(TEAM1)
+                    .isDeleted(false)
                     .build();
 
             User DUMMY_UNASSIGNED_USER1 = User.builder()
@@ -88,6 +91,7 @@ public class UserInitializer implements ApplicationRunner {
                     .profileImageUrl("image.png")
                     .isAssigned(false)
                     .role(HQ_USER)
+                    .isDeleted(false)
                     .build();
 
             User DUMMY_UNASSIGNED_USER2 = User.builder()
@@ -100,6 +104,7 @@ public class UserInitializer implements ApplicationRunner {
                     .isAssigned(false)
                     .role(CS_USER)
                     .team(TEAM2)
+                    .isDeleted(false)
                     .build();
 
             User DUMMY_UNASSIGNED_USER3 = User.builder()
@@ -111,6 +116,7 @@ public class UserInitializer implements ApplicationRunner {
                     .profileImageUrl("image.png")
                     .isAssigned(false)
                     .role(HQ_USER)
+                    .isDeleted(false)
                     .build();
 
             User DUMMY_UNASSIGNED_USER4 = User.builder()
@@ -123,6 +129,7 @@ public class UserInitializer implements ApplicationRunner {
                     .isAssigned(false)
                     .role(CS_USER)
                     .team(TEAM3)
+                    .isDeleted(false)
                     .build();
 
             User DUMMY_UNASSIGNED_USER5 = User.builder()
@@ -135,6 +142,7 @@ public class UserInitializer implements ApplicationRunner {
                     .isAssigned(false)
                     .role(CS_USER)
                     .team(TEAM4)
+                    .isDeleted(false)
                     .build();
 
             userList.add(DUMMY_ADMIN);

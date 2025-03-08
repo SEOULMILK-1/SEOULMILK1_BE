@@ -30,7 +30,7 @@ public class AuthController {
 
     private final AuthService authService;
 
-    @Operation(summary = "테스트용 토큰발급", description = "테스트용 토큰발급")
+    @Operation(summary = "테스트용 토큰발급", description = "테스트용 토큰발급 (관리자 : 1, 본사 : 2, 대리점 : 3)")
     @GetMapping("/test/{userId}")
     public String testToken(@PathVariable Long userId) {
         return authService.getTestToken(userId);
