@@ -35,6 +35,7 @@ public record SignUpCSRequest(
                 .role(CS_USER)
                 .team(team)
                 .isAssigned(false)
+                .isDeleted(false)
                 .build();
     }
 }

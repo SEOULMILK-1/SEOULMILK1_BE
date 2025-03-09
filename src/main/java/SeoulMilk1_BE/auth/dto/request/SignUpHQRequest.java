@@ -30,6 +30,7 @@ public record SignUpHQRequest(
                 .phone(phone)
                 .role(HQ_USER)
                 .isAssigned(false)
+                .isDeleted(false)
                 .build();
     }
 }
