@@ -38,8 +38,8 @@ public record CustomOcrResponse(
             return issueId;
         }
 
-        return issueId.substring(0, 8) + "." +
-                issueId.substring(8, 14) + "." +
+        return issueId.substring(0, 8) + "-" +
+                issueId.substring(8, 14) + "-" +
                 issueId.substring(14, 24);
     }
 

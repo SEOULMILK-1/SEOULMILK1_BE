@@ -269,7 +269,7 @@ public class NtsTax extends BaseTimeEntity {
         String month = this.issueDate.substring(4, 6);
 
         this.title = String.format("%s %s년 %s월 세금계산서(%d)",
-                this.team.getName() != null ? this.team.getName() : this.suDeptName,
+                this.team != null ? this.team.getName() : this.suDeptName,
                 year, month, count);
     }
 

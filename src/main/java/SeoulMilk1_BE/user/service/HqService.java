@@ -34,13 +34,8 @@ public class HqService {
     private final TeamRepository teamRepository;
     private final UserRepository userRepository;
 
-    public HqTaxResponseList getTaxInfo(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        String thisMonth = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMM"));
-
-        Page<NtsTax> ntsTaxList = ntsTaxRepository.findAllByIssueDateStartsWith(thisMonth, pageable);
-
-        List<HqTaxResponse> responseList = ntsTaxList.stream()
+    public HqTaxResponseList getTaxInfo() {
+        List<HqTaxResponse> responseList = ntsTaxRepository.findAllByIsPaymentWritten().stream()
                 .map(HqTaxResponse::from)
                 .toList();
 

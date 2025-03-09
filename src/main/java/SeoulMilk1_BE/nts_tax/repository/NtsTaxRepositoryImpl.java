@@ -74,7 +74,7 @@ public class NtsTaxRepositoryImpl implements NtsTaxRepositoryCustom {
                 .where(equalUser(userId),
                         betweenDate(startDate, endDate),
                         betweenMonths(months),
-                        betweenStatus(status))
+                        betweenCsStatus(status))
                 .offset((pageable.getOffset()))
                 .orderBy(ntsTax.issueDate.desc())
                 .limit(pageable.getPageSize())
@@ -84,7 +84,7 @@ public class NtsTaxRepositoryImpl implements NtsTaxRepositoryCustom {
                 .from(ntsTax)
                 .where(betweenDate(startDate, endDate),
                         betweenMonths(months),
-                        betweenStatus(status));
+                        betweenCsStatus(status));
 
         return PageableExecutionUtils.getPage(results, pageable, countQuery::fetchOne);
     }
@@ -132,11 +132,11 @@ public class NtsTaxRepositoryImpl implements NtsTaxRepositoryCustom {
         }
     }
 
-    private BooleanExpression betweenStatus(ValidStatus status) {
-        if (status != null) {
+    private BooleanExpression betweenCsStatus(ValidStatus status) {
+        if (status == null) {
+            return null;
+        } else {
             return ntsTax.validStatus.eq(status);
         }
-
-        return ntsTax.validStatus.eq(ValidStatus.APPROVE);
     }
 }
