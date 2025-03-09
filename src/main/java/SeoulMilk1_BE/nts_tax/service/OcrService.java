@@ -11,8 +11,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
+import static SeoulMilk1_BE.nts_tax.util.TaxConstants.DUPLICATE_TAX;
 
 @Slf4j
 @Service
@@ -46,6 +49,9 @@ public class OcrService {
         } catch (JsonProcessingException e) {
             log.error("OCR API 호출 중 오류 발생", e);
             return CustomOcrResponse.from(e.getMessage());
+        } catch (IncorrectResultSizeDataAccessException e) {
+            log.error("중복된 승인번호 발견", e);
+            return CustomOcrResponse.from(DUPLICATE_TAX.getMessage());
         }
     }
 
