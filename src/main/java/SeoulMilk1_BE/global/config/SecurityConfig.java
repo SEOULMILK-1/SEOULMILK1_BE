@@ -44,10 +44,11 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable) // CSRF 보호 기능 비활성화
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth // 요청에 대한 인증 설정
-                        .requestMatchers(WHITE_LIST).permitAll()
-                        .requestMatchers("/admin/**").hasRole("ADMIN") // ADMIN 역할만 접근 가능
-                        .requestMatchers("/hq/**").hasRole("HQ_USER") // HQ_USER 역할만 접근 가능
-                        .anyRequest().authenticated())  //이외의 요청은 전부 인증 필요
+//                        .requestMatchers(WHITE_LIST).permitAll()
+//                        .requestMatchers("/admin/**").hasRole("ADMIN") // ADMIN 역할만 접근 가능
+//                        .requestMatchers("/hq/**").hasRole("HQ_USER") // HQ_USER 역할만 접근 가능
+//                        .anyRequest().authenticated())  //이외의 요청은 전부 인증 필요
+                        .anyRequest().permitAll())
                 .exceptionHandling(exceptionHandling -> {
                     exceptionHandling
                             .authenticationEntryPoint(jwtAuthenticationEntryPoint) //인증되지 않은 사용자가 보호된 리소스에 액세스 할 때 호출
