@@ -10,7 +10,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import static SeoulMilk1_BE.user.domain.type.Role.HQ_USER;
 
 public record SignUpHQRequest(
-        Long employeeId,
+        String loginId,
         @Size(min = 8, max = 16, message = "비밀번호는 8자 이상 16자 이하로 입력해주세요")
         @NotBlank(message = "비밀번호를 입력해주세요")
         @Pattern(regexp = "^(?=.*[a-zA-Z])(?=.*\\d)(?=.*[@!%?&])[A-Za-z\\d@!%?&]{8,16}$",
@@ -23,13 +23,14 @@ public record SignUpHQRequest(
 ) {
     public User toUser(PasswordEncoder passwordEncoder) {
         return User.builder()
-                .employeeId(employeeId)
+                .loginId(loginId)
                 .password(passwordEncoder.encode(password))
                 .name(name)
                 .email(email)
                 .phone(phone)
                 .role(HQ_USER)
                 .isAssigned(false)
+                .isDeleted(false)
                 .build();
     }
 }

@@ -11,7 +11,7 @@ import java.time.format.DateTimeFormatter;
 @Builder
 public record PendingUserResponse(
         Long userId,
-        Long employeeId,
+        String loginId,
         String name,
         String phone,
         Role role,
@@ -21,7 +21,7 @@ public record PendingUserResponse(
     public static PendingUserResponse from(User user) {
         return PendingUserResponse.builder()
                 .userId(user.getId())
-                .employeeId(user.getEmployeeId())
+                .loginId(user.getLoginId())
                 .name(user.getName())
                 .phone(formatPhone(user.getPhone()))
                 .role(user.getRole())

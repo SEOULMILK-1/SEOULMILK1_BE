@@ -11,24 +11,26 @@ import java.time.format.DateTimeFormatter;
 @Builder
 public record UserManageResponse(
         Long userId,
-        Long employeeId,
+        String loginId,
         String name,
         String phone,
         Role role,
         String csName,
         String createdAt,
-        String isAssigned
+        String isAssigned,
+        String email
 ) {
     public static UserManageResponse from(User user) {
         return UserManageResponse.builder()
                 .userId(user.getId())
-                .employeeId(user.getEmployeeId())
+                .loginId(user.getLoginId())
                 .name(user.getName())
                 .phone(formatPhone(user.getPhone()))
                 .role(user.getRole())
                 .csName(user.getTeam() != null ? user.getTeam().getName() : null)
                 .createdAt(formatCreatedAt(user.getCreatedAt()))
                 .isAssigned(user.getIsAssigned() ? "등록" : "미등록")
+                .email(user.getEmail())
                 .build();
     }
 

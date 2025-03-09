@@ -4,16 +4,15 @@ import SeoulMilk1_BE.global.apiPayload.code.status.ErrorStatus;
 import SeoulMilk1_BE.global.apiPayload.exception.GeneralException;
 import SeoulMilk1_BE.global.service.S3Service;
 import SeoulMilk1_BE.post.domain.Post;
-import SeoulMilk1_BE.post.domain.type.Type;
 import SeoulMilk1_BE.post.dto.request.post.PostCreateRequest;
 import SeoulMilk1_BE.post.dto.request.post.PostListRequest;
 import SeoulMilk1_BE.post.dto.response.comment.CommentReadResponse;
 import SeoulMilk1_BE.post.dto.response.post.*;
 import SeoulMilk1_BE.post.repository.PostRepository;
+import SeoulMilk1_BE.post.util.PostConstants;
 import SeoulMilk1_BE.user.domain.User;
 import SeoulMilk1_BE.user.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -36,7 +35,7 @@ public class PostService {
         List<String> postImgList = s3Service.uploadFiles(files);
         User user = userService.findUser(request.userId());
 
-        Post post = PostCreateRequest.of(user, request.title(), request.content(), Type.valueOf(request.type()), postImgList);
+        Post post = PostCreateRequest.of(user, request.title(), request.content(), postImgList);
 
         postRepository.save(post);
 
@@ -49,19 +48,19 @@ public class PostService {
         // 조회 수 증가.
         post.updateViews();
 
-        return PostDetailResponse.from(post.getId(), post.getUser().getName(), post.getTitle(), post.getContent(), post.getType(), post.getViews(), post.getPostImgUrl(), post.getCreatedAt(), post.getModifiedAt(), comments);
+        return PostDetailResponse.of(post.getId(), post.getUser().getName(), post.getUser().getRole(), post.getTitle(), post.getContent(), post.getViews(), post.getPostImgUrl(), post.getModifiedAt(), comments, post.getPin());
     }
 
     public List<PostListResponse> findList(PostListRequest request) {
         Pageable pageable = PageRequest.of(request.page(), request.size());
-        List<Post> result = postRepository.findAllByOrderByModifiedAtDesc(pageable).getContent();
-        return result.stream().map(r -> PostListResponse.from(r.getId(), r.getTitle(), r.getUser().getName())).collect(Collectors.toList());
+        List<Post> result = postRepository.findByPinAndOrder(pageable).getContent();
+        return result.stream().map(r -> PostListResponse.from(r.getId(), r.getTitle(), r.getUser().getName(), r.getUser().getRole(), r.getPin(), r.getModifiedAt())).collect(Collectors.toList());
     }
 
     public PostUpdateResponse update(Long postId, PostCreateRequest request, List<MultipartFile> files) {
         List<String> postImgList = s3Service.uploadFiles(files);
         Post post = postRepository.findById(postId).orElseThrow();
-        post.updatePost(request.title(), request.content(), Type.valueOf(request.type()), postImgList);
+        post.updatePost(request.title(), request.content(), postImgList);
 
         return PostUpdateResponse.from(post.getId(), post.getModifiedAt());
     }
@@ -84,5 +83,24 @@ public class PostService {
     // 엔티티 조회용
     public Post get(Long postId) {
         return postRepository.findById(postId).orElseThrow(() -> new GeneralException(ErrorStatus.POST_NOT_FOUND));
+    }
+
+    // 게시글 상단 고정
+    @Transactional
+    public String pinPost(Long postId) {
+        Post post = postRepository.findById(postId).orElseThrow(() -> new GeneralException(ErrorStatus.POST_NOT_FOUND));
+        Boolean pin = post.getPin();
+
+        if (pin == false) {
+            int count = postRepository.countByPinTrue();
+            if (count >= 4)
+                return PostConstants.PIN_FAILED.getMessage();
+            post.updatePin();
+            return PostConstants.PIN_SUCCESS.getMessage();
+        }
+        else {
+            post.updatePin();
+            return PostConstants.UN_PIN_SUCCESS.getMessage();
+        }
     }
 }

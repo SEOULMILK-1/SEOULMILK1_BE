@@ -46,7 +46,8 @@ public enum ErrorStatus implements BaseErrorCode {
     // 게시글 관련 에러
     POST_NOT_FOUND(HttpStatus.NOT_FOUND, "POST400", "해당 게시글을 찾을 수 없습니다."),
     COMMENT_IS_EXIST(HttpStatus.NOT_FOUND, "POST401", "해당 게시글에 등록된 댓글이 존재합니다."),
-
+    ALREADY_PINED(HttpStatus.BAD_REQUEST, "POST402", "해당 게시글은 이미 고정되어있습니다."),
+    ALREADY_UN_PINED(HttpStatus.BAD_REQUEST, "POST403", "해당 게시글은 이미 고정 해제되어있습니다."),
     ;
 
     private final HttpStatus httpStatus;

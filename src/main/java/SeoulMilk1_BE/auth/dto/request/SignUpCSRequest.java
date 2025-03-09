@@ -11,7 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import static SeoulMilk1_BE.user.domain.type.Role.CS_USER;
 
 public record SignUpCSRequest(
-        Long employeeId,
+        String loginId,
         @Size(min = 8, max = 16, message = "비밀번호는 8자 이상 16자 이하로 입력해주세요")
         @NotBlank(message = "비밀번호를 입력해주세요")
         @Pattern(regexp = "^(?=.*[a-zA-Z])(?=.*\\d)(?=.*[@!%?&])[A-Za-z\\d@!%?&]{8,16}$",
@@ -27,7 +27,7 @@ public record SignUpCSRequest(
 ) {
     public User toUser(PasswordEncoder passwordEncoder, Team team) {
         return User.builder()
-                .employeeId(employeeId)
+                .loginId(loginId)
                 .password(passwordEncoder.encode(password))
                 .name(name)
                 .email(email)
@@ -35,6 +35,7 @@ public record SignUpCSRequest(
                 .role(CS_USER)
                 .team(team)
                 .isAssigned(false)
+                .isDeleted(false)
                 .build();
     }
 }

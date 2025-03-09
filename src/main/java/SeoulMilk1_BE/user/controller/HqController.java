@@ -57,8 +57,7 @@ public class HqController {
         return ApiResponse.onSuccess(hqService.searchCsName(keyword));
     }
 
-    @Operation(summary = "대리점 검색 및 조회", description = "키워드를 포함하는 대리점 검색에 사용되는 API입니다 <br>" +
-            "대리점 정보들이 제공됩니다")
+    @Operation(summary = "대리점 직원 조회", description = "키워드를 포함하는 대리점에 소속된 모든 직원이 제공됩니다")
     @GetMapping("/search/cs/info")
     public ApiResponse<HqSearchCsResponseList> searchCsInfo(@RequestParam(required = false) String keyword) {
         return ApiResponse.onSuccess(hqService.searchCs(keyword));

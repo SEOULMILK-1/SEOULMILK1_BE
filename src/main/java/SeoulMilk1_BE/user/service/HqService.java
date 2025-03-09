@@ -4,11 +4,13 @@ import SeoulMilk1_BE.nts_tax.domain.NtsTax;
 import SeoulMilk1_BE.nts_tax.dto.response.*;
 import SeoulMilk1_BE.nts_tax.exception.NtsTaxNotFoundException;
 import SeoulMilk1_BE.nts_tax.repository.NtsTaxRepository;
+import SeoulMilk1_BE.user.domain.Team;
 import SeoulMilk1_BE.user.dto.response.HqSearchCsNameResponse;
 import SeoulMilk1_BE.user.dto.response.HqSearchCsNameResponseList;
 import SeoulMilk1_BE.user.dto.response.HqSearchCsResponse;
 import SeoulMilk1_BE.user.dto.response.HqSearchCsResponseList;
 import SeoulMilk1_BE.user.repository.TeamRepository;
+import SeoulMilk1_BE.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -30,6 +32,7 @@ public class HqService {
 
     private final NtsTaxRepository ntsTaxRepository;
     private final TeamRepository teamRepository;
+    private final UserRepository userRepository;
 
     public HqTaxResponseList getTaxInfo() {
         List<HqTaxResponse> responseList = ntsTaxRepository.findAllByIsPaymentWritten().stream()
@@ -69,7 +72,8 @@ public class HqService {
     }
 
     public HqSearchCsResponseList searchCs(String keyword) {
-        List<HqSearchCsResponse> responseList = teamRepository.findByNameContaining(keyword).stream()
+        List<Team> teamList = teamRepository.findByNameContaining(keyword);
+        List<HqSearchCsResponse> responseList = userRepository.findByTeamInAndIsDeleted(teamList).stream()
                 .map(HqSearchCsResponse::from)
                 .toList();
 
