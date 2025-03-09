@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <title>지급결의서</title>
+  <style>
+    @page {
+      size: A4 landscape;
+      margin: 3%
+    }
+    body {
+      font-family: NanumBarunGothic,serif;
+    }
+
+    .container {
+      width: 80%;
+      margin: auto;
+      border: 1px solid #ddd;
+      padding: 20px;
+      border-radius: 8px;
+    }
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid #ddd;
+      padding-bottom: 10px;
+    }
+    .header h2 {
+      margin: 0;
+      font-weight: bold;
+    }
+    .info-table {
+      width: 100%;
+      table-layout: fixed;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    .info-table th, .info-table td {
+      border: 1px solid #ddd;
+      padding: 10px;
+      text-align: left;
+    }
+    .info-table th {
+      background-color: #f5f5f5;
+      font-size: 17px;
+    }
+    .info-table td {
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <h3 th:text="${title}"></h3>
+    <p>작성일: <span th:text="${createdAt}">2025.02.26</span> | 문서번호: <span th:text="${docNumber}">1234567890</span></p>
+  </div>
+
+  <table class="info-table">
+    <tr>
+      <th colspan="2" style="text-align: center">지급 대상 정보</th>
+      <th colspan="2" style="text-align: center">지급 주체 정보</th>
+    </tr>
+    <tr>
+      <th>지급 대상</th>
+      <td th:text="${paymentRecepient}"></td>
+      <th>지급 주체</th>
+      <td th:text="${paymentPrincipal}"></td>
+    </tr>
+    <tr>
+      <th>지급 대상 사업자 등록번호</th>
+      <td th:text="${receipientBusinessNumber}"></td>
+      <th>지급 주체 사업자 등록번호</th>
+      <td th:text="${principalBusinessNumber}"></td>
+    </tr>
+    <tr>
+      <th>정산 지급 총액</th>
+      <td th:text="${totalPaymentAccount}"></td>
+      <th>결재권자</th>
+      <td th:text="${approver}">-</td>
+    </tr>
+    <tr>
+      <th>지급 방법</th>
+      <td th:text="${paymentMethod}"></td>
+      <th>지급결의서 작성일자</th>
+      <td th:text="${createdAt}"></td>
+    </tr>
+    <tr>
+      <th>지급 계좌</th>
+      <td th:text="${paymentAccount}"></td>
+      <th>지급 예정일</th>
+      <td th:text="${scheduledPaymentDate}">-</td>
+    </tr>
+  </table>
+</div>
+</body>
+</html>
