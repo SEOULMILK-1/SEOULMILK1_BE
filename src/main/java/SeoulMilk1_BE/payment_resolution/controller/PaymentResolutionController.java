@@ -73,7 +73,7 @@ public class PaymentResolutionController {
 
     @Operation(summary = "지급결의서 pdf 파일 다운로드", description = "다운로드 받을 지급결의서 id를 보내주세요")
     @GetMapping(value = "/pdf/{payment_resolution_id}", produces = MediaType.APPLICATION_PDF_VALUE)
-    public ApiResponse<byte[]> createPdfFile(@PathVariable("payment_resolution_id") Long paymentResolutionId) {
-        return ApiResponse.onSuccess(paymentResolutionService.createPdfFile(paymentResolutionId));
+    public byte[] createPdfFile(@PathVariable("payment_resolution_id") Long paymentResolutionId) {
+        return paymentResolutionService.createPdfFile(paymentResolutionId);
     }
 }
