@@ -298,7 +298,8 @@ public class NtsTax extends BaseTimeEntity {
         return inputData.replace("-", "")
                 .replace("/", "")
                 .replace(" ", "")
-                .replace("\n", "");
+                .replace("\n", "")
+                .replace(".", "");
     }
 
 
