@@ -5,6 +5,7 @@ import SeoulMilk1_BE.global.service.S3Service;
 import SeoulMilk1_BE.nts_tax.domain.NtsTax;
 import SeoulMilk1_BE.nts_tax.dto.request.CodefApiRequest;
 import SeoulMilk1_BE.nts_tax.dto.request.UpdateTaxRequest;
+import SeoulMilk1_BE.nts_tax.dto.response.IssueIdTaxResponse;
 import SeoulMilk1_BE.nts_tax.exception.NtsTaxNotFoundException;
 import SeoulMilk1_BE.nts_tax.repository.NtsTaxRepository;
 import SeoulMilk1_BE.nts_tax.dto.response.OcrApiResponse;
@@ -32,20 +33,23 @@ public class NtsTaxService {
     private final S3Service s3Service;
 
     @Transactional
-    public NtsTax saveNtsTax(OcrApiResponse ocrApiResponse, Long userId, String imageUrl) {
+    public IssueIdTaxResponse saveNtsTax(OcrApiResponse ocrApiResponse, Long userId, String imageUrl) {
         User user = userService.findUser(userId);
-
         NtsTax ocrNtsTax = NtsTax.toNtsTax(ocrApiResponse, user, imageUrl);
-        ntsTaxRepository.save(ocrNtsTax);
 
-        NtsTax findNtsTax = findByIssueId(ocrNtsTax.getIssueId());
+        if (ntsTaxRepository.existsByIssueId(ocrNtsTax.getIssueId())) {
+            return IssueIdTaxResponse.of(true, findByIssueId(ocrNtsTax.getIssueId()));
+        } else {
+            ntsTaxRepository.save(ocrNtsTax);
+            NtsTax findNtsTax = findByIssueId(ocrNtsTax.getIssueId());
 
-        String issueYearMonth = findNtsTax.getIssueDate().substring(0, 6);
-        Long count = ntsTaxRepository.countByTeamAndIssueYearMonth(user.getTeam(), issueYearMonth);
+            String issueYearMonth = findNtsTax.getIssueDate().substring(0, 6);
+            Long count = ntsTaxRepository.countByTeamAndIssueYearMonth(user.getTeam(), issueYearMonth);
 
-        findNtsTax.updateTitle(count);
+            findNtsTax.updateTitle(count);
 
-        return findNtsTax;
+            return IssueIdTaxResponse.of(false, findNtsTax);
+        }
     }
 
     @Transactional

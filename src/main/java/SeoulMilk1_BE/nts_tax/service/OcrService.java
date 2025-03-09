@@ -1,9 +1,9 @@
 package SeoulMilk1_BE.nts_tax.service;
 
 import SeoulMilk1_BE.global.service.S3Service;
-import SeoulMilk1_BE.nts_tax.domain.NtsTax;
 import SeoulMilk1_BE.nts_tax.dto.request.OcrApiRequest;
 import SeoulMilk1_BE.nts_tax.dto.response.CustomOcrResponse;
+import SeoulMilk1_BE.nts_tax.dto.response.IssueIdTaxResponse;
 import SeoulMilk1_BE.nts_tax.util.OcrClient;
 import SeoulMilk1_BE.nts_tax.dto.response.OcrApiResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -11,7 +11,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -43,15 +42,16 @@ public class OcrService {
             OcrApiResponse response = ocrClient.callOcrApi(secret, request);
             log.info("OCR API Response: {}", response);
 
-            NtsTax ntsTax = ntsTaxService.saveNtsTax(response, userId, imageUrl);
+            IssueIdTaxResponse issueResponse = ntsTaxService.saveNtsTax(response, userId, imageUrl);
 
-            return CustomOcrResponse.from(ntsTax);
+            if (issueResponse.isExist()) {
+                return CustomOcrResponse.from(DUPLICATE_TAX.getMessage(), issueResponse.ntsTax());
+            } else {
+                return CustomOcrResponse.from(issueResponse.ntsTax());
+            }
         } catch (JsonProcessingException e) {
             log.error("OCR API 호출 중 오류 발생", e);
             return CustomOcrResponse.from(e.getMessage());
-        } catch (IncorrectResultSizeDataAccessException e) {
-            log.error("중복된 승인번호 발견", e);
-            return CustomOcrResponse.from(DUPLICATE_TAX.getMessage());
         }
     }
 

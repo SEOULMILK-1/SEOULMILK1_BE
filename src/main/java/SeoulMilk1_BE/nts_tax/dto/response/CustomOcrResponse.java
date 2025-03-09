@@ -14,7 +14,8 @@ public record CustomOcrResponse(
         String suId,
         String ipId,
         String issueDate,
-        String chargeTotal
+        String chargeTotal,
+        String title
 ) {
     public static CustomOcrResponse from(NtsTax ntsTax) {
         return CustomOcrResponse.builder()
@@ -24,12 +25,22 @@ public record CustomOcrResponse(
                 .ipId(formatSuAndIpId(ntsTax.getIpId()))
                 .issueDate(formatIssueDate(ntsTax.getIssueDate()))
                 .chargeTotal(formatChargeTotal(ntsTax.getChargeTotal()))
+                .title(ntsTax.getTitle())
                 .build();
     }
 
     public static CustomOcrResponse from(String message) {
         return CustomOcrResponse.builder()
                 .issueId(message)
+                .build();
+    }
+
+    public static CustomOcrResponse from(String message, NtsTax ntsTax) {
+        return CustomOcrResponse.builder()
+                .ntsTaxId(ntsTax.getId())
+                .issueId(message)
+                .issueDate(formatIssueDate(ntsTax.getIssueDate()))
+                .title(ntsTax.getTitle())
                 .build();
     }
 

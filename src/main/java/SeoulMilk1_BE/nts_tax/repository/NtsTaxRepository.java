@@ -23,4 +23,5 @@ public interface NtsTaxRepository extends JpaRepository<NtsTax, Long>, NtsTaxRep
     @Query("SELECT COUNT(nts) FROM NtsTax nts WHERE nts.team = :team AND SUBSTRING(nts.issueDate, 1, 6) = :issueYearMonth")
     Long countByTeamAndIssueYearMonth(Team team, String issueYearMonth);
 
+    Boolean existsByIssueId(String issueId);
 }
