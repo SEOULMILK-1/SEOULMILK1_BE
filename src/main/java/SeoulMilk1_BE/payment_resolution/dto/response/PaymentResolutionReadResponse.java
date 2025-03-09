@@ -36,8 +36,6 @@ public record PaymentResolutionReadResponse(
                 .paymentAccount(request.paymentAccount())
                 .paymentPrincipal(request.paymentPrincipal())
                 .principalBusinessNumber(request.principalBusinessNumber())
-                .approver(request.approver())
-                .scheduledPaymentDate(request.scheduledPaymentDate())
                 .paymentDetailsList(request.paymentDetails())
                 .totalSupplyAmount(request.totalSupplyAmount())
                 .totalAllAmount(request.totalAllAmount())

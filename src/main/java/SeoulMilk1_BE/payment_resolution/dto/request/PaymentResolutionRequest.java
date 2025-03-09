@@ -49,8 +49,6 @@ public record PaymentResolutionRequest(
                 .paymentAccount(ntsTax.getTeam().getAccount())
                 .paymentPrincipal(user.getTeam().getName())
                 .principalBusinessNumber(user.getTeam().getBusinessNumber())
-                .approver(user.getName())
-                .scheduledPaymentDate(LocalDateTime.now().plusDays(7))
                 .paymentDetails(paymentDetailsDtoList)
                 .totalSupplyAmount(supplyAmount)
                 .totalAllAmount(allAmount)
