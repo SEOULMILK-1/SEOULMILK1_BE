@@ -77,6 +77,11 @@ dependencies {
 
 	// configuration-processor
 	annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+
+	// html -> pdf 변환 관련
+	implementation 'org.xhtmlrenderer:flying-saucer-pdf:9.1.20'
+	implementation 'com.itextpdf:itext7-core:7.2.5'
+	implementation 'org.thymeleaf:thymeleaf:3.1.2.RELEASE'
 }
 
 tasks.named('test') {
