@@ -28,7 +28,9 @@ import org.xhtmlrenderer.pdf.ITextRenderer;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -91,18 +93,16 @@ public class PaymentResolutionService {
 
         Context context = new Context();
         context.setVariable("title", paymentResolution.getName());
-        context.setVariable("createdAt", paymentResolution.getModifiedAt());
-        context.setVariable("docNumber", "1234567890");
+        context.setVariable("createdAt", paymentResolution.getModifiedAt().format(DateTimeFormatter.ofPattern("yyyy.MM.dd")));
+        context.setVariable("docNumber", String.format("%010d", paymentResolution.getId()));
         context.setVariable("paymentRecepient", paymentResolution.getPaymentRecipient());
         context.setVariable("paymentPrincipal", paymentResolution.getPaymentPrincipal());
         context.setVariable("receipientBusinessNumber", paymentResolution.getRecipientBusinessNumber());
         context.setVariable("principalBusinessNumber", paymentResolution.getPrincipalBusinessNumber());
         context.setVariable("totalPaymentAccount", paymentResolution.getTotalPaymentAmount());
-        context.setVariable("approver", paymentResolution.getApprover());
         context.setVariable("paymentMethod", paymentResolution.getPaymentMethod());
-        context.setVariable("createdAt", paymentResolution.getModifiedAt());
+        context.setVariable("createdAt", paymentResolution.getModifiedAt().format(DateTimeFormatter.ofPattern("yyyy.MM.dd")));
         context.setVariable("paymentAccount", paymentResolution.getPaymentAccount());
-        context.setVariable("scheduledPaymentDate", paymentResolution.getScheduledPaymentDate());
 
         return templateEngine.process("payment_resolution", context);
     }
