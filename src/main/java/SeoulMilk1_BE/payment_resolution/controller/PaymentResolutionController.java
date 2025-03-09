@@ -14,6 +14,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.query.Page;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -68,5 +69,11 @@ public class PaymentResolutionController {
                                                                                      @RequestParam(defaultValue = "0") int page,
                                                                                      @RequestParam(defaultValue = "10") int size) {
         return ApiResponse.onSuccess(paymentResolutionService.readPaymentResolutionList(period, page, size));
+    }
+
+    @Operation(summary = "지급결의서 pdf 파일 다운로드", description = "다운로드 받을 지급결의서 id를 보내주세요")
+    @GetMapping(value = "/pdf/{payment_resolution_id}", produces = MediaType.APPLICATION_PDF_VALUE)
+    public ApiResponse<byte[]> createPdfFile(@PathVariable("payment_resolution_id") Long paymentResolutionId) {
+        return ApiResponse.onSuccess(paymentResolutionService.createPdfFile(paymentResolutionId));
     }
 }

@@ -91,18 +91,18 @@ public class PaymentResolutionService {
 
         Context context = new Context();
         context.setVariable("title", paymentResolution.getName());
-        context.setVariable("writeDate", paymentResolution.getModifiedAt());
+        context.setVariable("createdAt", paymentResolution.getModifiedAt());
         context.setVariable("docNumber", "1234567890");
-        context.setVariable("recipient", "서울우유태평고객센터");
-        context.setVariable("payer", "서울우유태평고객센터");
-        context.setVariable("recipientBusinessNumber", "1029301924");
-        context.setVariable("payerBusinessNumber", "1029301924");
-        context.setVariable("totalAmount", "654,321,000");
-        context.setVariable("approver", "문정욱");
-        context.setVariable("paymentMethod", "계좌이체");
-        context.setVariable("approvalDate", "2025.02.26");
-        context.setVariable("bankAccount", "국민 1234567891234");
-        context.setVariable("scheduledDate", "2025.03.09");
+        context.setVariable("paymentRecepient", paymentResolution.getPaymentRecipient());
+        context.setVariable("paymentPrincipal", paymentResolution.getPaymentPrincipal());
+        context.setVariable("receipientBusinessNumber", paymentResolution.getRecipientBusinessNumber());
+        context.setVariable("principalBusinessNumber", paymentResolution.getPrincipalBusinessNumber());
+        context.setVariable("totalPaymentAccount", paymentResolution.getTotalPaymentAmount());
+        context.setVariable("approver", paymentResolution.getApprover());
+        context.setVariable("paymentMethod", paymentResolution.getPaymentMethod());
+        context.setVariable("createdAt", paymentResolution.getModifiedAt());
+        context.setVariable("paymentAccount", paymentResolution.getPaymentAccount());
+        context.setVariable("scheduledPaymentDate", paymentResolution.getScheduledPaymentDate());
 
         return templateEngine.process("payment_resolution", context);
     }
