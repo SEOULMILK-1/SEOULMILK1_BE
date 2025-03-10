@@ -47,11 +47,16 @@ public class TeamInitializer implements ApplicationRunner {
                     .name("서울우유대덕대리점")
                     .build();
 
+            Team TEAM_HQ = Team.builder()
+                    .name("서울우유본사")
+                    .build();
+
             teamList.add(TEAM_CS);
             teamList.add(TEAM_TP);
             teamList.add(TEAM_DJ);
             teamList.add(TEAM_BM);
             teamList.add(TEAM_DD);
+            teamList.add(TEAM_HQ);
 
             teamRepository.saveAll(teamList);
         }

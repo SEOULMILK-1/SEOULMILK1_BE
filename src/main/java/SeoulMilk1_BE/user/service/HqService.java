@@ -5,10 +5,7 @@ import SeoulMilk1_BE.nts_tax.dto.response.*;
 import SeoulMilk1_BE.nts_tax.exception.NtsTaxNotFoundException;
 import SeoulMilk1_BE.nts_tax.repository.NtsTaxRepository;
 import SeoulMilk1_BE.user.domain.Team;
-import SeoulMilk1_BE.user.dto.response.HqSearchCsNameResponse;
-import SeoulMilk1_BE.user.dto.response.HqSearchCsNameResponseList;
-import SeoulMilk1_BE.user.dto.response.HqSearchCsResponse;
-import SeoulMilk1_BE.user.dto.response.HqSearchCsResponseList;
+import SeoulMilk1_BE.user.dto.response.*;
 import SeoulMilk1_BE.user.repository.TeamRepository;
 import SeoulMilk1_BE.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static SeoulMilk1_BE.global.apiPayload.code.status.ErrorStatus.TAX_NOT_FOUND;
 
@@ -97,5 +95,12 @@ public class HqService {
                 .replace(" ", "")
                 .replace("\n", "")
                 .replace(".", "");
+    }
+
+    public List<HqWaitingNtsTax> readWaitingNtsTaxList() {
+        List<NtsTax> ntsTaxList = ntsTaxRepository.findAllByIsPaymentWritten();
+        return ntsTaxList.stream().map(ntsTax -> {
+            return HqWaitingNtsTax.of(ntsTax);
+        }).collect(Collectors.toList());
     }
 }

@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum PaymentResolutionConstants {
     CREATE_SUCCESS("지급결의서가 정상 생성되었습니다."),
-    UPDATE_SUCCESS("지급결의서가 정상 수정되었습니다."),
+    UPDATE_ACCOUNT_SUCCESS("지급계좌가 정상 수정되었습니다."),
     DELETE_SUCCESS("지급결의서가 정상 삭제되었습니다."),
     ;
 

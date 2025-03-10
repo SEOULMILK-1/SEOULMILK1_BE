@@ -2,15 +2,19 @@ package SeoulMilk1_BE.payment_resolution.service;
 
 import SeoulMilk1_BE.global.apiPayload.code.status.ErrorStatus;
 import SeoulMilk1_BE.global.apiPayload.exception.GeneralException;
+import SeoulMilk1_BE.nts_tax.domain.NtsTax;
 import SeoulMilk1_BE.nts_tax.service.NtsTaxService;
 import SeoulMilk1_BE.payment_resolution.domain.PaymentResolution;
 import SeoulMilk1_BE.payment_resolution.dto.request.PaymentResolutionRequest;
+import SeoulMilk1_BE.payment_resolution.dto.request.PaymentResolutionUpdateAccountRequest;
 import SeoulMilk1_BE.payment_resolution.dto.response.PaymentResolutionInsertResponse;
 import SeoulMilk1_BE.payment_resolution.dto.response.PaymentResolutionListResponse;
 import SeoulMilk1_BE.payment_resolution.dto.response.PaymentResolutionReadResponse;
 import SeoulMilk1_BE.payment_resolution.repository.PaymentResolutionRepository;
 import SeoulMilk1_BE.payment_resolution.utils.PaymentResolutionConstants;
+import SeoulMilk1_BE.user.domain.User;
 import SeoulMilk1_BE.user.service.TeamService;
+import SeoulMilk1_BE.user.service.UserService;
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.pdf.BaseFont;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +36,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -42,6 +47,7 @@ public class PaymentResolutionService {
     private final PaymentResolutionRepository paymentResolutionRepository;
     private final TeamService teamService;
     private final NtsTaxService ntsTaxService;
+    private final UserService userService;
 
     @Transactional
     public PaymentResolutionInsertResponse createPaymentResolution(PaymentResolutionRequest request) {
@@ -58,6 +64,25 @@ public class PaymentResolutionService {
         return PaymentResolutionInsertResponse.of(paymentResolution.getId(), paymentResolution.getModifiedAt());
     }
 
+    @Transactional
+    public String createPaymentResolutionByGrouping(Long userId) {
+        User user = userService.findUser(userId);
+        List<NtsTax> ntsTaxList = ntsTaxService.findByPaymentWritten();
+
+        if (ntsTaxList.size() == 0) {
+            throw new GeneralException(ErrorStatus.NTS_TAX_NOT_FOUND);
+        }
+        // 작성되지 않은 세금계산서 목록 조회 및 지점별로 파티셔닝
+        Map<String, List<NtsTax>> groupedByDept = ntsTaxList.stream().collect(Collectors.groupingBy(NtsTax::getSuDeptName));
+
+        // 지점별로 지급결의서 작성
+        groupedByDept.forEach((deptName, taxList) -> {
+            PaymentResolutionRequest request = PaymentResolutionRequest.from(taxList, user);
+            createPaymentResolution(request);
+        });
+        return PaymentResolutionConstants.CREATE_SUCCESS.getMessage();
+    }
+
     public PaymentResolutionReadResponse readPaymentResolution(Long id) {
         PaymentResolution paymentResolution = paymentResolutionRepository.findById(id).orElseThrow(() -> new GeneralException(ErrorStatus.PAYMENT_RESOLUTION_NOT_FOUND));
         return PaymentResolutionReadResponse.byId(paymentResolution);
@@ -68,6 +93,13 @@ public class PaymentResolutionService {
         PaymentResolution paymentResolution = paymentResolutionRepository.findById(id).orElseThrow(() -> new GeneralException(ErrorStatus.PAYMENT_RESOLUTION_NOT_FOUND));
         paymentResolution.updatePaymentResolution(request);
         return PaymentResolutionInsertResponse.of(paymentResolution.getId(), paymentResolution.getModifiedAt());
+    }
+
+    @Transactional
+    public String updateAccount(PaymentResolutionUpdateAccountRequest request) {
+        PaymentResolution paymentResolution = paymentResolutionRepository.findById(request.id()).orElseThrow(() -> new GeneralException(ErrorStatus.PAYMENT_RESOLUTION_NOT_FOUND));
+        paymentResolution.updateAccount(request);
+        return PaymentResolutionConstants.UPDATE_ACCOUNT_SUCCESS.getMessage();
     }
 
     @Transactional

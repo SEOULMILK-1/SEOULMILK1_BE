@@ -30,6 +30,7 @@ public record PaymentResolutionRequest(
         List<PaymentDetails> paymentDetailsDtoList = ntsTaxList.stream().map(
                 n -> {
                     return PaymentDetails.builder()
+                            .ntsId(n.getId())
                             .ntsTaxNum(n.getIssueId())
                             .supplyAmount(n.getChargeTotal())
                             .issueDate(n.getModifiedAt())
