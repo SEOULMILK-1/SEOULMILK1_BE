@@ -57,9 +57,13 @@ public class HqController {
         return ApiResponse.onSuccess(hqService.searchCsName(keyword));
     }
 
-    @Operation(summary = "대리점 직원 조회", description = "키워드를 포함하는 대리점에 소속된 모든 직원이 제공됩니다")
+    @Operation(summary = "대리점 직원 조회", description = "키워드를 포함하는 대리점에 소속된 모든 직원이 제공됩니다 <br><br>" +
+            "page : 조회할 페이지 번호 <br> size : 한 페이지에 조회할 세금계산서 수")
     @GetMapping("/search/cs/info")
-    public ApiResponse<HqSearchCsResponseList> searchCsInfo(@RequestParam(required = false) String keyword) {
-        return ApiResponse.onSuccess(hqService.searchCs(keyword));
+    public ApiResponse<HqSearchCsResponseList> searchCsInfo(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) String keyword) {
+        return ApiResponse.onSuccess(hqService.searchCs(page, size, keyword));
     }
 }

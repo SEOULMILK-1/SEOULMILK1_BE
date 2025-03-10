@@ -69,19 +69,23 @@ public class HqService {
         return HqSearchCsNameResponseList.from(responseList);
     }
 
-    public HqSearchCsResponseList searchCs(String keyword) {
-        List<Team> teamList = teamRepository.findByNameContaining(keyword);
+    public HqSearchCsResponseList searchCs(int page, int size, String keyword) {
+        Pageable pageable = PageRequest.of(page, size);
+        List<Team> teamList;
 
         if (StringUtils.isEmpty(keyword)) {
             teamList = teamRepository.findAll();
+        } else {
+            teamList = teamRepository.findByNameContaining(keyword);
         }
 
-        List<HqSearchCsResponse> responseList = userRepository.findByTeamInAndIsDeleted(teamList).stream()
-                .map(HqSearchCsResponse::from)
-                .toList();
+        Page<HqSearchCsResponse> responsePage = userRepository.findByTeamInAndIsDeleted(teamList, pageable)
+                .map(HqSearchCsResponse::from);
 
-        return HqSearchCsResponseList.from(responseList);
+        return HqSearchCsResponseList.of(responsePage.getTotalElements(), responsePage.getTotalPages(), responsePage.getContent());
     }
+
+
 
     private static String formatInputData(String inputData) {
         if (!StringUtils.hasText(inputData) || inputData.isEmpty()) {

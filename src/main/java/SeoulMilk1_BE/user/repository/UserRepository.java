@@ -22,7 +22,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByLoginId(String loginId);
 
     @Query("SELECT u FROM User u WHERE u.team IN :teamList AND u.isDeleted = false")
-    List<User> findByTeamInAndIsDeleted(List<Team> teamList);
+    Page<User> findByTeamInAndIsDeleted(List<Team> teamList, Pageable pageable);
 
     @Query("SELECT u FROM User u WHERE u.isDeleted = false")
     Page<User> findAllByIsDeleted(Pageable pageable);
