@@ -4,6 +4,7 @@ import SeoulMilk1_BE.global.apiPayload.ApiResponse;
 import SeoulMilk1_BE.nts_tax.dto.response.HqSearchTaxResponseList;
 import SeoulMilk1_BE.nts_tax.dto.response.HqTaxDetailResponse;
 import SeoulMilk1_BE.nts_tax.dto.response.HqTaxResponseList;
+import SeoulMilk1_BE.user.dto.request.HqAddManageCsRequest;
 import SeoulMilk1_BE.user.dto.response.HqManageCsResponseList;
 import SeoulMilk1_BE.user.dto.response.HqSearchCsNameResponseList;
 import SeoulMilk1_BE.user.dto.response.HqSearchCsResponseList;
@@ -31,6 +32,14 @@ public class HqController {
     @GetMapping("/manage/cs")
     public ApiResponse<HqManageCsResponseList> manageCs(@AuthenticationPrincipal Long userId) {
         return ApiResponse.onSuccess(hqService.getManageCsList(userId));
+    }
+
+    @Operation(summary = "담당 대리점 추가", description = "담당 대리점 추가 API 입니다.")
+    @PostMapping("/manage/cs")
+    public ApiResponse<String> addManageCs(
+            @AuthenticationPrincipal Long userId,
+            @RequestBody HqAddManageCsRequest request) {
+        return ApiResponse.onSuccess(hqService.addManageCs(userId, request));
     }
 
     @Operation(summary = "이번 달 세금계산서 조회", description = "담당 대리점의 지급 대기 중인 세금계산서 목록을 조회합니다.")

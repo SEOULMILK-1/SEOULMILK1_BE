@@ -98,4 +98,8 @@ public class User extends BaseTimeEntity {
     private static String formatPhone(String phone) {
         return phone.replace("-", "");
     }
+
+    public void addManageTeam(Team team) {
+        this.manageTeams.add(team.getId());
+    }
 }

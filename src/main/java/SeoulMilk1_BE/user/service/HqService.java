@@ -6,6 +6,7 @@ import SeoulMilk1_BE.nts_tax.exception.NtsTaxNotFoundException;
 import SeoulMilk1_BE.nts_tax.repository.NtsTaxRepository;
 import SeoulMilk1_BE.user.domain.Team;
 import SeoulMilk1_BE.user.domain.User;
+import SeoulMilk1_BE.user.dto.request.HqAddManageCsRequest;
 import SeoulMilk1_BE.user.dto.response.*;
 import SeoulMilk1_BE.user.exception.TeamNotFoundException;
 import SeoulMilk1_BE.user.exception.UserNotFoundException;
@@ -24,6 +25,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static SeoulMilk1_BE.global.apiPayload.code.status.ErrorStatus.*;
+import static SeoulMilk1_BE.user.util.UserConstants.ADD_MANAGE_CS_SUCCESS;
 
 @Service
 @RequiredArgsConstructor
@@ -100,6 +102,19 @@ public class HqService {
         }
 
         return HqManageCsResponseList.from(responseList);
+    }
+
+    @Transactional
+    public String addManageCs(Long userId, HqAddManageCsRequest request) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException(USER_NOT_FOUND));
+
+        for (Long teamId : request.teamIds()) {
+            Team team = teamRepository.findById(teamId).orElseThrow(() -> new TeamNotFoundException(TEAM_NOT_FOUND));
+            user.addManageTeam(team);
+        }
+
+        return ADD_MANAGE_CS_SUCCESS.getMessage();
     }
 
     private static String formatInputData(String inputData) {
