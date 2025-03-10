@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Builder
 public class PaymentDetails {
+    private Long ntsId;
     private String ntsTaxNum;
     private Long supplyAmount;
     private LocalDateTime issueDate;
