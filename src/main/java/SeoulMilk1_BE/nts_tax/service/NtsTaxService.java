@@ -110,6 +110,6 @@ public class NtsTaxService {
     }
 
     public List<NtsTax> findByPaymentWritten() {
-        return ntsTaxRepository.findByIsPaymentWrittenFalseAndValidStatusTrueOrderBySuDeptName();
+        return ntsTaxRepository.findByIsPaymentWritten();
     }
 }

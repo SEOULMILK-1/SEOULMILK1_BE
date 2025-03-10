@@ -25,5 +25,6 @@ public interface NtsTaxRepository extends JpaRepository<NtsTax, Long>, NtsTaxRep
 
     Boolean existsByIssueId(String issueId);
 
-    List<NtsTax> findByIsPaymentWrittenFalseAndValidStatusTrueOrderBySuDeptName();
+    @Query("select nts FROM NtsTax nts WHERE nts.isPaymentWritten = false AND nts.validStatus = 'APPROVE' order by nts.suDeptName")
+    List<NtsTax> findByIsPaymentWritten();
 }
