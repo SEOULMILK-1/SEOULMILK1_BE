@@ -24,4 +24,10 @@ public interface NtsTaxRepository extends JpaRepository<NtsTax, Long>, NtsTaxRep
     Long countByTeamAndIssueYearMonth(Team team, String issueYearMonth);
 
     Boolean existsByIssueId(String issueId);
+
+    @Query("SELECT nts FROM NtsTax nts WHERE nts.user.id = :userId AND SUBSTRING(nts.issueDate, 1, 6) = :thisMonth AND nts.validStatus = 'REFUSED'")
+    List<NtsTax> findThisMonthRefusedTax(Long userId, String thisMonth);
+
+    @Query("SELECT nts FROM NtsTax nts WHERE nts.user.id = :userId AND SUBSTRING(nts.issueDate, 1, 6) = :thisMonth AND nts.validStatus = 'APPROVE'")
+    List<NtsTax> findThisMonthApprovedTax(Long userId, String thisMonth);
 }

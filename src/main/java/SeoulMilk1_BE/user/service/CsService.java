@@ -2,9 +2,7 @@ package SeoulMilk1_BE.user.service;
 
 import SeoulMilk1_BE.nts_tax.domain.NtsTax;
 import SeoulMilk1_BE.nts_tax.domain.type.ValidStatus;
-import SeoulMilk1_BE.nts_tax.dto.response.CsSearchTaxResponse;
-import SeoulMilk1_BE.nts_tax.dto.response.CsSearchTaxResponseList;
-import SeoulMilk1_BE.nts_tax.dto.response.CsTaxDetailResponse;
+import SeoulMilk1_BE.nts_tax.dto.response.*;
 import SeoulMilk1_BE.nts_tax.exception.NtsTaxNotFoundException;
 import SeoulMilk1_BE.nts_tax.repository.NtsTaxRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +13,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import static SeoulMilk1_BE.global.apiPayload.code.status.ErrorStatus.TAX_NOT_FOUND;
@@ -25,6 +25,26 @@ import static SeoulMilk1_BE.global.apiPayload.code.status.ErrorStatus.TAX_NOT_FO
 public class CsService {
 
     private final NtsTaxRepository ntsTaxRepository;
+
+    public CsRefusedTaxResponseList getThisMonthRefusedTax(Long userId) {
+        String thisMonth = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMM"));
+
+        List<CsRefusedTaxResponse> rejectedTaxList = ntsTaxRepository.findThisMonthRefusedTax(userId, thisMonth).stream()
+                .map(CsRefusedTaxResponse::from)
+                .toList();
+
+        return CsRefusedTaxResponseList.from(rejectedTaxList);
+    }
+
+    public CsApprovedTaxResponseList getThisMonthApprovedTax(Long userId) {
+        String thisMonth = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMM"));
+
+        List<CsApprovedTaxResponse> approvedTaxList = ntsTaxRepository.findThisMonthApprovedTax(userId, thisMonth).stream()
+                .map(CsApprovedTaxResponse::from)
+                .toList();
+
+        return CsApprovedTaxResponseList.from(approvedTaxList);
+    }
 
     public CsSearchTaxResponseList searchTax(Long userId, int page, int size, String startDate, String endDate, Long months, ValidStatus status) {
         String start = formatInputData(startDate);
