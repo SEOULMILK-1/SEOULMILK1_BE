@@ -39,6 +39,14 @@ public class HqController {
         return ApiResponse.onSuccess(hqService.addManageCs(userId, request));
     }
 
+    @Operation(summary = "담당 대리점 삭제", description = "담당 대리점 삭제 API 입니다.")
+    @DeleteMapping("/manage/cs/{csId}")
+    public ApiResponse<String> deleteManageCs(
+            @AuthenticationPrincipal Long userId,
+            @PathVariable Long csId) {
+        return ApiResponse.onSuccess(hqService.deleteManageCs(userId, csId));
+    }
+
     @Operation(summary = "지급 대기 세금계산서 조회", description = "담당 대리점의 지급 대기 세금계산서 목록을 조회합니다.")
     @GetMapping("/wait/tax")
     public ApiResponse<HqTaxResponseList> getTaxInfo(@AuthenticationPrincipal Long userId) {

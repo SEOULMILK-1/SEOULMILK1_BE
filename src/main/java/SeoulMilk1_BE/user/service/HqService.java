@@ -25,6 +25,7 @@ import java.util.List;
 
 import static SeoulMilk1_BE.global.apiPayload.code.status.ErrorStatus.*;
 import static SeoulMilk1_BE.user.util.UserConstants.ADD_MANAGE_CS_SUCCESS;
+import static SeoulMilk1_BE.user.util.UserConstants.DELETE_MANAGE_CS_SUCCESS;
 
 @Service
 @RequiredArgsConstructor
@@ -128,6 +129,19 @@ public class HqService {
         }
 
         return ADD_MANAGE_CS_SUCCESS.getMessage();
+    }
+
+    @Transactional
+    public String deleteManageCs(Long userId, Long teamId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException(USER_NOT_FOUND));
+
+        Team team = teamRepository.findById(teamId)
+                .orElseThrow(() -> new TeamNotFoundException(TEAM_NOT_FOUND));
+
+        user.removeManageTeam(team);
+
+        return DELETE_MANAGE_CS_SUCCESS.getMessage();
     }
 
     private static String formatInputData(String inputData) {

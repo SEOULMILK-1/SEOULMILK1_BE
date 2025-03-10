@@ -102,4 +102,8 @@ public class User extends BaseTimeEntity {
     public void addManageTeam(Team team) {
         this.manageTeams.add(team.getId());
     }
+
+    public void removeManageTeam(Team team) {
+        this.manageTeams.remove(team.getId());
+    }
 }
