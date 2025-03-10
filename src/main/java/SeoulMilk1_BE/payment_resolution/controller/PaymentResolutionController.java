@@ -39,8 +39,8 @@ public class PaymentResolutionController {
 
     @Operation(summary = "지급결의서 생성", description = "자동 작성된 값들 토대로 넣어주세요!!")
     @PostMapping
-    public ApiResponse<PaymentResolutionInsertResponse> createPaymentResolution(@RequestBody PaymentResolutionRequest request) {
-        return ApiResponse.onSuccess(paymentResolutionService.createPaymentResolution(request));
+    public ApiResponse<String> createPaymentResolution(@AuthenticationPrincipal Long userId) {
+        return ApiResponse.onSuccess(paymentResolutionService.createPaymentResolutionByGrouping(userId));
     }
 
     @Operation(summary = "지급결의서 수정", description = "수정 희망하는 지급결의서 ID와 수정된 값 포함된 전체 값을 넣어주세요!")

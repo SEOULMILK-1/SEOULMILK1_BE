@@ -2,6 +2,7 @@ package SeoulMilk1_BE.payment_resolution.service;
 
 import SeoulMilk1_BE.global.apiPayload.code.status.ErrorStatus;
 import SeoulMilk1_BE.global.apiPayload.exception.GeneralException;
+import SeoulMilk1_BE.nts_tax.domain.NtsTax;
 import SeoulMilk1_BE.nts_tax.service.NtsTaxService;
 import SeoulMilk1_BE.payment_resolution.domain.PaymentResolution;
 import SeoulMilk1_BE.payment_resolution.dto.request.PaymentResolutionRequest;
@@ -10,7 +11,9 @@ import SeoulMilk1_BE.payment_resolution.dto.response.PaymentResolutionListRespon
 import SeoulMilk1_BE.payment_resolution.dto.response.PaymentResolutionReadResponse;
 import SeoulMilk1_BE.payment_resolution.repository.PaymentResolutionRepository;
 import SeoulMilk1_BE.payment_resolution.utils.PaymentResolutionConstants;
+import SeoulMilk1_BE.user.domain.User;
 import SeoulMilk1_BE.user.service.TeamService;
+import SeoulMilk1_BE.user.service.UserService;
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.pdf.BaseFont;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +35,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -42,6 +46,7 @@ public class PaymentResolutionService {
     private final PaymentResolutionRepository paymentResolutionRepository;
     private final TeamService teamService;
     private final NtsTaxService ntsTaxService;
+    private final UserService userService;
 
     @Transactional
     public PaymentResolutionInsertResponse createPaymentResolution(PaymentResolutionRequest request) {
@@ -56,6 +61,23 @@ public class PaymentResolutionService {
         ntsTaxService.updatePaymentWritten(request.paymentDetails());
 
         return PaymentResolutionInsertResponse.of(paymentResolution.getId(), paymentResolution.getModifiedAt());
+    }
+
+    @Transactional
+    public String createPaymentResolutionByGrouping(Long userId) {
+        User user = userService.findUser(userId);
+        // 작성되지 않은 세금계산서 목록 조회 및 지점별로 파티셔닝
+        List<NtsTax> ntsTaxList = ntsTaxService.findByPaymentWritten();
+
+        Map<String, List<NtsTax>> groupedByDept = ntsTaxList.stream().collect(Collectors.groupingBy(NtsTax::getSuDeptName));
+
+        groupedByDept.forEach((deptName, taxList) -> {
+            System.out.println(deptName);
+
+            PaymentResolutionRequest request = PaymentResolutionRequest.from(taxList, user);
+            createPaymentResolution(request);
+        });
+        return "OK";
     }
 
     public PaymentResolutionReadResponse readPaymentResolution(Long id) {
