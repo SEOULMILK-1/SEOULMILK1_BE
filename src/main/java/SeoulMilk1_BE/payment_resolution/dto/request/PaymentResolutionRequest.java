@@ -7,6 +7,7 @@ import SeoulMilk1_BE.user.domain.User;
 import lombok.Builder;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,7 +34,7 @@ public record PaymentResolutionRequest(
                             .ntsId(n.getId())
                             .ntsTaxNum(n.getIssueId())
                             .supplyAmount(n.getChargeTotal())
-                            .issueDate(n.getModifiedAt())
+                            .issueDate(n.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy.MM.dd")))
                             .totalAmount(n.getGrandTotal())
                             .build();
                 }

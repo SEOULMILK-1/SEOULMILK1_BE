@@ -17,6 +17,6 @@ public class PaymentDetails {
     private Long ntsId;
     private String ntsTaxNum;
     private Long supplyAmount;
-    private LocalDateTime issueDate;
+    private String issueDate;
     private Long totalAmount;
 }
