@@ -66,18 +66,20 @@ public class PaymentResolutionService {
     @Transactional
     public String createPaymentResolutionByGrouping(Long userId) {
         User user = userService.findUser(userId);
-        // 작성되지 않은 세금계산서 목록 조회 및 지점별로 파티셔닝
         List<NtsTax> ntsTaxList = ntsTaxService.findByPaymentWritten();
 
+        if (ntsTaxList.size() == 0) {
+            throw new GeneralException(ErrorStatus.NTS_TAX_NOT_FOUND);
+        }
+        // 작성되지 않은 세금계산서 목록 조회 및 지점별로 파티셔닝
         Map<String, List<NtsTax>> groupedByDept = ntsTaxList.stream().collect(Collectors.groupingBy(NtsTax::getSuDeptName));
 
+        // 지점별로 지급결의서 작성
         groupedByDept.forEach((deptName, taxList) -> {
-            System.out.println(deptName);
-
             PaymentResolutionRequest request = PaymentResolutionRequest.from(taxList, user);
             createPaymentResolution(request);
         });
-        return "OK";
+        return PaymentResolutionConstants.CREATE_SUCCESS.getMessage();
     }
 
     public PaymentResolutionReadResponse readPaymentResolution(Long id) {
