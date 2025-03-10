@@ -6,12 +6,15 @@ import SeoulMilk1_BE.nts_tax.dto.response.HqTaxDetailResponse;
 import SeoulMilk1_BE.nts_tax.dto.response.HqTaxResponseList;
 import SeoulMilk1_BE.user.dto.response.HqSearchCsNameResponseList;
 import SeoulMilk1_BE.user.dto.response.HqSearchCsResponseList;
+import SeoulMilk1_BE.user.dto.response.HqWaitingNtsTax;
 import SeoulMilk1_BE.user.service.HqService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Tag(name = "HQ", description = "본사 직원 관련 API")
 @Slf4j
@@ -65,5 +68,11 @@ public class HqController {
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(required = false) String keyword) {
         return ApiResponse.onSuccess(hqService.searchCs(page, size, keyword));
+    }
+
+    @Operation(summary = "지급 대기 중인 세금계산서 목록 조회", description = "지급 대기 중인 세금계산서 목록 조회 API 입니다.")
+    @GetMapping("/waiting/nts_tax")
+    public ApiResponse<List<HqWaitingNtsTax>> readWaitingNtsTaxList() {
+        return ApiResponse.onSuccess(hqService.readWaitingNtsTaxList());
     }
 }
