@@ -6,6 +6,7 @@ import SeoulMilk1_BE.payment_resolution.dto.request.PaymentResolutionRequest;
 import lombok.Builder;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Builder
@@ -20,7 +21,7 @@ public record PaymentResolutionReadResponse(
         String principalBusinessNumber,
         String approver,
         LocalDateTime scheduledPaymentDate,
-        LocalDateTime createdAt,
+        String createdAt,
         List<PaymentDetails> paymentDetails,
         Long totalSupplyAmount,
         Long totalAllAmount
@@ -54,7 +55,7 @@ public record PaymentResolutionReadResponse(
                 .principalBusinessNumber(paymentResolution.getPrincipalBusinessNumber())
                 .approver(paymentResolution.getApprover())
                 .scheduledPaymentDate(paymentResolution.getScheduledPaymentDate())
-                .createdAt(paymentResolution.getModifiedAt())
+                .createdAt(paymentResolution.getModifiedAt().format(DateTimeFormatter.ofPattern("yyyy.MM.dd")))
                 .paymentDetails(paymentResolution.getPaymentDetailsList())
                 .totalSupplyAmount(paymentResolution.getTotalSupplyAmount())
                 .totalAllAmount(paymentResolution.getTotalAllAmount())
