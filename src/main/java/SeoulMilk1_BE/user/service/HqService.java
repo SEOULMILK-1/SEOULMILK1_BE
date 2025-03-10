@@ -5,7 +5,10 @@ import SeoulMilk1_BE.nts_tax.dto.response.*;
 import SeoulMilk1_BE.nts_tax.exception.NtsTaxNotFoundException;
 import SeoulMilk1_BE.nts_tax.repository.NtsTaxRepository;
 import SeoulMilk1_BE.user.domain.Team;
+import SeoulMilk1_BE.user.domain.User;
 import SeoulMilk1_BE.user.dto.response.*;
+import SeoulMilk1_BE.user.exception.TeamNotFoundException;
+import SeoulMilk1_BE.user.exception.UserNotFoundException;
 import SeoulMilk1_BE.user.repository.TeamRepository;
 import SeoulMilk1_BE.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,10 +19,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static SeoulMilk1_BE.global.apiPayload.code.status.ErrorStatus.TAX_NOT_FOUND;
+import static SeoulMilk1_BE.global.apiPayload.code.status.ErrorStatus.*;
 
 @Service
 @RequiredArgsConstructor
@@ -83,7 +87,20 @@ public class HqService {
         return HqSearchCsResponseList.of(responsePage.getTotalElements(), responsePage.getTotalPages(), responsePage.getContent());
     }
 
+    public HqManageCsResponseList getManageCsList(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException(USER_NOT_FOUND));
+        List<Long> teamIds = user.getManageTeams();
 
+        List<HqManageCsResponse> responseList = new ArrayList<>();
+
+        for (Long teamId : teamIds) {
+            Team team = teamRepository.findById(teamId).orElseThrow(() -> new TeamNotFoundException(TEAM_NOT_FOUND));
+            responseList.add(HqManageCsResponse.from(team));
+        }
+
+        return HqManageCsResponseList.from(responseList);
+    }
 
     private static String formatInputData(String inputData) {
         if (!StringUtils.hasText(inputData) || inputData.isEmpty()) {

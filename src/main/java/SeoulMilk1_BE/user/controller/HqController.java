@@ -4,6 +4,7 @@ import SeoulMilk1_BE.global.apiPayload.ApiResponse;
 import SeoulMilk1_BE.nts_tax.dto.response.HqSearchTaxResponseList;
 import SeoulMilk1_BE.nts_tax.dto.response.HqTaxDetailResponse;
 import SeoulMilk1_BE.nts_tax.dto.response.HqTaxResponseList;
+import SeoulMilk1_BE.user.dto.response.HqManageCsResponseList;
 import SeoulMilk1_BE.user.dto.response.HqSearchCsNameResponseList;
 import SeoulMilk1_BE.user.dto.response.HqSearchCsResponseList;
 import SeoulMilk1_BE.user.dto.response.HqWaitingNtsTax;
@@ -12,6 +13,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,7 +27,13 @@ public class HqController {
 
     private final HqService hqService;
 
-    @Operation(summary = "이번 달 세금계산서 조회", description = "본사 직원의 홈 화면입니다.")
+    @Operation(summary = "담당 대리점 조회", description = "직원이 담당하는 대리점 목록을 조회합니다.")
+    @GetMapping("/manage/cs")
+    public ApiResponse<HqManageCsResponseList> manageCs(@AuthenticationPrincipal Long userId) {
+        return ApiResponse.onSuccess(hqService.getManageCsList(userId));
+    }
+
+    @Operation(summary = "이번 달 세금계산서 조회", description = "담당 대리점의 지급 대기 중인 세금계산서 목록을 조회합니다.")
     @GetMapping
     public ApiResponse<HqTaxResponseList> getTaxInfo() {
         return ApiResponse.onSuccess(hqService.getTaxInfo());
