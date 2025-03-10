@@ -22,7 +22,6 @@ import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static SeoulMilk1_BE.global.apiPayload.code.status.ErrorStatus.*;
 import static SeoulMilk1_BE.user.util.UserConstants.ADD_MANAGE_CS_SUCCESS;
@@ -51,12 +50,19 @@ public class HqService {
         return HqTaxResponseList.from(responseList);
     }
 
-    public HqSearchTaxResponseList searchTax(int page, int size, String keyword, String startDate, String endDate, Long months, Boolean status) {
+    public HqSearchTaxResponseList searchTax(int page, int size, String keyword, String startDate, String endDate, Long months, Boolean status, Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException(USER_NOT_FOUND));
+
+        List<Team> teamList = user.getManageTeams().stream()
+                .map(teamId -> teamRepository.findById(teamId).orElseThrow(() -> new TeamNotFoundException(TEAM_NOT_FOUND)))
+                .toList();
+
         String start = formatInputData(startDate);
         String end = formatInputData(endDate);
 
         Pageable pageable = PageRequest.of(page, size);
-        Page<HqSearchTaxResponse> hqTaxResponsePage = ntsTaxRepository.findTaxUsedInHQ(pageable, keyword, start, end, months, status);
+        Page<HqSearchTaxResponse> hqTaxResponsePage = ntsTaxRepository.findTaxUsedInHQ(pageable, keyword, start, end, months, status, teamList);
 
         Long totalElements = hqTaxResponsePage.getTotalElements();
         Integer totalPages = hqTaxResponsePage.getTotalPages();
@@ -134,12 +140,5 @@ public class HqService {
                 .replace(" ", "")
                 .replace("\n", "")
                 .replace(".", "");
-    }
-
-    public List<HqWaitingNtsTax> readWaitingNtsTaxList() {
-        List<NtsTax> ntsTaxList = ntsTaxRepository.findAllByIsPaymentWritten();
-        return ntsTaxList.stream().map(ntsTax -> {
-            return HqWaitingNtsTax.of(ntsTax);
-        }).collect(Collectors.toList());
     }
 }

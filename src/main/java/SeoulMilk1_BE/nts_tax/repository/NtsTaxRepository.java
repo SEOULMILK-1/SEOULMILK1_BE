@@ -14,9 +14,6 @@ public interface NtsTaxRepository extends JpaRepository<NtsTax, Long>, NtsTaxRep
 
     Optional<NtsTax> findByIssueId(String issueId);
 
-    @Query("SELECT nts FROM NtsTax nts WHERE nts.validStatus = 'APPROVE' AND nts.isPaymentWritten = false")
-    List<NtsTax> findAllByIsPaymentWritten();
-
     @Query("SELECT nts FROM NtsTax nts WHERE nts.validStatus = 'APPROVE' AND nts.isPaymentWritten = false AND nts.team IN :teams")
     List<NtsTax> findAllByIsPaymentWrittenAndManageCs(List<Team> teams);
 

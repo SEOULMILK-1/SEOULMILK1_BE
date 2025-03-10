@@ -8,7 +8,6 @@ import SeoulMilk1_BE.user.dto.request.HqAddManageCsRequest;
 import SeoulMilk1_BE.user.dto.response.HqManageCsResponseList;
 import SeoulMilk1_BE.user.dto.response.HqSearchCsNameResponseList;
 import SeoulMilk1_BE.user.dto.response.HqSearchCsResponseList;
-import SeoulMilk1_BE.user.dto.response.HqWaitingNtsTax;
 import SeoulMilk1_BE.user.service.HqService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -16,8 +15,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Tag(name = "HQ", description = "본사 직원 관련 API")
 @Slf4j
@@ -43,7 +40,7 @@ public class HqController {
     }
 
     @Operation(summary = "지급 대기 세금계산서 조회", description = "담당 대리점의 지급 대기 세금계산서 목록을 조회합니다.")
-    @GetMapping
+    @GetMapping("/wait/tax")
     public ApiResponse<HqTaxResponseList> getTaxInfo(@AuthenticationPrincipal Long userId) {
         return ApiResponse.onSuccess(hqService.getTaxInfo(userId));
     }
@@ -54,6 +51,7 @@ public class HqController {
             "page : 조회할 페이지 번호 <br> size : 한 페이지에 조회할 세금계산서 수")
     @GetMapping("/search/tax")
     public ApiResponse<HqSearchTaxResponseList> searchTax(
+            @AuthenticationPrincipal Long userId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(required = false) String keyword,
@@ -61,7 +59,7 @@ public class HqController {
             @RequestParam(required = false) String endDate,
             @RequestParam(required = false) Long months,
             @RequestParam(required = false) Boolean status) {
-        return ApiResponse.onSuccess(hqService.searchTax(page, size, keyword, startDate, endDate, months, status));
+        return ApiResponse.onSuccess(hqService.searchTax(page, size, keyword, startDate, endDate, months, status, userId));
     }
 
     @Operation(summary = "세금계산서 상세 조회", description = "상세 조회할 세금계산서의 ID 값을 넣어주세요")
@@ -85,11 +83,5 @@ public class HqController {
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(required = false) String keyword) {
         return ApiResponse.onSuccess(hqService.searchCs(page, size, keyword));
-    }
-
-    @Operation(summary = "지급 대기 중인 세금계산서 목록 조회", description = "지급 대기 중인 세금계산서 목록 조회 API 입니다.")
-    @GetMapping("/waiting/nts_tax")
-    public ApiResponse<List<HqWaitingNtsTax>> readWaitingNtsTaxList() {
-        return ApiResponse.onSuccess(hqService.readWaitingNtsTaxList());
     }
 }
