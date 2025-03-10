@@ -19,8 +19,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import static SeoulMilk1_BE.global.apiPayload.code.status.ErrorStatus.TAX_NOT_FOUND;
@@ -73,6 +71,11 @@ public class HqService {
 
     public HqSearchCsResponseList searchCs(String keyword) {
         List<Team> teamList = teamRepository.findByNameContaining(keyword);
+
+        if (StringUtils.isEmpty(keyword)) {
+            teamList = teamRepository.findAll();
+        }
+
         List<HqSearchCsResponse> responseList = userRepository.findByTeamInAndIsDeleted(teamList).stream()
                 .map(HqSearchCsResponse::from)
                 .toList();

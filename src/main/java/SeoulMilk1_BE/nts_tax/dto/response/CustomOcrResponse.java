@@ -1,6 +1,7 @@
 package SeoulMilk1_BE.nts_tax.dto.response;
 
 import SeoulMilk1_BE.nts_tax.domain.NtsTax;
+import SeoulMilk1_BE.nts_tax.domain.type.ValidStatus;
 import lombok.Builder;
 import org.springframework.util.StringUtils;
 
@@ -15,7 +16,8 @@ public record CustomOcrResponse(
         String ipId,
         String issueDate,
         String chargeTotal,
-        String title
+        String title,
+        ValidStatus status
 ) {
     public static CustomOcrResponse from(NtsTax ntsTax) {
         return CustomOcrResponse.builder()
@@ -26,6 +28,7 @@ public record CustomOcrResponse(
                 .issueDate(formatIssueDate(ntsTax.getIssueDate()))
                 .chargeTotal(formatChargeTotal(ntsTax.getChargeTotal()))
                 .title(ntsTax.getTitle())
+                .status(ntsTax.getValidStatus())
                 .build();
     }
 
@@ -41,6 +44,7 @@ public record CustomOcrResponse(
                 .issueId(message)
                 .issueDate(formatIssueDate(ntsTax.getIssueDate()))
                 .title(ntsTax.getTitle())
+                .status(ntsTax.getValidStatus())
                 .build();
     }
 
