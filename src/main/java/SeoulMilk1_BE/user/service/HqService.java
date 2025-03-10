@@ -36,8 +36,15 @@ public class HqService {
     private final TeamRepository teamRepository;
     private final UserRepository userRepository;
 
-    public HqTaxResponseList getTaxInfo() {
-        List<HqTaxResponse> responseList = ntsTaxRepository.findAllByIsPaymentWritten().stream()
+    public HqTaxResponseList getTaxInfo(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException(USER_NOT_FOUND));
+
+        List<Team> teamList = user.getManageTeams().stream()
+                .map(teamId -> teamRepository.findById(teamId).orElseThrow(() -> new TeamNotFoundException(TEAM_NOT_FOUND)))
+                .toList();
+
+        List<HqTaxResponse> responseList = ntsTaxRepository.findAllByIsPaymentWrittenAndManageCs(teamList).stream()
                 .map(HqTaxResponse::from)
                 .toList();
 

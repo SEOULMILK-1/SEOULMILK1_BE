@@ -42,10 +42,10 @@ public class HqController {
         return ApiResponse.onSuccess(hqService.addManageCs(userId, request));
     }
 
-    @Operation(summary = "이번 달 세금계산서 조회", description = "담당 대리점의 지급 대기 중인 세금계산서 목록을 조회합니다.")
+    @Operation(summary = "지급 대기 세금계산서 조회", description = "담당 대리점의 지급 대기 세금계산서 목록을 조회합니다.")
     @GetMapping
-    public ApiResponse<HqTaxResponseList> getTaxInfo() {
-        return ApiResponse.onSuccess(hqService.getTaxInfo());
+    public ApiResponse<HqTaxResponseList> getTaxInfo(@AuthenticationPrincipal Long userId) {
+        return ApiResponse.onSuccess(hqService.getTaxInfo(userId));
     }
 
     @Operation(summary = "세금계산서 검색", description = "검색 조건을 설정하지 않으면 세금계산서 전체 목록이 조회됩니다.<br><br>" +

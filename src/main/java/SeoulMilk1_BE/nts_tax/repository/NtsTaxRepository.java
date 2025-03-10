@@ -17,6 +17,9 @@ public interface NtsTaxRepository extends JpaRepository<NtsTax, Long>, NtsTaxRep
     @Query("SELECT nts FROM NtsTax nts WHERE nts.validStatus = 'APPROVE' AND nts.isPaymentWritten = false")
     List<NtsTax> findAllByIsPaymentWritten();
 
+    @Query("SELECT nts FROM NtsTax nts WHERE nts.validStatus = 'APPROVE' AND nts.isPaymentWritten = false AND nts.team IN :teams")
+    List<NtsTax> findAllByIsPaymentWrittenAndManageCs(List<Team> teams);
+
     @Query("SELECT nts FROM NtsTax nts WHERE nts.modifiedAt > :deadline AND nts.validStatus = 'APPROVE'")
     List<NtsTax> findAllByPeriod(@Param("deadline") LocalDateTime deadline);
 
@@ -24,7 +27,7 @@ public interface NtsTaxRepository extends JpaRepository<NtsTax, Long>, NtsTaxRep
     Long countByTeamAndIssueYearMonth(Team team, String issueYearMonth);
 
     Boolean existsByIssueId(String issueId);
-  
+
     @Query("select nts FROM NtsTax nts WHERE nts.isPaymentWritten = false AND nts.validStatus = 'APPROVE' order by nts.suDeptName")
     List<NtsTax> findByIsPaymentWritten();
 
