@@ -1,6 +1,7 @@
 package SeoulMilk1_BE.payment_resolution.domain;
 
 import SeoulMilk1_BE.global.domain.BaseTimeEntity;
+import SeoulMilk1_BE.payment_resolution.dto.request.PaymentResolutionUpdateAccountRequest;
 import SeoulMilk1_BE.payment_resolution.dto.response.PaymentResolutionReadResponse;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -66,5 +67,9 @@ public class PaymentResolution extends BaseTimeEntity {
         this.approver = request.approver();
         this.scheduledPaymentDate = request.scheduledPaymentDate();
         this.paymentDetailsList = request.paymentDetails();
+    }
+
+    public void updateAccount(PaymentResolutionUpdateAccountRequest request) {
+        this.paymentAccount = request.bank() + " " + request.accountNumber();
     }
 }

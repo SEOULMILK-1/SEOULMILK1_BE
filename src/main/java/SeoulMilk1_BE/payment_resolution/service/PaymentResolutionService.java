@@ -6,6 +6,7 @@ import SeoulMilk1_BE.nts_tax.domain.NtsTax;
 import SeoulMilk1_BE.nts_tax.service.NtsTaxService;
 import SeoulMilk1_BE.payment_resolution.domain.PaymentResolution;
 import SeoulMilk1_BE.payment_resolution.dto.request.PaymentResolutionRequest;
+import SeoulMilk1_BE.payment_resolution.dto.request.PaymentResolutionUpdateAccountRequest;
 import SeoulMilk1_BE.payment_resolution.dto.response.PaymentResolutionInsertResponse;
 import SeoulMilk1_BE.payment_resolution.dto.response.PaymentResolutionListResponse;
 import SeoulMilk1_BE.payment_resolution.dto.response.PaymentResolutionReadResponse;
@@ -92,6 +93,13 @@ public class PaymentResolutionService {
         PaymentResolution paymentResolution = paymentResolutionRepository.findById(id).orElseThrow(() -> new GeneralException(ErrorStatus.PAYMENT_RESOLUTION_NOT_FOUND));
         paymentResolution.updatePaymentResolution(request);
         return PaymentResolutionInsertResponse.of(paymentResolution.getId(), paymentResolution.getModifiedAt());
+    }
+
+    @Transactional
+    public String updateAccount(PaymentResolutionUpdateAccountRequest request) {
+        PaymentResolution paymentResolution = paymentResolutionRepository.findById(request.id()).orElseThrow(() -> new GeneralException(ErrorStatus.PAYMENT_RESOLUTION_NOT_FOUND));
+        paymentResolution.updateAccount(request);
+        return PaymentResolutionConstants.UPDATE_ACCOUNT_SUCCESS.getMessage();
     }
 
     @Transactional
