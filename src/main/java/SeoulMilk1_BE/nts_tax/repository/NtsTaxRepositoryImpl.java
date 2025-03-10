@@ -3,6 +3,7 @@ package SeoulMilk1_BE.nts_tax.repository;
 import SeoulMilk1_BE.nts_tax.domain.type.ValidStatus;
 import SeoulMilk1_BE.nts_tax.dto.response.CsSearchTaxResponse;
 import SeoulMilk1_BE.nts_tax.dto.response.HqSearchTaxResponse;
+import SeoulMilk1_BE.user.domain.Team;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
@@ -27,7 +28,7 @@ public class NtsTaxRepositoryImpl implements NtsTaxRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public Page<HqSearchTaxResponse> findTaxUsedInHQ(Pageable pageable, String keyword, String startDate, String endDate, Long months, Boolean status) {
+    public Page<HqSearchTaxResponse> findTaxUsedInHQ(Pageable pageable, String keyword, String startDate, String endDate, Long months, Boolean status, List<Team> teamList) {
         List<HqSearchTaxResponse> results = queryFactory.select(
                         Projections.constructor(HqSearchTaxResponse.class,
                                 ntsTax.id,
@@ -43,7 +44,8 @@ public class NtsTaxRepositoryImpl implements NtsTaxRepositoryCustom {
                 .where(containsKeyword(keyword),
                         betweenDate(startDate, endDate),
                         betweenMonths(months),
-                        betweenHqStatus(status))
+                        betweenHqStatus(status),
+                        ntsTax.team.in(teamList))
                 .offset((pageable.getOffset()))
                 .orderBy(ntsTax.issueDate.desc())
                 .limit(pageable.getPageSize())
@@ -91,7 +93,7 @@ public class NtsTaxRepositoryImpl implements NtsTaxRepositoryCustom {
 
 
     private BooleanExpression containsKeyword(String keyword) {
-        return StringUtils.hasText(keyword) ? ntsTax.suDeptName.containsIgnoreCase(keyword) : null;
+        return StringUtils.hasText(keyword) ? ntsTax.team.name.containsIgnoreCase(keyword) : null;
     }
 
     private BooleanExpression equalUser(Long userId) {

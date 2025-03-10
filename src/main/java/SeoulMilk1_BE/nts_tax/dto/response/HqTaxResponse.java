@@ -15,7 +15,7 @@ public record HqTaxResponse(
                 .ntsTaxId(ntsTax.getId())
                 .title(ntsTax.getTitle())
                 .taxDate(getFormattedTaxDate(ntsTax.getIssueDate()))
-                .csName(ntsTax.getSuDeptName())
+                .csName(ntsTax.getTeam().getName())
                 .build();
     }
 

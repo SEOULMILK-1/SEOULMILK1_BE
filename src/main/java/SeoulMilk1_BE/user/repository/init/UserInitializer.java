@@ -44,6 +44,8 @@ public class UserInitializer implements ApplicationRunner {
                     .orElseThrow(() -> new TeamNotFoundException(TEAM_NOT_FOUND));
             Team TEAM5 = teamRepository.findById(5L)
                     .orElseThrow(() -> new TeamNotFoundException(TEAM_NOT_FOUND));
+            Team TEAM6 = teamRepository.findById(6L)
+                    .orElseThrow(() -> new TeamNotFoundException(TEAM_NOT_FOUND));
 
             List<User> userList = new ArrayList<>();
 
@@ -68,6 +70,7 @@ public class UserInitializer implements ApplicationRunner {
                     .profileImageUrl("image.png")
                     .isAssigned(true)
                     .role(HQ_USER)
+                    .manageTeams(List.of(TEAM1.getId(), TEAM2.getId()))
                     .isDeleted(false)
                     .build();
 
@@ -93,6 +96,7 @@ public class UserInitializer implements ApplicationRunner {
                     .profileImageUrl("image.png")
                     .isAssigned(false)
                     .role(HQ_USER)
+                    .manageTeams(List.of(TEAM3.getId(), TEAM4.getId()))
                     .isDeleted(false)
                     .build();
 
@@ -118,6 +122,7 @@ public class UserInitializer implements ApplicationRunner {
                     .profileImageUrl("image.png")
                     .isAssigned(false)
                     .role(HQ_USER)
+                    .manageTeams(List.of(TEAM5.getId()))
                     .isDeleted(false)
                     .build();
 
@@ -147,16 +152,16 @@ public class UserInitializer implements ApplicationRunner {
                     .isDeleted(false)
                     .build();
 
-            User DUMMY_HQ_USER6 = User.builder()
+            User DUMMY_HQ = User.builder()
                     .loginId("m020202")
                     .password(passwordEncoder.encode("password"))
                     .name("문정욱")
-                    .email("kim.hanul@naver.com")
+                    .email("m020202@naver.com")
                     .phone("01012446677")
                     .profileImageUrl("image.png")
                     .isAssigned(false)
                     .role(HQ_USER)
-                    .team(TEAM5)
+                    .team(TEAM6)
                     .isDeleted(false)
                     .build();
 
@@ -168,7 +173,7 @@ public class UserInitializer implements ApplicationRunner {
             userList.add(DUMMY_UNASSIGNED_USER3);
             userList.add(DUMMY_UNASSIGNED_USER4);
             userList.add(DUMMY_UNASSIGNED_USER5);
-            userList.add(DUMMY_HQ_USER6);
+            userList.add(DUMMY_HQ);
 
             userRepository.saveAll(userList);
         }
