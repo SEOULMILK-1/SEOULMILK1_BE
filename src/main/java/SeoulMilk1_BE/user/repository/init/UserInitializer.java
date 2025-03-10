@@ -42,6 +42,8 @@ public class UserInitializer implements ApplicationRunner {
                     .orElseThrow(() -> new TeamNotFoundException(TEAM_NOT_FOUND));
             Team TEAM4 = teamRepository.findById(4L)
                     .orElseThrow(() -> new TeamNotFoundException(TEAM_NOT_FOUND));
+            Team TEAM5 = teamRepository.findById(5L)
+                    .orElseThrow(() -> new TeamNotFoundException(TEAM_NOT_FOUND));
 
             List<User> userList = new ArrayList<>();
 
@@ -145,6 +147,19 @@ public class UserInitializer implements ApplicationRunner {
                     .isDeleted(false)
                     .build();
 
+            User DUMMY_HQ_USER6 = User.builder()
+                    .loginId("m020202")
+                    .password(passwordEncoder.encode("password"))
+                    .name("문정욱")
+                    .email("kim.hanul@naver.com")
+                    .phone("01012446677")
+                    .profileImageUrl("image.png")
+                    .isAssigned(false)
+                    .role(HQ_USER)
+                    .team(TEAM5)
+                    .isDeleted(false)
+                    .build();
+
             userList.add(DUMMY_ADMIN);
             userList.add(DUMMY_USER1);
             userList.add(DUMMY_USER2);
@@ -153,6 +168,7 @@ public class UserInitializer implements ApplicationRunner {
             userList.add(DUMMY_UNASSIGNED_USER3);
             userList.add(DUMMY_UNASSIGNED_USER4);
             userList.add(DUMMY_UNASSIGNED_USER5);
+            userList.add(DUMMY_HQ_USER6);
 
             userRepository.saveAll(userList);
         }
