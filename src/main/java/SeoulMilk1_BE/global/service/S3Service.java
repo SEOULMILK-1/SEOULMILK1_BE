@@ -35,7 +35,7 @@ public class S3Service {
     public String uploadFile(MultipartFile file) {
         validateFile(file);
 
-        String fileName = file.getOriginalFilename();
+        String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
         ObjectMetadata metadata = new ObjectMetadata();
 
         // 이미 존재하는지 확인
@@ -52,13 +52,13 @@ public class S3Service {
     // 이미지 다 건 업로드
     public List<String> uploadFiles(List<MultipartFile> files) {
         List<String> fileUrls = new ArrayList<>();
-        String fileName = "";
+        String fileName = UUID.randomUUID() + "_";
         ObjectMetadata metadata = new ObjectMetadata();
 
         for (MultipartFile file : files) {
             validateFile(file);
 
-            fileName = file.getOriginalFilename();
+            fileName += file.getOriginalFilename();
 
             // 이미 존재하는지 확인
             if (amazonS3.doesObjectExist(bucketName, fileName)) {
