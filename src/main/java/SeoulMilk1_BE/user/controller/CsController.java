@@ -2,6 +2,8 @@ package SeoulMilk1_BE.user.controller;
 
 import SeoulMilk1_BE.global.apiPayload.ApiResponse;
 import SeoulMilk1_BE.nts_tax.domain.type.ValidStatus;
+import SeoulMilk1_BE.nts_tax.dto.response.CsApprovedTaxResponseList;
+import SeoulMilk1_BE.nts_tax.dto.response.CsRefusedTaxResponseList;
 import SeoulMilk1_BE.nts_tax.dto.response.CsSearchTaxResponseList;
 import SeoulMilk1_BE.nts_tax.dto.response.CsTaxDetailResponse;
 import SeoulMilk1_BE.user.service.CsService;
@@ -20,6 +22,18 @@ import org.springframework.web.bind.annotation.*;
 public class CsController {
 
     private final CsService csService;
+
+    @Operation(summary = "이번 달 반려된 세금계산서 조회", description = "이번 달 반려된 세금계산서 목록을 조회합니다.")
+    @GetMapping("/tax/refuse")
+    public ApiResponse<CsRefusedTaxResponseList> getThisMonthRefusedTax(@AuthenticationPrincipal Long userId) {
+        return ApiResponse.onSuccess(csService.getThisMonthRefusedTax(userId));
+    }
+
+    @Operation(summary = "이번 달 승인된 세금계산서 조회", description = "이번 달 승인된 세금계산서 목록을 조회합니다.")
+    @GetMapping("/tax/approve")
+    public ApiResponse<CsApprovedTaxResponseList> getThisMonthApprovedTax(@AuthenticationPrincipal Long userId) {
+        return ApiResponse.onSuccess(csService.getThisMonthApprovedTax(userId));
+    }
 
     @Operation(summary = "세금계산서 검색", description = "검색 조건을 설정하지 않으면 세금계산서 전체 목록이 조회됩니다.<br><br>" +
             "months : 기간(ex. 1개월, 3개월, 6개월 등)에 사용된 숫자를 입력해주세요 <br><br>" +
