@@ -108,4 +108,8 @@ public class NtsTaxService {
         return ntsTaxRepository.findByIssueId(issueId)
                 .orElseThrow(() -> new NtsTaxNotFoundException(TAX_NOT_FOUND));
     }
+
+    public List<NtsTax> findByPaymentWritten() {
+        return ntsTaxRepository.findByIsPaymentWrittenFalseAndValidStatusTrue();
+    }
 }

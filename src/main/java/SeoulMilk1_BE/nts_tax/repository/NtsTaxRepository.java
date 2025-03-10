@@ -24,4 +24,6 @@ public interface NtsTaxRepository extends JpaRepository<NtsTax, Long>, NtsTaxRep
     Long countByTeamAndIssueYearMonth(Team team, String issueYearMonth);
 
     Boolean existsByIssueId(String issueId);
+
+    List<NtsTax> findByIsPaymentWrittenFalseAndValidStatusTrue();
 }
