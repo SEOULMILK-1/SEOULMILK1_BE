@@ -9,6 +9,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Table(name = "users")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -23,6 +26,11 @@ public class User extends BaseTimeEntity {
     @JoinColumn(name = "team_id")
     @ManyToOne(fetch = FetchType.LAZY)
     private Team team;
+
+    @ElementCollection
+    @CollectionTable(name = "manage_teams", joinColumns = @JoinColumn(name = "user_id"))
+    @Column(name = "team_id")
+    private List<Long> manageTeams = new ArrayList<>();
 
     @Column(name = "login_id", nullable = false)
     private String loginId;
@@ -57,7 +65,7 @@ public class User extends BaseTimeEntity {
 
     @Builder
     public User(String loginId, String password, String name, String email, Boolean isAssigned,
-                String phone, String profileImageUrl, String account, Role role, Team team, Boolean isDeleted) {
+                String phone, String profileImageUrl, String account, Role role, Team team, List<Long> manageTeams, Boolean isDeleted) {
         this.loginId = loginId;
         this.password = password;
         this.name = name;
@@ -68,6 +76,7 @@ public class User extends BaseTimeEntity {
         this.account = account;
         this.role = role;
         this.team = team;
+        this.manageTeams = manageTeams;
         this.isDeleted = isDeleted;
     }
 
@@ -88,5 +97,13 @@ public class User extends BaseTimeEntity {
 
     private static String formatPhone(String phone) {
         return phone.replace("-", "");
+    }
+
+    public void addManageTeam(Team team) {
+        this.manageTeams.add(team.getId());
+    }
+
+    public void removeManageTeam(Team team) {
+        this.manageTeams.remove(team.getId());
     }
 }
