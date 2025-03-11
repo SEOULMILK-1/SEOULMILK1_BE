@@ -87,16 +87,12 @@ public class User extends BaseTimeEntity {
     public void updateUser(UpdateUserRequest request) {
         this.loginId = request.loginId();
         this.email = request.email();
-        this.phone = formatPhone(request.phone());
+        this.phone = request.phone();
         this.account = request.account();
     }
 
     public void delete() {
         this.isDeleted = true;
-    }
-
-    private static String formatPhone(String phone) {
-        return phone.replace("-", "");
     }
 
     public void addManageTeam(Team team) {

@@ -24,7 +24,7 @@ public record UserDetailResponse(
             .name(user.getName())
             .loginId(user.getLoginId())
             .email(user.getEmail())
-            .phone(formatPhoneNumber(user.getPhone()));
+            .phone(user.getPhone());
 
         if (user.getRole() == ADMIN) {
             response.role("관리자");
@@ -37,12 +37,5 @@ public record UserDetailResponse(
         }
 
         return response.build();
-    }
-
-    private static String formatPhoneNumber(String phoneNumber) {
-        if (!StringUtils.hasText(phoneNumber) || phoneNumber.length() != 11) {
-            return phoneNumber;
-        }
-        return phoneNumber.replaceFirst("(\\d{3})(\\d{4})(\\d{4})", "$1-$2-$3");
     }
 }
