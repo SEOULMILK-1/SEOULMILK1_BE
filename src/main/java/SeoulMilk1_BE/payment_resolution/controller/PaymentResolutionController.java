@@ -28,8 +28,6 @@ import java.util.List;
 @RequestMapping("/hq/payment-resolution")
 public class PaymentResolutionController {
     private final PaymentResolutionService paymentResolutionService;
-    private final NtsTaxService ntsTaxService;
-    private final UserService userService;
 
     @Operation(summary = "지급결의서 생성", description = "자동 작성된 값들 토대로 넣어주세요!!")
     @PostMapping
@@ -49,7 +47,7 @@ public class PaymentResolutionController {
         return ApiResponse.onSuccess(paymentResolutionService.deletePaymentResolution(id));
     }
 
-    @Operation(summary = "지급결의서 조회", description = "조회 희망하는 지급결의서 ID 넣어주세요!")
+    @Operation(summary = "지급결의서 상세 조회", description = "조회 희망하는 지급결의서 ID 넣어주세요!")
     @GetMapping("/{payment_resolution_id}")
     public ApiResponse<PaymentResolutionReadResponse> readPaymentResolution(@PathVariable("payment_resolution_id") Long id) {
         return ApiResponse.onSuccess(paymentResolutionService.readPaymentResolution(id));
@@ -69,6 +67,12 @@ public class PaymentResolutionController {
             @RequestParam(required = false) String endDate,
             @RequestParam(required = false) Integer months) {
         return ApiResponse.onSuccess(paymentResolutionService.readPaymentResolutionList(page, size, suDeptName, startDate, endDate, months));
+    }
+
+    @Operation(summary = "작성된 지급결의서 목록 조회", description = "지급결의서 일괄 작성 후 조회되는 지급결의서 전체 목록 조회 API 입니다.")
+    @GetMapping("/list/all")
+    public ApiResponse<List<PaymentResolutionListResponse>> readPaymentResolutionList() {
+        return ApiResponse.onSuccess(paymentResolutionService.readAllPaymentResolutions());
     }
 
     @Operation(summary = "지급결의서 pdf 파일 다운로드", description = "다운로드 받을 지급결의서 id를 보내주세요")

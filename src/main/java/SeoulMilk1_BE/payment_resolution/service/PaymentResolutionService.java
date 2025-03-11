@@ -1,5 +1,6 @@
 package SeoulMilk1_BE.payment_resolution.service;
 
+import SeoulMilk1_BE.global.apiPayload.ApiResponse;
 import SeoulMilk1_BE.global.apiPayload.code.status.ErrorStatus;
 import SeoulMilk1_BE.global.apiPayload.exception.GeneralException;
 import SeoulMilk1_BE.nts_tax.domain.NtsTax;
@@ -125,6 +126,13 @@ public class PaymentResolutionService {
 
         Page<PaymentResolution> paymentResolutionList = paymentResolutionRepositoryCustom.findListByOptions(pageRequest, suDeptName, startDateTime, endDateTime, deadline);
         return paymentResolutionList.getContent().stream().map(paymentResolution -> {
+            return PaymentResolutionListResponse.from(paymentResolution);
+        }).collect(Collectors.toList());
+    }
+
+    public List<PaymentResolutionListResponse> readAllPaymentResolutions() {
+        List<PaymentResolution> paymentResolutionList = paymentResolutionRepository.findAll();
+        return paymentResolutionList.stream().map(paymentResolution -> {
             return PaymentResolutionListResponse.from(paymentResolution);
         }).collect(Collectors.toList());
     }
