@@ -33,6 +33,7 @@ public class PaymentResolution extends BaseTimeEntity {
     private LocalDateTime scheduledPaymentDate;
     private Long totalSupplyAmount;
     private Long totalAllAmount;
+    private String hqUserName;
 
     @ElementCollection
     @CollectionTable(name = "payment_details",
@@ -40,7 +41,7 @@ public class PaymentResolution extends BaseTimeEntity {
     private List<PaymentDetails> paymentDetailsList = new ArrayList<>();
 
     @Builder
-    public PaymentResolution(String name, String paymentRecipient, String recipientBusinessNumber, Long totalPaymentAmount, String paymentMethod, String paymentAccount, String paymentPrincipal, String principalBusinessNumber, String approver, LocalDateTime scheduledPaymentDate, List<PaymentDetails> paymentDetailsList, Long totalSupplyAmount, Long totalAllAmount) {
+    public PaymentResolution(String name, String paymentRecipient, String recipientBusinessNumber, Long totalPaymentAmount, String paymentMethod, String paymentAccount, String paymentPrincipal, String principalBusinessNumber, String approver, LocalDateTime scheduledPaymentDate, List<PaymentDetails> paymentDetailsList, Long totalSupplyAmount, Long totalAllAmount, String hqUserName) {
         this.name = name;
         this.paymentRecipient = paymentRecipient;
         this.recipientBusinessNumber = recipientBusinessNumber;
@@ -54,6 +55,7 @@ public class PaymentResolution extends BaseTimeEntity {
         this.paymentDetailsList = paymentDetailsList;
         this.totalSupplyAmount = totalSupplyAmount;
         this.totalAllAmount = totalAllAmount;
+        this.hqUserName = hqUserName;
     }
 
     public void updatePaymentResolution(PaymentResolutionReadResponse request) {

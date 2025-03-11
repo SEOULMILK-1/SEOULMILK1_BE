@@ -1,5 +1,6 @@
 package SeoulMilk1_BE.payment_resolution.service;
 
+import SeoulMilk1_BE.global.apiPayload.ApiResponse;
 import SeoulMilk1_BE.global.apiPayload.code.status.ErrorStatus;
 import SeoulMilk1_BE.global.apiPayload.exception.GeneralException;
 import SeoulMilk1_BE.nts_tax.domain.NtsTax;
@@ -11,6 +12,7 @@ import SeoulMilk1_BE.payment_resolution.dto.response.PaymentResolutionInsertResp
 import SeoulMilk1_BE.payment_resolution.dto.response.PaymentResolutionListResponse;
 import SeoulMilk1_BE.payment_resolution.dto.response.PaymentResolutionReadResponse;
 import SeoulMilk1_BE.payment_resolution.repository.PaymentResolutionRepository;
+import SeoulMilk1_BE.payment_resolution.repository.PaymentResolutionRepositoryCustom;
 import SeoulMilk1_BE.payment_resolution.utils.PaymentResolutionConstants;
 import SeoulMilk1_BE.user.domain.User;
 import SeoulMilk1_BE.user.service.TeamService;
@@ -19,7 +21,9 @@ import com.lowagie.text.DocumentException;
 import com.lowagie.text.pdf.BaseFont;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -30,6 +34,7 @@ import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 
+import javax.swing.text.html.Option;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.time.LocalDate;
@@ -45,6 +50,7 @@ import java.util.stream.Collectors;
 public class PaymentResolutionService {
 
     private final PaymentResolutionRepository paymentResolutionRepository;
+    private final PaymentResolutionRepositoryCustom paymentResolutionRepositoryCustom;
     private final TeamService teamService;
     private final NtsTaxService ntsTaxService;
     private final UserService userService;
@@ -89,13 +95,6 @@ public class PaymentResolutionService {
     }
 
     @Transactional
-    public PaymentResolutionInsertResponse updatePaymentResolution(Long id, PaymentResolutionReadResponse request) {
-        PaymentResolution paymentResolution = paymentResolutionRepository.findById(id).orElseThrow(() -> new GeneralException(ErrorStatus.PAYMENT_RESOLUTION_NOT_FOUND));
-        paymentResolution.updatePaymentResolution(request);
-        return PaymentResolutionInsertResponse.of(paymentResolution.getId(), paymentResolution.getModifiedAt());
-    }
-
-    @Transactional
     public String updateAccount(PaymentResolutionUpdateAccountRequest request) {
         PaymentResolution paymentResolution = paymentResolutionRepository.findById(request.id()).orElseThrow(() -> new GeneralException(ErrorStatus.PAYMENT_RESOLUTION_NOT_FOUND));
         paymentResolution.updateAccount(request);
@@ -108,10 +107,34 @@ public class PaymentResolutionService {
         return PaymentResolutionConstants.DELETE_SUCCESS.getMessage();
     }
 
-    public List<PaymentResolutionListResponse> readPaymentResolutionList(int period, int page, int size) {
+    public List<PaymentResolutionListResponse> readPaymentResolutionList(int page, int size, String suDeptName, String startDate, String endDate, Integer months) {
         PageRequest pageRequest = PageRequest.of(page, size);
-        List<PaymentResolution> result = paymentResolutionRepository.findListByDeadline(LocalDateTime.now().minusMonths(period), pageRequest).getContent();
-        return result.stream().map(p -> PaymentResolutionListResponse.from(p)).collect(Collectors.toList());
+
+        // null 값 처리
+        LocalDateTime deadline = null;
+        if (months != null) {
+            deadline = LocalDateTime.now().minusMonths(months);
+        }
+        LocalDateTime startDateTime = null;
+        if (startDate != null) {
+            startDateTime = LocalDate.parse(startDate, DateTimeFormatter.ofPattern("yyyy.MM.dd")).atStartOfDay();
+        }
+        LocalDateTime endDateTime = null;
+        if (endDate != null) {
+            endDateTime = LocalDate.parse(endDate, DateTimeFormatter.ofPattern("yyyy.MM.dd")).atStartOfDay();
+        }
+
+        Page<PaymentResolution> paymentResolutionList = paymentResolutionRepositoryCustom.findListByOptions(pageRequest, suDeptName, startDateTime, endDateTime, deadline);
+        return paymentResolutionList.getContent().stream().map(paymentResolution -> {
+            return PaymentResolutionListResponse.from(paymentResolution);
+        }).collect(Collectors.toList());
+    }
+
+    public List<PaymentResolutionListResponse> readAllPaymentResolutions() {
+        List<PaymentResolution> paymentResolutionList = paymentResolutionRepository.findAll();
+        return paymentResolutionList.stream().map(paymentResolution -> {
+            return PaymentResolutionListResponse.from(paymentResolution);
+        }).collect(Collectors.toList());
     }
 
     private String parseThymeleafTemplate(PaymentResolution paymentResolution) {
