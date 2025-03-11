@@ -2,6 +2,7 @@ package SeoulMilk1_BE.payment_resolution.controller;
 
 import SeoulMilk1_BE.global.apiPayload.ApiResponse;
 import SeoulMilk1_BE.nts_tax.domain.NtsTax;
+import SeoulMilk1_BE.nts_tax.dto.response.HqSearchTaxResponseList;
 import SeoulMilk1_BE.nts_tax.service.NtsTaxService;
 import SeoulMilk1_BE.payment_resolution.dto.request.PaymentResolutionRequest;
 import SeoulMilk1_BE.payment_resolution.dto.request.PaymentResolutionUpdateAccountRequest;
@@ -27,8 +28,6 @@ import java.util.List;
 @RequestMapping("/hq/payment-resolution")
 public class PaymentResolutionController {
     private final PaymentResolutionService paymentResolutionService;
-    private final NtsTaxService ntsTaxService;
-    private final UserService userService;
 
     @Operation(summary = "지급결의서 생성", description = "자동 작성된 값들 토대로 넣어주세요!!")
     @PostMapping
@@ -48,20 +47,32 @@ public class PaymentResolutionController {
         return ApiResponse.onSuccess(paymentResolutionService.deletePaymentResolution(id));
     }
 
-    @Operation(summary = "지급결의서 조회", description = "조회 희망하는 지급결의서 ID 넣어주세요!")
+    @Operation(summary = "지급결의서 상세 조회", description = "조회 희망하는 지급결의서 ID 넣어주세요!")
     @GetMapping("/{payment_resolution_id}")
     public ApiResponse<PaymentResolutionReadResponse> readPaymentResolution(@PathVariable("payment_resolution_id") Long id) {
         return ApiResponse.onSuccess(paymentResolutionService.readPaymentResolution(id));
     }
 
-    @Operation(summary = "지급결의서 목록 조회", description = "period(path variable): 조회 희망하는 기간 (1 -> 최근 1달치, 3 -> 최근 3달치) <br>" +
-            "page: 조회할 페이지 번호" +
-            "size: 한 페이지에 조회할 사용자 수")
-    @GetMapping("/list/{period}")
-    public ApiResponse<List<PaymentResolutionListResponse>> readPaymentResolutionList(@PathVariable("period") int period,
-                                                                                     @RequestParam(defaultValue = "0") int page,
-                                                                                     @RequestParam(defaultValue = "10") int size) {
-        return ApiResponse.onSuccess(paymentResolutionService.readPaymentResolutionList(period, page, size));
+    @Operation(summary = "지급결의서 목록 조회", description = "검색 조건을 설정하지 않으면 지급결의서 전체 목록이 조회됩니다.<br><br>" +
+            "suDeptName : 대리점 이름을 입력해주세요. <br>" +
+            "months : 기간(ex. 1개월, 3개월, 6개월 등)에 사용된 숫자를 입력해주세요. <br>" +
+            "startDate, endDate: 시작 / 끝 날짜를 입력해주세요. <br><br>" +
+            "page : 조회할 페이지 번호 <br> size : 한 페이지에 조회할 세금계산서 수")
+    @GetMapping("/list")
+    public ApiResponse<List<PaymentResolutionListResponse>> readPaymentResolutionList(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) String suDeptName,
+            @RequestParam(required = false) String startDate,
+            @RequestParam(required = false) String endDate,
+            @RequestParam(required = false) Integer months) {
+        return ApiResponse.onSuccess(paymentResolutionService.readPaymentResolutionList(page, size, suDeptName, startDate, endDate, months));
+    }
+
+    @Operation(summary = "작성된 지급결의서 목록 조회", description = "지급결의서 일괄 작성 후 조회되는 지급결의서 전체 목록 조회 API 입니다.")
+    @GetMapping("/list/all")
+    public ApiResponse<List<PaymentResolutionListResponse>> readPaymentResolutionList() {
+        return ApiResponse.onSuccess(paymentResolutionService.readAllPaymentResolutions());
     }
 
     @Operation(summary = "지급결의서 pdf 파일 다운로드", description = "다운로드 받을 지급결의서 id를 보내주세요")
