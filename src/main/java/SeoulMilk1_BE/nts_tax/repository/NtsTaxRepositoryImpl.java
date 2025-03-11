@@ -88,7 +88,7 @@ public class NtsTaxRepositoryImpl implements NtsTaxRepositoryCustom {
                         betweenMonths(months),
                         betweenCsStatus(status));
 
-        return PageableExecutionUtils.getPage(results, pageable, countQuery::fetchOne);
+        return PageableExecutionUtils.getPage(results, pageable, countQuery::fetchCount);
     }
 
 
