@@ -84,7 +84,8 @@ public class NtsTaxRepositoryImpl implements NtsTaxRepositoryCustom {
 
         JPAQuery<Long> countQuery = queryFactory.select(ntsTax.id)
                 .from(ntsTax)
-                .where(betweenDate(startDate, endDate),
+                .where(equalUser(userId),
+                        betweenDate(startDate, endDate),
                         betweenMonths(months),
                         betweenCsStatus(status));
 
