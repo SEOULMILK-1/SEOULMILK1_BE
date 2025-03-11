@@ -23,7 +23,8 @@ public record PaymentResolutionReadResponse(
         LocalDateTime createdAt,
         List<PaymentDetails> paymentDetails,
         Long totalSupplyAmount,
-        Long totalAllAmount
+        Long totalAllAmount,
+        String hqUserName
 ) {
     public static PaymentResolution of(int count, PaymentResolutionRequest request) {
         String name = request.paymentRecipient() + " " + LocalDateTime.now().getYear() + "년 " + LocalDateTime.now().getMonthValue() + "월 지급결의서(" + count + ")";
@@ -39,6 +40,7 @@ public record PaymentResolutionReadResponse(
                 .paymentDetailsList(request.paymentDetails())
                 .totalSupplyAmount(request.totalSupplyAmount())
                 .totalAllAmount(request.totalAllAmount())
+                .hqUserName(request.hqUserName())
                 .build();
     }
 
@@ -58,6 +60,7 @@ public record PaymentResolutionReadResponse(
                 .paymentDetails(paymentResolution.getPaymentDetailsList())
                 .totalSupplyAmount(paymentResolution.getTotalSupplyAmount())
                 .totalAllAmount(paymentResolution.getTotalAllAmount())
+                .hqUserName(paymentResolution.getHqUserName())
                 .build();
     }
 }

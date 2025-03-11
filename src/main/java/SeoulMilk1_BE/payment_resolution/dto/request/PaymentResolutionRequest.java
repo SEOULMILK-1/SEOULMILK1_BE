@@ -23,7 +23,8 @@ public record PaymentResolutionRequest(
         LocalDateTime scheduledPaymentDate,
         List<PaymentDetails> paymentDetails,
         Long totalSupplyAmount,
-        Long totalAllAmount
+        Long totalAllAmount,
+        String hqUserName
 ) {
     public static PaymentResolutionRequest from(List<NtsTax> ntsTaxList, User user) {
         NtsTax ntsTax = ntsTaxList.get(0);
@@ -53,6 +54,7 @@ public record PaymentResolutionRequest(
                 .paymentDetails(paymentDetailsDtoList)
                 .totalSupplyAmount(supplyAmount)
                 .totalAllAmount(allAmount)
+                .hqUserName(user.getName())
                 .build();
     }
 }
