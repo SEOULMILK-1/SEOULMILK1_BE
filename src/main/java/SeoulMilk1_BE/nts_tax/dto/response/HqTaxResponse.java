@@ -8,7 +8,8 @@ public record HqTaxResponse(
         Long ntsTaxId,
         String title,
         String taxDate,
-        String csName
+        String csName,
+        String csUser
 ) {
     public static HqTaxResponse from(NtsTax ntsTax) {
         return HqTaxResponse.builder()
@@ -16,6 +17,7 @@ public record HqTaxResponse(
                 .title(ntsTax.getTitle())
                 .taxDate(getFormattedTaxDate(ntsTax.getIssueDate()))
                 .csName(ntsTax.getTeam().getName())
+                .csUser(ntsTax.getUser().getName())
                 .build();
     }
 
