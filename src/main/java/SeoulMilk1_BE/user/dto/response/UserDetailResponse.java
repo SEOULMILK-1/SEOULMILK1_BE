@@ -29,8 +29,7 @@ public record UserDetailResponse(
         if (user.getRole() == ADMIN) {
             response.role("관리자");
         } else if (user.getRole() == HQ_USER) {
-            response.role("직원")
-                    .teamName(user.getTeam().getName());
+            response.role("직원");
         } else {
             response.teamName(user.getTeam().getName())
                     .bank(user.getTeam().getBank())
