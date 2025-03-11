@@ -9,11 +9,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import javax.swing.text.html.Option;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 public interface PaymentResolutionRepository extends JpaRepository<PaymentResolution, Long> {
-    Page<PaymentResolution> findAllByOrderByModifiedAtDesc(Pageable pageable);
-
-    @Query("SELECT p FROM PaymentResolution p WHERE p.createdAt >= :deadline ORDER BY p.modifiedAt desc")
-    Page<PaymentResolution> findListByDeadline(@Param("deadline") LocalDateTime deadline, Pageable pageable);
 }

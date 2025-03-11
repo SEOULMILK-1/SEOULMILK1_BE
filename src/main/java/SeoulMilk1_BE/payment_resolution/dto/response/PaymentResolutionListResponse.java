@@ -4,20 +4,22 @@ import SeoulMilk1_BE.payment_resolution.domain.PaymentResolution;
 import lombok.Builder;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Builder
 public record PaymentResolutionListResponse(
         Long paymentResolutionId,
+        String suDeptName,
         String paymentResolutionName,
-        LocalDateTime createdAt,
-        String paymentRecipient
+        String createdAt,
+        String csUserName
 ) {
     public static PaymentResolutionListResponse from(PaymentResolution paymentResolution) {
         return PaymentResolutionListResponse.builder()
                 .paymentResolutionId(paymentResolution.getId())
+                .suDeptName(paymentResolution.getPaymentRecipient())
                 .paymentResolutionName(paymentResolution.getName())
-                .createdAt(paymentResolution.getCreatedAt())
-                .paymentRecipient(paymentResolution.getPaymentRecipient())
+                .createdAt(paymentResolution.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy.MM.dd")))
                 .build();
     }
 }
