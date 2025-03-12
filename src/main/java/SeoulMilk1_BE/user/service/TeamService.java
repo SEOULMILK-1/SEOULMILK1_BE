@@ -1,6 +1,8 @@
 package SeoulMilk1_BE.user.service;
 
+import SeoulMilk1_BE.global.apiPayload.code.status.ErrorStatus;
 import SeoulMilk1_BE.user.domain.Team;
+import SeoulMilk1_BE.user.exception.TeamNotFoundException;
 import SeoulMilk1_BE.user.repository.TeamRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,7 +17,9 @@ public class TeamService {
 
     @Transactional
     public Optional<Integer> findAboutPayment(String name, int month) {
-        Team team = teamRepository.findByName(name);
+        Team team = teamRepository.findByName(name)
+                .orElseThrow(() -> new TeamNotFoundException(ErrorStatus.TEAM_NOT_FOUND));
+
         if (team.getPaymentResolutionRecentMonth() == null || team.getPaymentResolutionRecentMonth() != month) {
             team.updatePaymentMonth(month);
         } else {

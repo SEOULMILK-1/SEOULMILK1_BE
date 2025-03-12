@@ -4,10 +4,11 @@ import SeoulMilk1_BE.user.domain.Team;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface TeamRepository extends JpaRepository<Team, Long> {
 
     List<Team> findByNameContaining(String keyword);
 
-    Team findByName(String name);
+    Optional<Team> findByName(String name);
 }
