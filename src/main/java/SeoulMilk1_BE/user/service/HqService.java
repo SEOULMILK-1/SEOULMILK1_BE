@@ -123,9 +123,12 @@ public class HqService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException(USER_NOT_FOUND));
 
-        for (Long teamId : request.teamIds()) {
-            Team team = teamRepository.findById(teamId).orElseThrow(() -> new TeamNotFoundException(TEAM_NOT_FOUND));
-            user.addManageTeam(team);
+        for (String csName : request.csNames()) {
+            Team team = teamRepository.findByName(csName).orElseThrow(() -> new TeamNotFoundException(TEAM_NOT_FOUND));
+
+            if (!user.getManageTeams().contains(team.getId())) {
+                user.addManageTeam(team);
+            }
         }
 
         return ADD_MANAGE_CS_SUCCESS.getMessage();
