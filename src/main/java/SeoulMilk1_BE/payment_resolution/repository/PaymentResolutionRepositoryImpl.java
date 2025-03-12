@@ -2,6 +2,8 @@ package SeoulMilk1_BE.payment_resolution.repository;
 
 import SeoulMilk1_BE.payment_resolution.domain.PaymentResolution;
 import SeoulMilk1_BE.payment_resolution.domain.QPaymentResolution;
+import SeoulMilk1_BE.payment_resolution.dto.response.PaymentResolutionFindListByOptionsResponse;
+import SeoulMilk1_BE.payment_resolution.dto.response.PaymentResolutionListResponse;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +22,7 @@ import static SeoulMilk1_BE.payment_resolution.domain.QPaymentResolution.payment
 public class PaymentResolutionRepositoryImpl implements PaymentResolutionRepositoryCustom {
     private final JPAQueryFactory queryFactory;
     @Override
-    public Page<PaymentResolution> findListByOptions(Pageable pageable, String suDeptName, LocalDateTime startDateTime, LocalDateTime endDateTime, LocalDateTime deadline) {
+    public PaymentResolutionFindListByOptionsResponse findListByOptions(Pageable pageable, String suDeptName, LocalDateTime startDateTime, LocalDateTime endDateTime, LocalDateTime deadline) {
         QPaymentResolution paymentResolution = QPaymentResolution.paymentResolution;
         BooleanBuilder builder = new BooleanBuilder();
 
@@ -37,7 +39,7 @@ public class PaymentResolutionRepositoryImpl implements PaymentResolutionReposit
             builder.and(paymentResolution.createdAt.goe(deadline));
         }
 
-        return findAll(builder, pageable);
+        return new PaymentResolutionFindListByOptionsResponse(countAll(builder), findAll(builder, pageable).getContent());
     }
 
     public Page<PaymentResolution> findAll(BooleanBuilder builder, Pageable pageable) {
@@ -53,5 +55,12 @@ public class PaymentResolutionRepositoryImpl implements PaymentResolutionReposit
                 .where(builder)
                 .fetchCount();
         return new PageImpl<>(result, pageable, total);
+    }
+
+    public Long countAll(BooleanBuilder builder) {
+        return queryFactory.select(paymentResolution.count())
+                .from(paymentResolution)
+                .where(builder)
+                .fetchOne();
     }
 }

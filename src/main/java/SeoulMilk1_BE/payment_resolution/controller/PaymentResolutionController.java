@@ -1,21 +1,14 @@
 package SeoulMilk1_BE.payment_resolution.controller;
 
 import SeoulMilk1_BE.global.apiPayload.ApiResponse;
-import SeoulMilk1_BE.nts_tax.domain.NtsTax;
-import SeoulMilk1_BE.nts_tax.dto.response.HqSearchTaxResponseList;
-import SeoulMilk1_BE.nts_tax.service.NtsTaxService;
-import SeoulMilk1_BE.payment_resolution.dto.request.PaymentResolutionRequest;
 import SeoulMilk1_BE.payment_resolution.dto.request.PaymentResolutionUpdateAccountRequest;
+import SeoulMilk1_BE.payment_resolution.dto.response.PaymentResolutionListDetailsResponse;
 import SeoulMilk1_BE.payment_resolution.dto.response.PaymentResolutionListResponse;
 import SeoulMilk1_BE.payment_resolution.dto.response.PaymentResolutionReadResponse;
-import SeoulMilk1_BE.payment_resolution.dto.response.PaymentResolutionInsertResponse;
 import SeoulMilk1_BE.payment_resolution.service.PaymentResolutionService;
-import SeoulMilk1_BE.user.domain.User;
-import SeoulMilk1_BE.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.query.Page;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -59,7 +52,7 @@ public class PaymentResolutionController {
             "startDate, endDate: 시작 / 끝 날짜를 입력해주세요. <br><br>" +
             "page : 조회할 페이지 번호 <br> size : 한 페이지에 조회할 세금계산서 수")
     @GetMapping("/list")
-    public ApiResponse<List<PaymentResolutionListResponse>> readPaymentResolutionList(
+    public ApiResponse<PaymentResolutionListResponse> readPaymentResolutionList(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(required = false) String suDeptName,
@@ -71,7 +64,7 @@ public class PaymentResolutionController {
 
     @Operation(summary = "작성된 지급결의서 목록 조회", description = "지급결의서 일괄 작성 후 조회되는 지급결의서 전체 목록 조회 API 입니다.")
     @GetMapping("/list/all")
-    public ApiResponse<List<PaymentResolutionListResponse>> readPaymentResolutionList() {
+    public ApiResponse<List<PaymentResolutionListDetailsResponse>> readPaymentResolutionList() {
         return ApiResponse.onSuccess(paymentResolutionService.readAllPaymentResolutions());
     }
 
