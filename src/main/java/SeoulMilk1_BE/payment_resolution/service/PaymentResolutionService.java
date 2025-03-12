@@ -1,6 +1,5 @@
 package SeoulMilk1_BE.payment_resolution.service;
 
-import SeoulMilk1_BE.global.apiPayload.ApiResponse;
 import SeoulMilk1_BE.global.apiPayload.code.status.ErrorStatus;
 import SeoulMilk1_BE.global.apiPayload.exception.GeneralException;
 import SeoulMilk1_BE.nts_tax.domain.NtsTax;
@@ -8,22 +7,18 @@ import SeoulMilk1_BE.nts_tax.service.NtsTaxService;
 import SeoulMilk1_BE.payment_resolution.domain.PaymentResolution;
 import SeoulMilk1_BE.payment_resolution.dto.request.PaymentResolutionRequest;
 import SeoulMilk1_BE.payment_resolution.dto.request.PaymentResolutionUpdateAccountRequest;
-import SeoulMilk1_BE.payment_resolution.dto.response.PaymentResolutionInsertResponse;
-import SeoulMilk1_BE.payment_resolution.dto.response.PaymentResolutionListResponse;
-import SeoulMilk1_BE.payment_resolution.dto.response.PaymentResolutionReadResponse;
+import SeoulMilk1_BE.payment_resolution.dto.response.*;
 import SeoulMilk1_BE.payment_resolution.repository.PaymentResolutionRepository;
 import SeoulMilk1_BE.payment_resolution.repository.PaymentResolutionRepositoryCustom;
 import SeoulMilk1_BE.payment_resolution.utils.PaymentResolutionConstants;
 import SeoulMilk1_BE.user.domain.User;
 import SeoulMilk1_BE.user.service.TeamService;
 import SeoulMilk1_BE.user.service.UserService;
-import com.lowagie.text.DocumentException;
 import com.lowagie.text.pdf.BaseFont;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -34,9 +29,7 @@ import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 
-import javax.swing.text.html.Option;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -107,7 +100,7 @@ public class PaymentResolutionService {
         return PaymentResolutionConstants.DELETE_SUCCESS.getMessage();
     }
 
-    public List<PaymentResolutionListResponse> readPaymentResolutionList(int page, int size, String suDeptName, String startDate, String endDate, Integer months) {
+    public PaymentResolutionListResponse readPaymentResolutionList(int page, int size, String suDeptName, String startDate, String endDate, Integer months) {
         PageRequest pageRequest = PageRequest.of(page, size);
 
         // null 값 처리
@@ -124,16 +117,18 @@ public class PaymentResolutionService {
             endDateTime = LocalDate.parse(endDate, DateTimeFormatter.ofPattern("yyyy.MM.dd")).atStartOfDay();
         }
 
-        Page<PaymentResolution> paymentResolutionList = paymentResolutionRepositoryCustom.findListByOptions(pageRequest, suDeptName, startDateTime, endDateTime, deadline);
-        return paymentResolutionList.getContent().stream().map(paymentResolution -> {
-            return PaymentResolutionListResponse.from(paymentResolution);
+        PaymentResolutionFindListByOptionsResponse listByOptions = paymentResolutionRepositoryCustom.findListByOptions(pageRequest, suDeptName, startDateTime, endDateTime, deadline);
+        List<PaymentResolutionListDetailsResponse> results = listByOptions.paymentResolutionList().stream().map(paymentResolution -> {
+            return PaymentResolutionListDetailsResponse.from(paymentResolution);
         }).collect(Collectors.toList());
+
+        return new PaymentResolutionListResponse(listByOptions.count(), results);
     }
 
-    public List<PaymentResolutionListResponse> readAllPaymentResolutions() {
+    public List<PaymentResolutionListDetailsResponse> readAllPaymentResolutions() {
         List<PaymentResolution> paymentResolutionList = paymentResolutionRepository.findAll();
         return paymentResolutionList.stream().map(paymentResolution -> {
-            return PaymentResolutionListResponse.from(paymentResolution);
+            return PaymentResolutionListDetailsResponse.from(paymentResolution);
         }).collect(Collectors.toList());
     }
 
