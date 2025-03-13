@@ -24,6 +24,21 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("SELECT u FROM User u WHERE u.team IN :teamList AND u.isDeleted = false")
     Page<User> findByTeamInAndIsDeleted(List<Team> teamList, Pageable pageable);
 
-    @Query("SELECT u FROM User u WHERE u.isDeleted = false")
+    @Query("""
+    SELECT u FROM User u 
+    WHERE u.isDeleted = false 
+    ORDER BY 
+        CASE 
+            WHEN u.isAssigned = false THEN 0 
+            ELSE 1 
+        END, 
+        CASE 
+            WHEN u.role = 'HQ_USER' THEN 0 
+            WHEN u.role = 'CS_USER' THEN 1 
+            ELSE 2 
+        END, 
+        u.createdAt ASC
+    """)
     Page<User> findAllByIsDeleted(Pageable pageable);
+
 }
