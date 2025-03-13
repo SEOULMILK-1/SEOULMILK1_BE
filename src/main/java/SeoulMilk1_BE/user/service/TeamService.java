@@ -1,6 +1,7 @@
 package SeoulMilk1_BE.user.service;
 
 import SeoulMilk1_BE.global.apiPayload.code.status.ErrorStatus;
+import SeoulMilk1_BE.global.apiPayload.exception.GeneralException;
 import SeoulMilk1_BE.user.domain.Team;
 import SeoulMilk1_BE.user.exception.TeamNotFoundException;
 import SeoulMilk1_BE.user.repository.TeamRepository;
@@ -27,5 +28,9 @@ public class TeamService {
         }
 
         return Optional.ofNullable(team.getPaymentResolutionCount());
+    }
+
+    public Team findTeam(Long teamId) {
+        return teamRepository.findById(teamId).orElseThrow(() -> new GeneralException(ErrorStatus.TEAM_NOT_FOUND));
     }
 }
