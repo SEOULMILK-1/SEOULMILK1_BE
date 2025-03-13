@@ -2,7 +2,6 @@ package SeoulMilk1_BE.user.dto.response;
 
 import SeoulMilk1_BE.user.domain.User;
 import lombok.Builder;
-import org.springframework.util.StringUtils;
 
 import static SeoulMilk1_BE.user.domain.type.Role.*;
 
@@ -24,7 +23,7 @@ public record UserDetailResponse(
             .name(user.getName())
             .loginId(user.getLoginId())
             .email(user.getEmail())
-            .phone(user.getPhone());
+            .phone(formatPhoneNumber(user.getPhone()));
 
         if (user.getRole() == ADMIN) {
             response.role("관리자");
@@ -37,5 +36,12 @@ public record UserDetailResponse(
         }
 
         return response.build();
+    }
+
+    private static String formatPhoneNumber(String phone) {
+        if (phone != null && phone.length() == 11) {
+            return phone.substring(0, 3) + "-" + phone.substring(3, 7) + "-" + phone.substring(7);
+        }
+        return phone;
     }
 }
