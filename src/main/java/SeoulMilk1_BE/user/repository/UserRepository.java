@@ -37,7 +37,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
             WHEN u.role = 'CS_USER' THEN 1 
             ELSE 2 
         END, 
-        u.createdAt ASC
+        u.createdAt DESC
     """)
     Page<User> findAllByIsDeleted(Pageable pageable);
 
