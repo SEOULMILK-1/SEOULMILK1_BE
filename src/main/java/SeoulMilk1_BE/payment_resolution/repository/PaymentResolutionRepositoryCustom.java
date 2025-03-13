@@ -16,4 +16,13 @@ public interface PaymentResolutionRepositoryCustom {
             @Param("endDate") LocalDateTime endDateTime,
             @Param("deadline") LocalDateTime deadline
     );
+
+    PaymentResolutionFindListByOptionsResponse findListByOptionsByHq(
+            Pageable pageable,
+            @Param("suDeptName") String suDeptName,
+            @Param("startDate") LocalDateTime startDateTime,
+            @Param("endDate") LocalDateTime endDateTime,
+            @Param("deadline") LocalDateTime deadline,
+            @Param("hqUserName") String hqUserName
+    );
 }
