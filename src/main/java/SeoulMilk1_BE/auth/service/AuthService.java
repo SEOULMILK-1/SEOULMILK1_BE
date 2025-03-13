@@ -9,9 +9,7 @@ import SeoulMilk1_BE.auth.dto.response.SearchCsNameResponseList;
 import SeoulMilk1_BE.auth.util.JwtTokenProvider;
 import SeoulMilk1_BE.user.domain.Team;
 import SeoulMilk1_BE.user.domain.User;
-import SeoulMilk1_BE.user.exception.PasswordNotMatchException;
-import SeoulMilk1_BE.user.exception.TeamNotFoundException;
-import SeoulMilk1_BE.user.exception.UserNotFoundException;
+import SeoulMilk1_BE.user.exception.*;
 import SeoulMilk1_BE.user.repository.TeamRepository;
 import SeoulMilk1_BE.user.repository.UserRepository;
 import jakarta.servlet.http.HttpServletResponse;
@@ -87,6 +85,10 @@ public class AuthService {
 
         if (!passwordEncoder.matches(request.password(), user.getPassword())) {
             throw new PasswordNotMatchException(PASSWORD_NOT_MATCH);
+        } else if (user.getIsDeleted()) {
+            throw new UserIsDeletedException(USER_IS_DELETED);
+        } else if (!user.getIsAssigned()) {
+            throw new UserNotAssignedException(USER_NOT_ASSIGNED);
         }
 
         String accessToken = jwtTokenProvider.createAccessToken(user);
