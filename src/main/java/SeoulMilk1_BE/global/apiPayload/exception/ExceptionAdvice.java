@@ -3,6 +3,11 @@ package SeoulMilk1_BE.global.apiPayload.exception;
 import SeoulMilk1_BE.global.apiPayload.ApiResponse;
 import SeoulMilk1_BE.global.apiPayload.ErrorReasonDTO;
 import SeoulMilk1_BE.global.apiPayload.code.status.ErrorStatus;
+import SeoulMilk1_BE.nts_tax.exception.NtsTaxNotFoundException;
+import SeoulMilk1_BE.nts_tax.exception.OcrApiException;
+import SeoulMilk1_BE.user.exception.PasswordNotMatchException;
+import SeoulMilk1_BE.user.exception.TeamNotFoundException;
+import SeoulMilk1_BE.user.exception.UserNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
@@ -61,6 +66,36 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
     public ResponseEntity onThrowException(GeneralException generalException, HttpServletRequest request) {
         ErrorReasonDTO errorReasonHttpStatus = generalException.getErrorReasonHttpStatus();
         return handleExceptionInternal(generalException,errorReasonHttpStatus,null,request);
+    }
+
+    @ExceptionHandler(value = UserNotFoundException.class)
+    public ResponseEntity<Object> handleUserNotFoundException(UserNotFoundException ex, WebRequest request) {
+        ErrorReasonDTO errorReason = ex.getErrorStatus().getReasonHttpStatus();
+        return new ResponseEntity<>(errorReason, ex.getErrorStatus().getHttpStatus());
+    }
+
+    @ExceptionHandler(value = PasswordNotMatchException.class)
+    public ResponseEntity<Object> handleUserNotFoundException(PasswordNotMatchException ex, WebRequest request) {
+        ErrorReasonDTO errorReason = ex.getErrorStatus().getReasonHttpStatus();
+        return new ResponseEntity<>(errorReason, ex.getErrorStatus().getHttpStatus());
+    }
+
+    @ExceptionHandler(value = NtsTaxNotFoundException.class)
+    public ResponseEntity<Object> handleUserNotFoundException(NtsTaxNotFoundException ex, WebRequest request) {
+        ErrorReasonDTO errorReason = ex.getErrorStatus().getReasonHttpStatus();
+        return new ResponseEntity<>(errorReason, ex.getErrorStatus().getHttpStatus());
+    }
+
+    @ExceptionHandler(value = OcrApiException.class)
+    public ResponseEntity<Object> handleUserNotFoundException(OcrApiException ex, WebRequest request) {
+        ErrorReasonDTO errorReason = ex.getErrorStatus().getReasonHttpStatus();
+        return new ResponseEntity<>(errorReason, ex.getErrorStatus().getHttpStatus());
+    }
+
+    @ExceptionHandler(value = TeamNotFoundException.class)
+    public ResponseEntity<Object> handleUserNotFoundException(TeamNotFoundException ex, WebRequest request) {
+        ErrorReasonDTO errorReason = ex.getErrorStatus().getReasonHttpStatus();
+        return new ResponseEntity<>(errorReason, ex.getErrorStatus().getHttpStatus());
     }
     
     private ResponseEntity<Object> handleExceptionInternal(Exception e, ErrorReasonDTO reason,
