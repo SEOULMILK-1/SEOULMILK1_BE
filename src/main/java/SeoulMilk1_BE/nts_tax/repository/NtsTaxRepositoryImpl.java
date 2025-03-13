@@ -58,7 +58,8 @@ public class NtsTaxRepositoryImpl implements NtsTaxRepositoryCustom {
                 .where(containsKeyword(keyword),
                         betweenDate(startDate, endDate),
                         betweenMonths(months),
-                        betweenHqStatus(status));
+                        betweenHqStatus(status),
+                        ntsTax.validStatus.eq(APPROVE));
 
         return PageableExecutionUtils.getPage(results, pageable, countQuery::fetchCount);
     }
@@ -93,7 +94,9 @@ public class NtsTaxRepositoryImpl implements NtsTaxRepositoryCustom {
                 .where(containsKeyword(keyword),
                         betweenDate(startDate, endDate),
                         betweenMonths(months),
-                        betweenHqStatus(status));
+                        betweenHqStatus(status),
+                        ntsTax.team.in(teamList),
+                        ntsTax.validStatus.eq(APPROVE));
 
         return PageableExecutionUtils.getPage(results, pageable, countQuery::fetchCount);
     }
