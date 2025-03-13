@@ -1,6 +1,7 @@
 package SeoulMilk1_BE.nts_tax.repository;
 
 import SeoulMilk1_BE.nts_tax.domain.type.ValidStatus;
+import SeoulMilk1_BE.nts_tax.dto.response.AdminSearchTaxResponse;
 import SeoulMilk1_BE.nts_tax.dto.response.CsSearchTaxResponse;
 import SeoulMilk1_BE.nts_tax.dto.response.HqSearchTaxResponse;
 import SeoulMilk1_BE.user.domain.Team;
@@ -20,12 +21,47 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static SeoulMilk1_BE.nts_tax.domain.QNtsTax.ntsTax;
+import static SeoulMilk1_BE.nts_tax.domain.type.ValidStatus.APPROVE;
 
 @Repository
 @RequiredArgsConstructor
 public class NtsTaxRepositoryImpl implements NtsTaxRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
+
+    @Override
+    public Page<AdminSearchTaxResponse> findTaxUsedInAdmin(Pageable pageable, String keyword, String startDate, String endDate, Long months, Boolean status) {
+        List<AdminSearchTaxResponse> results = queryFactory.select(
+                        Projections.constructor(AdminSearchTaxResponse.class,
+                                ntsTax.id,
+                                ntsTax.title,
+                                Expressions.stringTemplate("CONCAT(SUBSTRING(issueDate, 1, 4), '.', SUBSTRING(issueDate, 5, 2), '.', SUBSTRING(issueDate, 7, 2))").as("formattedIssueDate"),
+                                ntsTax.team.name,
+                                Expressions.cases()
+                                        .when(ntsTax.isPaymentWritten.isTrue()).then("반영")
+                                        .otherwise("미반영").as("status")
+                        )
+                )
+                .from(ntsTax)
+                .where(containsKeyword(keyword),
+                        betweenDate(startDate, endDate),
+                        betweenMonths(months),
+                        betweenHqStatus(status),
+                        ntsTax.validStatus.eq(APPROVE))
+                .offset((pageable.getOffset()))
+                .orderBy(ntsTax.issueDate.desc())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        JPAQuery<Long> countQuery = queryFactory.select(ntsTax.id)
+                .from(ntsTax)
+                .where(containsKeyword(keyword),
+                        betweenDate(startDate, endDate),
+                        betweenMonths(months),
+                        betweenHqStatus(status));
+
+        return PageableExecutionUtils.getPage(results, pageable, countQuery::fetchCount);
+    }
 
     @Override
     public Page<HqSearchTaxResponse> findTaxUsedInHQ(Pageable pageable, String keyword, String startDate, String endDate, Long months, Boolean status, List<Team> teamList) {
@@ -45,7 +81,8 @@ public class NtsTaxRepositoryImpl implements NtsTaxRepositoryCustom {
                         betweenDate(startDate, endDate),
                         betweenMonths(months),
                         betweenHqStatus(status),
-                        ntsTax.team.in(teamList))
+                        ntsTax.team.in(teamList),
+                        ntsTax.validStatus.eq(APPROVE))
                 .offset((pageable.getOffset()))
                 .orderBy(ntsTax.issueDate.desc())
                 .limit(pageable.getPageSize())
