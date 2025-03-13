@@ -76,8 +76,14 @@ public class PaymentResolutionService {
 
         // 지점별로 지급결의서 작성
         groupedByDept.forEach((deptName, taxList) -> {
-            PaymentResolutionRequest request = PaymentResolutionRequest.from(taxList, user);
-            createPaymentResolution(request);
+            boolean isManaged = user.getManageTeams().stream()
+                    .map(teamService::findTeam)
+                    .anyMatch(team -> team.getName().equals(deptName));
+
+            if (isManaged) {
+                PaymentResolutionRequest request = PaymentResolutionRequest.from(taxList, user);
+                createPaymentResolution(request);
+            }
         });
         return PaymentResolutionConstants.CREATE_SUCCESS.getMessage();
     }
