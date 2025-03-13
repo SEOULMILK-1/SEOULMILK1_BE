@@ -125,6 +125,32 @@ public class PaymentResolutionService {
         return new PaymentResolutionListResponse(listByOptions.count(), results);
     }
 
+    public PaymentResolutionListResponse readPaymentResolutionListByHq(int page, int size, String suDeptName, String startDate, String endDate, Integer months, Long userId) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        String hqUserName = userService.findUser(userId).getName();
+
+        // null 값 처리
+        LocalDateTime deadline = null;
+        if (months != null) {
+            deadline = LocalDateTime.now().minusMonths(months);
+        }
+        LocalDateTime startDateTime = null;
+        if (startDate != null) {
+            startDateTime = LocalDate.parse(startDate, DateTimeFormatter.ofPattern("yyyy.MM.dd")).atStartOfDay();
+        }
+        LocalDateTime endDateTime = null;
+        if (endDate != null) {
+            endDateTime = LocalDate.parse(endDate, DateTimeFormatter.ofPattern("yyyy.MM.dd")).atStartOfDay();
+        }
+
+        PaymentResolutionFindListByOptionsResponse listByOptions = paymentResolutionRepositoryCustom.findListByOptionsByHq(pageRequest, suDeptName, startDateTime, endDateTime, deadline, hqUserName);
+        List<PaymentResolutionListDetailsResponse> results = listByOptions.paymentResolutionList().stream().map(paymentResolution -> {
+            return PaymentResolutionListDetailsResponse.from(paymentResolution);
+        }).collect(Collectors.toList());
+
+        return new PaymentResolutionListResponse(listByOptions.count(), results);
+    }
+
     public List<PaymentResolutionListDetailsResponse> readAllPaymentResolutions() {
         List<PaymentResolution> paymentResolutionList = paymentResolutionRepository.findAll();
         return paymentResolutionList.stream().map(paymentResolution -> {

@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
@@ -21,9 +22,8 @@ import static SeoulMilk1_BE.payment_resolution.domain.QPaymentResolution.payment
 @RequiredArgsConstructor
 public class PaymentResolutionRepositoryImpl implements PaymentResolutionRepositoryCustom {
     private final JPAQueryFactory queryFactory;
-    @Override
-    public PaymentResolutionFindListByOptionsResponse findListByOptions(Pageable pageable, String suDeptName, LocalDateTime startDateTime, LocalDateTime endDateTime, LocalDateTime deadline) {
-        QPaymentResolution paymentResolution = QPaymentResolution.paymentResolution;
+
+    private BooleanBuilder options(String suDeptName, LocalDateTime startDateTime, LocalDateTime endDateTime, LocalDateTime deadline) {
         BooleanBuilder builder = new BooleanBuilder();
 
         if (suDeptName != null) {
@@ -38,6 +38,19 @@ public class PaymentResolutionRepositoryImpl implements PaymentResolutionReposit
         if (deadline != null) {
             builder.and(paymentResolution.createdAt.goe(deadline));
         }
+        return builder;
+    }
+    @Override
+    public PaymentResolutionFindListByOptionsResponse findListByOptions(Pageable pageable, String suDeptName, LocalDateTime startDateTime, LocalDateTime endDateTime, LocalDateTime deadline) {
+        BooleanBuilder builder = options(suDeptName, startDateTime, endDateTime, deadline);
+
+        return new PaymentResolutionFindListByOptionsResponse(countAll(builder), findAll(builder, pageable).getContent());
+    }
+
+    @Override
+    public PaymentResolutionFindListByOptionsResponse findListByOptionsByHq(Pageable pageable, String suDeptName, LocalDateTime startDateTime, LocalDateTime endDateTime, LocalDateTime deadline, String hqUserName) {
+        BooleanBuilder builder = options(suDeptName, startDateTime, endDateTime, deadline);
+        builder.and(paymentResolution.hqUserName.eq(hqUserName));
 
         return new PaymentResolutionFindListByOptionsResponse(countAll(builder), findAll(builder, pageable).getContent());
     }

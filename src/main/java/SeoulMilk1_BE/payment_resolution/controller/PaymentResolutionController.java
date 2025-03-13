@@ -58,8 +58,9 @@ public class PaymentResolutionController {
             @RequestParam(required = false) String suDeptName,
             @RequestParam(required = false) String startDate,
             @RequestParam(required = false) String endDate,
-            @RequestParam(required = false) Integer months) {
-        return ApiResponse.onSuccess(paymentResolutionService.readPaymentResolutionList(page, size, suDeptName, startDate, endDate, months));
+            @RequestParam(required = false) Integer months,
+            @AuthenticationPrincipal Long userId) {
+        return ApiResponse.onSuccess(paymentResolutionService.readPaymentResolutionListByHq(page, size, suDeptName, startDate, endDate, months, userId ));
     }
 
     @Operation(summary = "작성된 지급결의서 목록 조회", description = "지급결의서 일괄 작성 후 조회되는 지급결의서 전체 목록 조회 API 입니다.")

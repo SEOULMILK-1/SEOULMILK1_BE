@@ -3,6 +3,9 @@ package SeoulMilk1_BE.user.controller;
 import SeoulMilk1_BE.global.apiPayload.ApiResponse;
 import SeoulMilk1_BE.nts_tax.dto.response.AdminSearchTaxResponseList;
 import SeoulMilk1_BE.nts_tax.dto.response.AdminTaxDetailResponse;
+import SeoulMilk1_BE.payment_resolution.dto.response.PaymentResolutionListResponse;
+import SeoulMilk1_BE.payment_resolution.dto.response.PaymentResolutionReadResponse;
+import SeoulMilk1_BE.payment_resolution.service.PaymentResolutionService;
 import SeoulMilk1_BE.user.dto.response.PendingUserResponseList;
 import SeoulMilk1_BE.user.dto.response.UserManageResponseList;
 import SeoulMilk1_BE.user.service.AdminService;
@@ -20,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 public class AdminController {
 
     private final AdminService adminService;
+    private final PaymentResolutionService paymentResolutionService;
 
     @Operation(summary = "등록 대기중인 본사/대리점 사용자 조회", description = "등록 대기중인 본사/대리점 사용자 조회 <br><br> " +
             "page : 조회할 페이지 번호 <br> " +
@@ -75,5 +79,27 @@ public class AdminController {
     @GetMapping("/tax/{ntsTaxId}")
     public ApiResponse<AdminTaxDetailResponse> getTaxDetail(@PathVariable Long ntsTaxId) {
         return ApiResponse.onSuccess(adminService.getTaxDetail(ntsTaxId));
+    }
+
+    @Operation(summary = "지급결의서 상세 조회", description = "조회 희망하는 지급결의서 ID 넣어주세요!")
+    @GetMapping("/{payment_resolution_id}")
+    public ApiResponse<PaymentResolutionReadResponse> readPaymentResolution(@PathVariable("payment_resolution_id") Long id) {
+        return ApiResponse.onSuccess(paymentResolutionService.readPaymentResolution(id));
+    }
+
+    @Operation(summary = "지급결의서 목록 조회", description = "검색 조건을 설정하지 않으면 지급결의서 전체 목록이 조회됩니다.<br><br>" +
+            "suDeptName : 대리점 이름을 입력해주세요. <br>" +
+            "months : 기간(ex. 1개월, 3개월, 6개월 등)에 사용된 숫자를 입력해주세요. <br>" +
+            "startDate, endDate: 시작 / 끝 날짜를 입력해주세요. <br><br>" +
+            "page : 조회할 페이지 번호 <br> size : 한 페이지에 조회할 세금계산서 수")
+    @GetMapping("/list")
+    public ApiResponse<PaymentResolutionListResponse> readPaymentResolutionList(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) String suDeptName,
+            @RequestParam(required = false) String startDate,
+            @RequestParam(required = false) String endDate,
+            @RequestParam(required = false) Integer months) {
+        return ApiResponse.onSuccess(paymentResolutionService.readPaymentResolutionList(page, size, suDeptName, startDate, endDate, months));
     }
 }
