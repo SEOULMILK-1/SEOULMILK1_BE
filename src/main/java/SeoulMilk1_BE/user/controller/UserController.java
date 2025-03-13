@@ -7,13 +7,11 @@ import SeoulMilk1_BE.user.dto.response.UserResponse;
 import SeoulMilk1_BE.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "User", description = "유저 관련 공통 API")
 @Slf4j
@@ -38,7 +36,11 @@ public class UserController {
 
     @Operation(summary = "유저 정보 수정", description = "유저 정보 수정 (본사 직원, 대리점 직원 공통 사용)")
     @PutMapping("/update")
-    public ApiResponse<String> updateUser(@AuthenticationPrincipal Long userId, UpdateUserRequest request) {
+    public ApiResponse<String> updateUser(
+            @AuthenticationPrincipal Long userId,
+            @Valid @RequestBody UpdateUserRequest request) {
+
+        log.info("userId: {}, request: {}", userId, request);
         return ApiResponse.onSuccess(userService.updateUser(userId, request));
     }
 }
