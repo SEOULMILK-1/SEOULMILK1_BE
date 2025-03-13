@@ -11,6 +11,7 @@ import SeoulMilk1_BE.payment_resolution.dto.response.*;
 import SeoulMilk1_BE.payment_resolution.repository.PaymentResolutionRepository;
 import SeoulMilk1_BE.payment_resolution.repository.PaymentResolutionRepositoryCustom;
 import SeoulMilk1_BE.payment_resolution.utils.PaymentResolutionConstants;
+import SeoulMilk1_BE.user.domain.Team;
 import SeoulMilk1_BE.user.domain.User;
 import SeoulMilk1_BE.user.service.TeamService;
 import SeoulMilk1_BE.user.service.UserService;
@@ -72,13 +73,12 @@ public class PaymentResolutionService {
             throw new GeneralException(ErrorStatus.NTS_TAX_NOT_FOUND);
         }
         // 작성되지 않은 세금계산서 목록 조회 및 지점별로 파티셔닝
-        Map<String, List<NtsTax>> groupedByDept = ntsTaxList.stream().collect(Collectors.groupingBy(NtsTax::getSuDeptName));
+        Map<Team, List<NtsTax>> groupedByDept = ntsTaxList.stream().collect(Collectors.groupingBy(NtsTax::getTeam));
 
         // 지점별로 지급결의서 작성
-        groupedByDept.forEach((deptName, taxList) -> {
+        groupedByDept.forEach((team, taxList) -> {
             boolean isManaged = user.getManageTeams().stream()
-                    .map(teamService::findTeam)
-                    .anyMatch(team -> team.getName().equals(deptName));
+                    .anyMatch(teamId -> teamId.equals(team.getId()));
 
             if (isManaged) {
                 PaymentResolutionRequest request = PaymentResolutionRequest.from(taxList, user);
