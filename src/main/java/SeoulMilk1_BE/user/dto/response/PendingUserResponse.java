@@ -3,7 +3,6 @@ package SeoulMilk1_BE.user.dto.response;
 import SeoulMilk1_BE.user.domain.User;
 import SeoulMilk1_BE.user.domain.type.Role;
 import lombok.Builder;
-import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -23,16 +22,16 @@ public record PendingUserResponse(
                 .userId(user.getId())
                 .loginId(user.getLoginId())
                 .name(user.getName())
-                .phone(formatPhone(user.getPhone()))
+                .phone(formatPhoneNumber(user.getPhone()))
                 .role(user.getRole())
                 .team(user.getTeam() != null ? user.getTeam().getName() : null)
                 .createdAt(formatCreatedAt(user.getCreatedAt()))
                 .build();
     }
 
-    private static String formatPhone(String phone) {
-        if (StringUtils.hasText(phone) && phone.matches("\\d{10,11}")) {
-            return phone.replaceFirst("(\\d{3})(\\d{4})(\\d{4})", "$1-$2-$3");
+    private static String formatPhoneNumber(String phone) {
+        if (phone != null && phone.length() == 11) {
+            return phone.substring(0, 3) + "-" + phone.substring(3, 7) + "-" + phone.substring(7);
         }
         return phone;
     }

@@ -8,6 +8,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -87,7 +88,7 @@ public class User extends BaseTimeEntity {
     public void updateUser(UpdateUserRequest request) {
         this.loginId = request.loginId();
         this.email = request.email();
-        this.phone = request.phone();
+        this.phone = formatInputData(request.phone());
         this.account = request.account();
     }
 
@@ -101,5 +102,17 @@ public class User extends BaseTimeEntity {
 
     public void removeManageTeam(Team team) {
         this.manageTeams.remove(team.getId());
+    }
+
+    private static String formatInputData(String inputData) {
+        if (!StringUtils.hasText(inputData) || inputData.isEmpty()) {
+            return "";
+        }
+
+        return inputData.replace("-", "")
+                .replace("/", "")
+                .replace(" ", "")
+                .replace("\n", "")
+                .replace(".", "");
     }
 }

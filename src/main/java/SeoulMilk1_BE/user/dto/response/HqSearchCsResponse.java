@@ -13,9 +13,16 @@ public record HqSearchCsResponse(
     public static HqSearchCsResponse from(User user) {
         return HqSearchCsResponse.builder()
                 .csName(user.getTeam().getName())
-                .phone(user.getPhone())
+                .phone(formatPhoneNumber(user.getPhone()))
                 .email(user.getEmail())
                 .name(user.getName())
                 .build();
+    }
+
+    private static String formatPhoneNumber(String phone) {
+        if (phone != null && phone.length() == 11) {
+            return phone.substring(0, 3) + "-" + phone.substring(3, 7) + "-" + phone.substring(7);
+        }
+        return phone;
     }
 }

@@ -29,16 +29,27 @@ public interface UserRepository extends JpaRepository<User, Long> {
     WHERE u.isDeleted = false 
     ORDER BY 
         CASE 
-            WHEN u.isAssigned = false THEN 0 
-            ELSE 1 
-        END, 
+            WHEN u.isAssigned = false THEN u.id
+            ELSE 0
+        END DESC, 
         CASE 
-            WHEN u.role = 'HQ_USER' THEN 0 
-            WHEN u.role = 'CS_USER' THEN 1 
-            ELSE 2 
-        END, 
-        u.createdAt ASC
+            WHEN u.isAssigned = true THEN 
+                CASE 
+                    WHEN u.role = 'HQ_USER' THEN 0 
+                    WHEN u.role = 'CS_USER' THEN 1 
+                    ELSE 2 
+                END
+            ELSE NULL
+        END ASC,
+        CASE 
+            WHEN u.isAssigned = true AND u.role = 'HQ_USER' THEN u.id
+            WHEN u.isAssigned = true AND u.role = 'CS_USER' THEN u.id
+            ELSE NULL
+        END DESC
     """)
     Page<User> findAllByIsDeleted(Pageable pageable);
+
+
+
 
 }

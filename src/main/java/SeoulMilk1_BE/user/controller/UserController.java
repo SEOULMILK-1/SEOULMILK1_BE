@@ -39,8 +39,6 @@ public class UserController {
     public ApiResponse<String> updateUser(
             @AuthenticationPrincipal Long userId,
             @Valid @RequestBody UpdateUserRequest request) {
-
-        log.info("userId: {}, request: {}", userId, request);
         return ApiResponse.onSuccess(userService.updateUser(userId, request));
     }
 }
