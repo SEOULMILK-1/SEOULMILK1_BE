@@ -11,7 +11,9 @@ import io.codef.api.EasyCodefConstant;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.codec.binary.Base64;
 import org.json.JSONObject;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClient;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -29,9 +31,10 @@ import java.util.HashMap;
 public class CodefService extends EasyCodefConstant {
     private final CodefConfigProperties properties;
     private final RSAUtil rsaUtil;
+    private final RestClient restClient;
 
     public String validateNtsTax(CodefApiRequest request) {
-        String accessToken = (String) publishToken().get("access_token");
+        String accessToken = publishToken();
         String result = getIssuedTaxInvoiceInfo(accessToken, request);
         return extractResult(result);
     }
@@ -53,65 +56,20 @@ public class CodefService extends EasyCodefConstant {
     /**
      * Access Token 발행
      **/
-    private HashMap publishToken() {
-        BufferedReader br = null;
-        try {
-            // HTTP 요청을 위한 URL 오브젝트 생성
-            URL url = new URL(EasyCodefConstant.OAUTH_DOMAIN + EasyCodefConstant.GET_TOKEN);
-            String params = "grant_type=client_credentials&scope=read";    // Oauth2.0 사용자 자격증명 방식(client_credentials) 토큰 요청 설정
+    private String publishToken() {
+        String auth = properties.getClient_id() + ":" + properties.getClient_secret();
+        byte[] authEncBytes = Base64.encodeBase64(auth.getBytes());
+        String authStringEnc = new String(authEncBytes);
+        String authHeader = "Basic " + authStringEnc;
 
-            HttpURLConnection con = (HttpURLConnection) url.openConnection();
-            con.setRequestMethod("POST");
-            con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-
-            // 클라이언트아이디, 시크릿코드 Base64 인코딩
-            String auth = properties.getClient_id() + ":" + properties.getClient_secret();
-            byte[] authEncBytes = Base64.encodeBase64(auth.getBytes());
-            String authStringEnc = new String(authEncBytes);
-            String authHeader = "Basic " + authStringEnc;
-
-            con.setRequestProperty("Authorization", authHeader);
-            con.setDoInput(true);
-            con.setDoOutput(true);
-
-            // 리퀘스트 바디 전송
-            OutputStream os = con.getOutputStream();
-            os.write(params.getBytes());
-            os.flush();
-            os.close();
-
-            // 응답 코드 확인
-            int responseCode = con.getResponseCode();
-            if (responseCode == HttpURLConnection.HTTP_OK) {    // 정상 응답
-                br = new BufferedReader(new InputStreamReader(con.getInputStream()));
-            } else {     // 에러 발생
-                return null;
-            }
-
-            // 응답 바디 read
-            String inputLine;
-            StringBuffer responseStr = new StringBuffer();
-            while ((inputLine = br.readLine()) != null) {
-                responseStr.append(inputLine);
-            }
-            br.close();
-
-            // 응답결과 URL Decoding(UTF-8)
-            ObjectMapper mapper = new ObjectMapper();
-            HashMap<String, Object> tokenMap = mapper.readValue(URLDecoder.decode(responseStr.toString(), "UTF-8"), new TypeReference<HashMap<String, Object>>() {
-            });
-            return tokenMap;
-
-        } catch (Exception e) {
-            return null;
-        } finally {
-            if (br != null) {
-                try {
-                    br.close();
-                } catch (IOException e) {
-                }
-            }
-        }
+        return (String) restClient.post()
+                .uri(OAUTH_DOMAIN + GET_TOKEN)
+                .header("Authorization", authHeader)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body("grant_type=client_credentials&scope=read")
+                .retrieve()
+                .body(HashMap.class)
+                .get("access_token");
     }
 
     /**
