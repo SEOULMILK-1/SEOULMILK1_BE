@@ -11,6 +11,7 @@ import io.codef.api.EasyCodefConstant;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.codec.binary.Base64;
 import org.json.JSONObject;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
@@ -56,7 +57,8 @@ public class CodefService extends EasyCodefConstant {
     /**
      * Access Token 발행
      **/
-    private String publishToken() {
+    @Cacheable(value = "tokenCache")
+    public String publishToken() {
         String auth = properties.getClient_id() + ":" + properties.getClient_secret();
         byte[] authEncBytes = Base64.encodeBase64(auth.getBytes());
         String authStringEnc = new String(authEncBytes);
