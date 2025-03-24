@@ -15,6 +15,7 @@ import SeoulMilk1_BE.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import reactor.core.publisher.Mono;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -73,7 +74,7 @@ public class NtsTaxService {
     public String validateNtsTax(Long ntsTaxId) {
         NtsTax ntsTax = ntsTaxRepository.findById(ntsTaxId).orElseThrow(() -> new GeneralException(TAX_NOT_FOUND));
         CodefApiRequest request = CodefApiRequest.from(ntsTax);
-        String result = codefService.validateNtsTax(request);
+        Mono<String> result = codefService.validateNtsTax(request);
 
         if (result.equals("성공")) {
             ntsTax.updateStatus(0);
