@@ -47,7 +47,6 @@ public class SecurityConfig {
                         .requestMatchers(WHITE_LIST).permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN") // ADMIN 역할만 접근 가능
                         .requestMatchers("/hq/**").hasRole("HQ_USER") // HQ_USER 역할만 접근 가능
-                        .requestMatchers("/tax/validate/**").permitAll()
                         .anyRequest().authenticated())  //이외의 요청은 전부 인증 필요
                 .exceptionHandling(exceptionHandling -> {
                     exceptionHandling

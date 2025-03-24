@@ -9,9 +9,11 @@ import SeoulMilk1_BE.nts_tax.dto.response.IssueIdTaxResponse;
 import SeoulMilk1_BE.nts_tax.exception.NtsTaxNotFoundException;
 import SeoulMilk1_BE.nts_tax.repository.NtsTaxRepository;
 import SeoulMilk1_BE.nts_tax.dto.response.OcrApiResponse;
+import SeoulMilk1_BE.nts_tax.util.TaxConstants;
 import SeoulMilk1_BE.payment_resolution.domain.PaymentDetails;
 import SeoulMilk1_BE.user.domain.User;
 import SeoulMilk1_BE.user.service.UserService;
+import com.fasterxml.jackson.databind.JsonNode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -74,11 +76,11 @@ public class NtsTaxService {
     public String validateNtsTax(Long ntsTaxId) {
         NtsTax ntsTax = ntsTaxRepository.findById(ntsTaxId).orElseThrow(() -> new GeneralException(TAX_NOT_FOUND));
         CodefApiRequest request = CodefApiRequest.from(ntsTax);
-        Mono<String> result = codefService.validateNtsTax(request);
-
+        String result = codefService.validateNtsTax(request).block();
         if (result.equals("성공")) {
             ntsTax.updateStatus(0);
-        } else {
+        }
+        else {
             ntsTax.updateStatus(1);
         }
 
