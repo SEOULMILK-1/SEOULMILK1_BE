@@ -1,6 +1,7 @@
 package SeoulMilk1_BE.nts_tax.repository;
 
 import SeoulMilk1_BE.nts_tax.domain.NtsTax;
+import SeoulMilk1_BE.nts_tax.dto.response.ForPaymentTaxResponse;
 import SeoulMilk1_BE.user.domain.Team;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -27,6 +28,11 @@ public interface NtsTaxRepository extends JpaRepository<NtsTax, Long>, NtsTaxRep
 
     @Query("select nts FROM NtsTax nts WHERE nts.isPaymentWritten = false AND nts.validStatus = 'APPROVE' order by nts.suDeptName")
     List<NtsTax> findByIsPaymentWritten();
+
+    @Query("SELECT new SeoulMilk1_BE.nts_tax.dto.response.ForPaymentTaxResponse(" +
+            "n.suId, n.ipId, n.issueId, n.createdAt, n.chargeTotal, n.grandTotal, n.team, n.id) " +
+            "FROM NtsTax n WHERE n.isPaymentWritten = false AND n.validStatus = 'APPROVE'")
+    List<ForPaymentTaxResponse> findByIsNotWritten();
 
     @Query("SELECT nts FROM NtsTax nts WHERE nts.user.id = :userId AND SUBSTRING(nts.issueDate, 1, 6) = :thisMonth AND nts.validStatus = 'REFUSED'")
     List<NtsTax> findThisMonthRefusedTax(Long userId, String thisMonth);
