@@ -1,6 +1,7 @@
 package SeoulMilk1_BE.payment_resolution.dto.request;
 
 import SeoulMilk1_BE.nts_tax.domain.NtsTax;
+import SeoulMilk1_BE.nts_tax.dto.response.ForPaymentTaxResponse;
 import SeoulMilk1_BE.payment_resolution.domain.PaymentDetails;
 import SeoulMilk1_BE.payment_resolution.dto.response.PaymentResolutionReadResponse;
 import SeoulMilk1_BE.user.domain.User;
@@ -27,16 +28,16 @@ public record PaymentResolutionRequest(
         Long totalAllAmount,
         String hqUserName
 ) {
-    public static PaymentResolutionRequest from(List<NtsTax> ntsTaxList, User user) {
-        NtsTax ntsTax = ntsTaxList.get(0);
+    public static PaymentResolutionRequest from(List<ForPaymentTaxResponse> ntsTaxList, User user) {
+        ForPaymentTaxResponse ntsTaxDto = ntsTaxList.get(0);
         List<PaymentDetails> paymentDetailsDtoList = ntsTaxList.stream().map(
                 n -> {
                     return PaymentDetails.builder()
-                            .ntsId(n.getId())
-                            .ntsTaxNum(n.getIssueId())
-                            .supplyAmount(n.getChargeTotal())
-                            .issueDate(n.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy.MM.dd")))
-                            .totalAmount(n.getGrandTotal())
+                            .ntsId(n.ntsTaxId())
+                            .ntsTaxNum(n.issueId())
+                            .supplyAmount(n.chargeTotal())
+                            .issueDate(n.createdAt().format(DateTimeFormatter.ofPattern("yyyy.MM.dd")))
+                            .totalAmount(n.grandTotal())
                             .build();
                 }
         ).collect(Collectors.toList());
@@ -45,11 +46,11 @@ public record PaymentResolutionRequest(
         Long allAmount = paymentDetailsDtoList.stream().mapToLong(PaymentDetails::getTotalAmount).sum();
 
         return PaymentResolutionRequest.builder()
-                .paymentRecipient(ntsTax.getTeam().getName())
-                .recipientBusinessNumber(ntsTax.getTeam().getBusinessNumber())
+                .paymentRecipient(ntsTaxDto.team().getName())
+                .recipientBusinessNumber(ntsTaxDto.team().getBusinessNumber())
                 .totalPaymentAmount(allAmount)
                 .paymentMethod("계좌이체")
-                .paymentAccount(ntsTax.getTeam().getAccount())
+                .paymentAccount(ntsTaxDto.team().getAccount())
                 .paymentPrincipal(user.getTeam().getName())
                 .principalBusinessNumber(user.getTeam().getBusinessNumber())
                 .paymentDetails(paymentDetailsDtoList)

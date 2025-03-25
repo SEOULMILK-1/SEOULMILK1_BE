@@ -27,7 +27,7 @@ import static SeoulMilk1_BE.nts_tax.domain.type.Arap.AR;
 @Table(
         name = "nts_tax",
         indexes = {
-                @Index(name = "covering_for_payment_resolution", columnList = "SU_ID, IP_ID, ISSUE_ID, CHARGETOTAL, GRANDTOTAL, TEAM_ID, NTS_TAX_ID, IS_PAYMENT_WRITTEN, VALID_STATUS")
+                @Index(name = "covering_for_payment_resolution", columnList = "SU_ID, IP_ID, ISSUE_ID, CREATED_AT, CHARGETOTAL, GRANDTOTAL, TEAM_ID, NTS_TAX_ID, IS_PAYMENT_WRITTEN, VALID_STATUS")
         }
 )
 public class NtsTax extends BaseTimeEntity {

@@ -3,6 +3,7 @@ package SeoulMilk1_BE.payment_resolution.service;
 import SeoulMilk1_BE.global.apiPayload.code.status.ErrorStatus;
 import SeoulMilk1_BE.global.apiPayload.exception.GeneralException;
 import SeoulMilk1_BE.nts_tax.domain.NtsTax;
+import SeoulMilk1_BE.nts_tax.dto.response.ForPaymentTaxResponse;
 import SeoulMilk1_BE.nts_tax.service.NtsTaxService;
 import SeoulMilk1_BE.payment_resolution.domain.PaymentResolution;
 import SeoulMilk1_BE.payment_resolution.dto.request.PaymentResolutionRequest;
@@ -67,13 +68,13 @@ public class PaymentResolutionService {
     @Transactional
     public String createPaymentResolutionByGrouping(Long userId) {
         User user = userService.findUser(userId);
-        List<NtsTax> ntsTaxList = ntsTaxService.findByPaymentWritten();
+        List<ForPaymentTaxResponse> ntsTaxList = ntsTaxService.findByIsNotWritten();
 
         if (ntsTaxList.size() == 0) {
             throw new GeneralException(ErrorStatus.NTS_TAX_NOT_FOUND);
         }
         // 작성되지 않은 세금계산서 목록 조회 및 지점별로 파티셔닝
-        Map<Team, List<NtsTax>> groupedByDept = ntsTaxList.stream().collect(Collectors.groupingBy(NtsTax::getTeam));
+        Map<Team, List<ForPaymentTaxResponse>> groupedByDept = ntsTaxList.stream().collect(Collectors.groupingBy(ForPaymentTaxResponse::team));
 
         // 지점별로 지급결의서 작성
         groupedByDept.forEach((team, taxList) -> {

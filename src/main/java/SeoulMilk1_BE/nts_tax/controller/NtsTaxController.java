@@ -3,6 +3,7 @@ package SeoulMilk1_BE.nts_tax.controller;
 import SeoulMilk1_BE.global.apiPayload.ApiResponse;
 import SeoulMilk1_BE.nts_tax.dto.request.UpdateTaxRequest;
 import SeoulMilk1_BE.nts_tax.dto.response.CustomOcrResponse;
+import SeoulMilk1_BE.nts_tax.dto.response.ForPaymentTaxResponse;
 import SeoulMilk1_BE.nts_tax.service.CodefService;
 import SeoulMilk1_BE.nts_tax.service.NtsTaxService;
 import SeoulMilk1_BE.nts_tax.service.OcrService;
@@ -16,6 +17,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import reactor.core.publisher.Mono;
+
+import java.util.List;
 
 @Tag(name = "Nts_Tax", description = "세금계산서 관련 API")
 @Slf4j

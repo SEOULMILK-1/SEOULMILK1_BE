@@ -5,6 +5,7 @@ import SeoulMilk1_BE.global.service.S3Service;
 import SeoulMilk1_BE.nts_tax.domain.NtsTax;
 import SeoulMilk1_BE.nts_tax.dto.request.CodefApiRequest;
 import SeoulMilk1_BE.nts_tax.dto.request.UpdateTaxRequest;
+import SeoulMilk1_BE.nts_tax.dto.response.ForPaymentTaxResponse;
 import SeoulMilk1_BE.nts_tax.dto.response.IssueIdTaxResponse;
 import SeoulMilk1_BE.nts_tax.exception.NtsTaxNotFoundException;
 import SeoulMilk1_BE.nts_tax.repository.NtsTaxRepository;
@@ -114,5 +115,9 @@ public class NtsTaxService {
 
     public List<NtsTax> findByPaymentWritten() {
         return ntsTaxRepository.findByIsPaymentWritten();
+    }
+
+    public List<ForPaymentTaxResponse> findByIsNotWritten() {
+        return ntsTaxRepository.findByIsNotWritten();
     }
 }
