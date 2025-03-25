@@ -71,6 +71,7 @@ public class UserInitializer implements ApplicationRunner {
                     .isAssigned(true)
                     .role(HQ_USER)
                     .manageTeams(List.of(TEAM1.getId(), TEAM2.getId()))
+                    .team(TEAM6)
                     .isDeleted(false)
                     .build();
 
