@@ -69,7 +69,7 @@ public class PaymentResolutionService {
     }
 
     private Boolean isFirstRequest(String idempotentKey) {
-        return redisTemplate.opsForValue().setIfAbsent(idempotentKey, "success");
+        return redisTemplate.opsForValue().setIfAbsent(idempotentKey, "success", 10, TimeUnit.SECONDS);
     }
 
     @Transactional
