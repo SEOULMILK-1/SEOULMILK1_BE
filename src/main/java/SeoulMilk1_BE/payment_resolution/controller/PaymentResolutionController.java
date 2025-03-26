@@ -24,8 +24,8 @@ public class PaymentResolutionController {
 
     @Operation(summary = "지급결의서 생성", description = "자동 작성된 값들 토대로 넣어주세요!!")
     @PostMapping
-    public ApiResponse<String> createPaymentResolution(@AuthenticationPrincipal Long userId) {
-        return ApiResponse.onSuccess(paymentResolutionService.createPaymentResolutionByGrouping(userId));
+    public ApiResponse<String> createPaymentResolution(@AuthenticationPrincipal Long userId, @RequestHeader("idempotentKey") String idempotentKey) {
+        return ApiResponse.onSuccess(paymentResolutionService.createPaymentResolutionByGrouping(userId, idempotentKey));
     }
 
     @Operation(summary = "지급 계좌 수정", description = "변경할 지급 계좌 번호를 넣어주세요!")
