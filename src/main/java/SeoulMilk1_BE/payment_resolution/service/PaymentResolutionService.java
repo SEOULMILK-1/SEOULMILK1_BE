@@ -21,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -38,6 +39,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Service
@@ -49,6 +51,7 @@ public class PaymentResolutionService {
     private final TeamService teamService;
     private final NtsTaxService ntsTaxService;
     private final UserService userService;
+    private final RedisTemplate redisTemplate;
 
     @Transactional
     public PaymentResolutionInsertResponse createPaymentResolution(PaymentResolutionRequest request) {
@@ -65,8 +68,17 @@ public class PaymentResolutionService {
         return PaymentResolutionInsertResponse.of(paymentResolution.getId(), paymentResolution.getModifiedAt());
     }
 
+    private Boolean isFirstRequest(String idempotentKey) {
+        return redisTemplate.opsForValue().setIfAbsent(idempotentKey, "success", 10, TimeUnit.SECONDS);
+    }
+
     @Transactional
-    public String createPaymentResolutionByGrouping(Long userId) {
+    public String createPaymentResolutionByGrouping(Long userId, String idempotentKey) {
+        // 멱등키 처리
+        if (!isFirstRequest(idempotentKey)) {
+            throw new GeneralException(ErrorStatus.ALREADY_IN_PROGRESS);
+        }
+
         User user = userService.findUser(userId);
         List<ForPaymentTaxResponse> ntsTaxList = ntsTaxService.findByIsNotWritten();
 
