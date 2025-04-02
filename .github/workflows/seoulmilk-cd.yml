@@ -60,15 +60,25 @@ jobs:
       - name: docker Hub push
         run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/seoulmilk
 
-      # 컨테이너로 실행
-      - name: Deploy to EC2
+      # 🔹 deploy.sh 파일 원격 서버로 전송
+      - name: Copy nginx config file to remote
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          source: "./deploy.sh"
+          target: "/home/ubuntu/deploy"
+
+      # 🔹 원격 서버에서 deploy.sh 실행 (무중단 배포)
+      - name: Run Zero-Downtime Deployment
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
+          script_stop: true
           script: |
-            sudo docker rm -f $(sudo docker ps -qa) || true
-            sudo docker image rm ${{ secrets.DOCKERHUB_USERNAME }}/seoulmilk:latest || true
-            sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/seoulmilk
-            sudo docker run -d -p 8080:8080 -e TZ=Asia/Seoul --name seoulmilk ${{ secrets.DOCKERHUB_USERNAME }}/seoulmilk
+            cd /home/ubuntu/deploy
+            chmod +x deploy.sh
+            ./deploy.sh
