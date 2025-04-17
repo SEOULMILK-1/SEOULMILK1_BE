@@ -4,7 +4,7 @@
 ## 팀원 
 | **이현지** | **문정욱** |
 | :------: |  :------: |
-| <a href="https://github.com/Amepistheo"><img src="https://github.com/user-attachments/assets/57c1f9cd-dab1-4993-a126-07a34b0e1406" width="120" height="120" /></a> | <a href="https://github.com/m020202"><img src="https://github.com/user-attachments/assets/491b070c-ca40-4582-94b1-c785945084dc" width="120" height="120" /></a> |  
+| <a href="https://github.com/Amepistheo"><img src="https://github.com/user-attachments/assets/57c1f9cd-dab1-4993-a126-07a34b0e1406" width="200" height="120" /></a> | <a href="https://github.com/m020202"><img src="https://github.com/user-attachments/assets/491b070c-ca40-4582-94b1-c785945084dc" width="200" height="120" /></a> |  
 | <a href="https://github.com/Amepistheo">@Amepistheo</a>  | <a href="https://github.com/m020202">@m020202</a> | 
 
 ## System Architecture
