@@ -8,7 +8,7 @@
 | <a href="https://github.com/Amepistheo">@Amepistheo</a>  | <a href="https://github.com/m020202">@m020202</a> | 
 
 ## System Architecture
-<img width="1026" alt="서울우유 아키텍쳐" src="https://github.com/user-attachments/assets/dbe1823d-02a5-447c-92b8-22116a723aa2" />
+<img width="800" alt="서울우유 아키텍쳐" src="https://github.com/user-attachments/assets/dbe1823d-02a5-447c-92b8-22116a723aa2" />
 
 ## Project Structure
 
